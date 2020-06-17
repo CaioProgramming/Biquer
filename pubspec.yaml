@@ -1,0 +1,37 @@
+name: biquerapp
+description: App to biqueiros that want to work with bico
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^0.1.3
+  flutter_launcher_icons: ^0.7.5
+  flutter_icons: ^1.1.0
+  firebase_core: ^0.4.4+3
+  firebase_auth: ^0.16.0
+  cloud_firestore: ^0.13.5
+  google_sign_in: ^4.4.6
+  url_launcher: ^5.4.7
+  provider: ^3.0.0+1
+  adobe_xd: ^0.1.0
+  camera: ^0.5.8+2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf

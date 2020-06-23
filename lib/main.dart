@@ -1,6 +1,7 @@
-import 'package:biquerapp/RegisterScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'RegisterScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,6 +26,7 @@ class _MyAppState extends State<MyApp> {
             primaryColorDark: Colors.deepOrange,
             primaryColor: Colors.orange,
             backgroundColor: Colors.white),
+        darkTheme: ThemeData.dark(),
         home: Scaffold(
           body: RegisterScreen(),
         ));

@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 
 BoxDecoration kFileInputDecoration = BoxDecoration(
     borderRadius: BorderRadius.circular(10),
-    color: Colors.grey.withOpacity(0.25));
-String kDocumentMessage =
+    border: Border.all(color: Colors.blue, style: BorderStyle.solid, width: 2),
+    color: Colors.blue.withOpacity(0.10));
+const String kDocumentMessage =
     'Hora de enviar uma foto de seus documentos. Lembre-se de fotografar corretamente, para que sua aprovação ocorra o mais rápido possível.';
 
 String kSelfieMessage =
     'Perfeito! Para concluir tire uma selfie com o documento';
+
+const String kRegistermessage =
+    'Cadastre-se para começar a divulgar seus serviços!';
+
 LinearGradient kButtonGradient = LinearGradient(
   colors: [
     Colors.blue,

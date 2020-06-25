@@ -6,20 +6,17 @@ class PageTitle extends StatelessWidget {
   const PageTitle(this.title, this.message);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.w900, fontSize: 40),
-          ),
-          Text(
-            message,
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 40),
+        ),
+        Text(
+          message,
+        ),
+      ],
     );
   }
 }

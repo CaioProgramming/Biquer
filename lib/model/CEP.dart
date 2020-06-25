@@ -1,6 +1,6 @@
+import 'package:Biquer/components/FormInput.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class CEP {
   String cep, logradouro, complemento, bairro, localidade, uf;
@@ -16,122 +16,21 @@ class CEP {
       map['localidade'],
       map['uf']);
 
-  Widget showCepInfo(BuildContext context) {
-    return Column(
-      children: [
-        Visibility(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              keyboardType: TextInputType.phone,
-              inputFormatters: <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly
-              ],
-              textInputAction: TextInputAction.go,
-              decoration: InputDecoration(
-                  hintText: uf,
-                  hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  )),
-            ),
-          ),
-        ),
-        Visibility(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              readOnly: true,
-              keyboardType: TextInputType.phone,
-              inputFormatters: <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly
-              ],
-              textInputAction: TextInputAction.go,
-              decoration: InputDecoration(
-                  hintText: logradouro,
-                  hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  )),
-            ),
-          ),
-        ),
-        Visibility(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              keyboardType: TextInputType.phone,
-              inputFormatters: <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly
-              ],
-              textInputAction: TextInputAction.go,
-              autofocus: true,
-              decoration: InputDecoration(
-                  hintText: 'Número',
-                  hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  )),
-            ),
-          ),
-        ),
-        Visibility(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              readOnly: true,
-              keyboardType: TextInputType.phone,
-              inputFormatters: <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly
-              ],
-              textInputAction: TextInputAction.go,
-              decoration: InputDecoration(
-                  hintText: bairro,
-                  hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  )),
-            ),
-          ),
-        ),
-        Visibility(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              readOnly: true,
-              keyboardType: TextInputType.phone,
-              inputFormatters: <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly
-              ],
-              textInputAction: TextInputAction.go,
-              decoration: InputDecoration(
-                  hintText: localidade,
-                  hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  )),
-            ),
-          ),
-        ),
-        Visibility(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              keyboardType: TextInputType.phone,
-              inputFormatters: <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly
-              ],
-              textInputAction: TextInputAction.go,
-              decoration: InputDecoration(
-                  hintText: complemento.isEmpty ? 'Complemento' : complemento,
-                  hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  )),
-            ),
-          ),
-        ),
-      ],
-    );
+  Widget showCepInfo(BuildContext context, Function numberField) {
+    List<Widget> cepWidgets = [];
+    if (uf != null)
+      cepWidgets.add(FormInput(null, readonly: true, hintText: uf));
+    if (logradouro != null)
+      cepWidgets.add(FormInput(null, readonly: true, hintText: logradouro));
+    cepWidgets.add(FormInput(numberField,
+        hintText: 'Número', keyBoardType: TextInputType.phone));
+    if (bairro != null)
+      cepWidgets.add(FormInput(null, readonly: true, hintText: bairro));
+    if (localidade != null)
+      cepWidgets.add(FormInput(null, readonly: true, hintText: localidade));
+    if (complemento != null && complemento.isNotEmpty)
+      cepWidgets.add(FormInput(null, readonly: true, hintText: complemento));
+
+    return Column(children: cepWidgets);
   }
 }

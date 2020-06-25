@@ -1,4 +1,6 @@
 class Document {
   String id;
-  String docURL;
+  List<String> docURL;
+
+  Document(this.id, this.docURL);
 }

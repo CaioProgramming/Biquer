@@ -9,13 +9,14 @@ BoxDecoration kFileInputDecoration = BoxDecoration(
 const kDocumentMessage =
     'Hora de enviar uma foto de seus documentos. Lembre-se de fotografar corretamente, para que sua aprovação ocorra o mais rápido possível.';
 const kSelfieMessage =
-    'Perfeito! Para concluir tire uma selfie com o documento';
+    'Perfeito! Para concluir tire uma selfie com o documento.';
 const kAddressMessage =
-    'Insira os dados de seu endereço para prosseguir com o cadastro';
+    'Insira os dados de seu endereço para prosseguir com o cadastro.';
 const kRegistermessage = 'Cadastre-se para começar a divulgar seus serviços!';
 
 const kCepHelperURL = 'https://viacep.com.br/ws/';
 const kCEPHelperJsonReturn = '/json/';
+const kDefaultMargin = EdgeInsets.symmetric(vertical: 10);
 
 LinearGradient kButtonGradient = LinearGradient(
   colors: [

@@ -1,8 +1,12 @@
+import 'package:Biquer/components/BaseForm.dart';
+import 'package:Biquer/components/FormInput.dart';
 import 'package:Biquer/components/PageTitle.dart';
+import 'package:Biquer/components/SocialLoginButton.dart';
 import 'package:Biquer/constants.dart';
 import 'package:Biquer/model/RegisterData.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +54,7 @@ class _RegisterFormState extends State<RegisterForm> {
   Future signInWithGoogle(BuildContext context) async {
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
+    await googleSignInAccount.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
@@ -71,13 +75,13 @@ class _RegisterFormState extends State<RegisterForm> {
     newUser.sendEmailVerification().then((value) {
       SnackBar snackBar = SnackBar(
           content: Text(
-        'Enviamos um e-mail de confirmação para você!',
-      ));
+            'Enviamos um e-mail de confirmação para você!',
+          ));
       Scaffold.of(context).showSnackBar(snackBar);
     }, onError: (error) {
       SnackBar snackBar = SnackBar(
           content: Text(
-        'Não conseguimos validar o seu email, tente novamente!',
+            'Não conseguimos validar o seu email, tente novamente!',
       ));
       Scaffold.of(context).showSnackBar(snackBar);
     });
@@ -88,230 +92,122 @@ class _RegisterFormState extends State<RegisterForm> {
   Widget build(BuildContext context) {
     RegisterData _biquerData = Provider.of<RegisterData>(context);
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Column(
-            children: [
-              PageTitle(
-                  _biquerData.user == null
-                      ? 'Cadastro'
-                      : 'Muito bem ${_biquerData.user.displayName}',
-                  _biquerData.user == null
-                      ? kRegistermessage
-                      : 'Seu email foi validado prossiga para concluir o cadastro!'),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  readOnly: _biquerData.user != null,
-                  textInputAction: TextInputAction.next,
-                  onChanged: (newText) => userName = newText,
-                  onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                  decoration: InputDecoration(
-                      hintText: _biquerData.user == null
-                          ? 'Nome Completo'
-                          : _biquerData.user.displayName,
-                      hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  readOnly: _biquerData.user != null,
-                  textInputAction: TextInputAction.next,
-                  onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                  onChanged: (newText) => userEmail = newText,
-                  decoration: InputDecoration(
-                      hintText: _biquerData.user == null
-                          ? 'E-mail'
-                          : _biquerData.user.email,
-                      hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      )),
-                ),
-              ),
-              Visibility(
-                visible: _biquerData.user == null,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    textInputAction: TextInputAction.next,
-                    onChanged: (newText) => password = newText,
-                    onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                    obscureText: true,
-                    decoration: InputDecoration(
-                        hintText: 'Senha',
-                        hintStyle:
-                            TextStyle(color: Theme.of(context).hintColor),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        )),
-                  ),
-                ),
-              ),
-              Visibility(
-                visible: _biquerData.user == null,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    textInputAction: TextInputAction.go,
-                    onChanged: (newText) => passwordCheck = newText,
-                    onSubmitted: (_) => () {
-                      print('Register complete!');
-                    },
-                    obscureText: true,
-                    decoration: InputDecoration(
-                        hintText: 'Confirmar senha',
-                        hintStyle:
-                            TextStyle(color: Theme.of(context).hintColor),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        )),
-                  ),
-                ),
-              ),
-              Visibility(
-                visible: _biquerData.user == null,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: MaterialButton(
-                      onPressed: () {
-                        signInWithGoogle(context);
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Registrar-se'.toUpperCase(),
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Visibility(
-                visible: _biquerData.user == null,
-                child: Column(
-                  children: [
-                    Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          SizedBox(
-                              width: 100,
-                              child: Divider(
-                                color: Theme.of(context).hintColor,
-                              )),
-                          Text(
-                            'Ou Cadastre-se com',
-                            style: TextStyle(fontWeight: FontWeight.w100),
-                          ),
-                          SizedBox(
-                              width: 100,
-                              child: Divider(
-                                color: Theme.of(context).hintColor,
-                              )),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Wrap(
-                        children: [
-                          SocialLoginButton(
-                            'Google',
-                            AntDesign.googleplus,
-                            onTap: () => signInWithGoogle(context),
-                            backColor: Colors.red,
-                            textStyle: ThemeData.dark().textTheme.bodyText1,
-                            iconColor: Colors.white,
-                          ),
-                          SocialLoginButton(
-                            'Facebook',
-                            AntDesign.facebook_square,
-                            onTap: () => signInWithGoogle(context),
-                            backColor: Colors.blue.shade700,
-                            iconColor: Colors.white,
-                            textStyle: ThemeData.dark().textTheme.bodyText1,
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
+    return BaseForm([
+      PageTitle(
+          _biquerData.user == null
+              ? 'Cadastro'
+              : 'Bem-vindo ${_biquerData.user.displayName}',
+          _biquerData.user == null
+              ? kRegistermessage
+              : 'Seu email foi validado prossiga para concluir o cadastro!'),
+      FormInput(
+        (newText) => _userName = newText,
+        inputAction: TextInputAction.next,
+        hintText: _biquerData.user?.displayName ?? 'Nome Completo',
+        readonly: _biquerData.userLogged(),
+        onSubmit: () {
+          moveToNextInput(context);
+        },
       ),
-    );
-  }
-}
-
-class SocialLoginButton extends StatelessWidget {
-  final Function onTap;
-
-  SocialLoginButton(this.title, this.icon,
-      {@required this.onTap,
-      this.backColor,
-      this.iconColor,
-      this.textStyle,
-      this.borderColor});
-
-  final String title;
-  final IconData icon;
-  final Color backColor, iconColor, borderColor;
-  final TextStyle textStyle;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-        decoration: BoxDecoration(
-            color: backColor ?? Theme.of(context).accentColor,
-            border: Border.all(color: borderColor ?? Colors.transparent),
-            borderRadius: BorderRadius.circular(14)),
-        child: InkWell(
-          onTap: onTap,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon,
-                color: iconColor ?? Theme.of(context).textTheme.bodyText1.color,
+      FormInput(
+        (newText) => _userEmail = newText,
+        inputAction: TextInputAction.next,
+        hintText: _biquerData.user?.email ?? 'Email',
+        readonly: _biquerData.userLogged(),
+        onSubmit: () => moveToNextInput(context),
+      ),
+      Visibility(
+        visible: _biquerData.user == null,
+        child: FormInput((newText) => password = newText,
+            inputAction: TextInputAction.next,
+            onSubmit: () => moveToNextInput(context),
+            hintText: 'Digite a senha',
+            obscureText: true),
+      ),
+      Visibility(
+        visible: _biquerData.user == null,
+        child: FormInput(
+          (newText) => passwordCheck = newText,
+          inputAction: TextInputAction.go,
+          readonly: false,
+          onSubmit: () => registerWithEmailAndPassword(context),
+          obscureText: true,
+          hintText: 'Confirme a senha',
+        ),
+      ),
+      Visibility(
+        visible: _biquerData.user == null,
+        child: Container(
+          margin: kDefaultMargin,
+          child: MaterialButton(
+            color: Colors.black,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            padding: EdgeInsets.all(0),
+            onPressed: () {
+              signInWithGoogle(context);
+            },
+            child: Container(
+              padding: EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    'Registrar-se'.toUpperCase(),
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w600),
+                  )
+                ],
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 8),
-                child: Text(
-                  title,
-                  style: textStyle ??
-                      Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .copyWith(fontWeight: FontWeight.w400),
-                ),
-              )
-            ],
+            ),
           ),
         ),
       ),
-    );
+      Visibility(
+        visible: _biquerData.user == null,
+        child: Column(
+          children: [
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                      width: 100,
+                      child: Divider(
+                        color: Theme.of(context).hintColor,
+                      )),
+                  Text(
+                    'Ou Cadastre-se com',
+                    style: TextStyle(fontWeight: FontWeight.w100),
+                  ),
+                  SizedBox(
+                      width: 100,
+                      child: Divider(
+                        color: Theme.of(context).hintColor,
+                      )),
+                ],
+              ),
+            ),
+            Wrap(
+              children: [
+                SocialLoginButton(
+                  'Google',
+                  AntDesign.googleplus,
+                  onTap: () => signInWithGoogle(context),
+                  backColor: Colors.red,
+                  textStyle: ThemeData.dark().textTheme.bodyText1,
+                  iconColor: Colors.white,
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    ]);
+  }
+
+  void moveToNextInput(BuildContext context) {
+    FocusScope.of(context).nextFocus();
   }
 }

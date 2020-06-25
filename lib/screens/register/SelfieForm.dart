@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:Biquer/components/BaseForm.dart';
 import 'package:Biquer/components/CameraButtons.dart';
 import 'package:Biquer/components/PageTitle.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 
 class SelfieForm extends StatefulWidget {
   final PageController pageController;
@@ -58,41 +60,29 @@ class _SelfieFormState extends State<SelfieForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        imageurl == null
-            ? Container(
-                child: cameras != null
-                    ? AspectRatio(
-                        aspectRatio: 3 / 4, child: CameraPreview(controller))
-                    : CircularProgressIndicator(
-                        strokeWidth: 3,
-                      ),
-              )
-            : FadeInImage(
-                placeholder: AssetImage('assets/images/toucan.svg'),
-                image: FileImage(
-                  File(imageurl),
-                ),
+    return BaseForm([
+      PageTitle('Reconhecimento',
+          'Tire uma foto sua com seus documentos para concluir o cadastro!'),
+      imageurl == null
+          ? Container(
+              child: cameras != null
+                  ? AspectRatio(
+                      aspectRatio: 4 / 8, child: CameraPreview(controller))
+                  : Icon(AntDesign.camera, color: Theme.of(context).hintColor),
+            )
+          : FadeInImage(
+              placeholder: AssetImage('assets/images/toucan.svg'),
+              image: FileImage(
+                File(imageurl),
               ),
-        Column(
-          children: [
-            Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: PageTitle('Reconhecimento facial',
-                  'Tire uma foto sua com seus documentos para concluir o cadastro!'),
             ),
-          ],
-        ),
-        CameraButtons(
-          controller,
-          imageurl,
-          onClose: closeCamera,
-          onPictureTake: (newPath) => showPicture(newPath),
-          resetImage: this.resetImage,
-        ),
-      ],
-    );
+      CameraButtons(
+        controller,
+        imageurl,
+        onClose: closeCamera,
+        onPictureTake: (newPath) => showPicture(newPath),
+        resetImage: this.resetImage,
+      )
+    ]);
   }
 }

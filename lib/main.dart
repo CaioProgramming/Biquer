@@ -40,7 +40,6 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         title: 'Biquer',
         theme: ThemeData(
-            fontFamily: 'Roboto',
             accentColor: Colors.deepOrange,
             primaryColorDark: Colors.deepOrange,
             primaryColor: Colors.orange,

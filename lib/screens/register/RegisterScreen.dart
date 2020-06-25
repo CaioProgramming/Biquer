@@ -21,6 +21,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     RegisterData _biquerData = Provider.of<RegisterData>(context);
 
+    bool canMoveForward() {
+      switch (currentpage) {
+        case 0:
+          return _biquerData.userLogged();
+        case 1:
+          return _biquerData.userAddress != null;
+        case 2:
+          return _biquerData.userDocument != null;
+        case 3:
+          return _biquerData.userPicURL != null;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -29,48 +42,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
         leading: IconButton(
           icon: Icon(currentpage == 0 ? AntDesign.close : AntDesign.arrowleft),
           onPressed: () {
-            moveToPage(context);
+            previousPage(context);
           },
         ),
       ),
       body: SafeArea(
-        child: Stack(
-          fit: StackFit.expand,
+        child: Column(
           children: [
-            PageView(
-              controller: controller,
-              onPageChanged: (index) {
-                currentpage = index;
-                setState(() {});
-              },
-              physics: NeverScrollableScrollPhysics(),
-              children: [
-                RegisterForm(),
-                AddressForm(),
-                DocumentForm(),
-                SelfieForm(pageController: controller)
-              ],
+            Expanded(
+              child: PageView(
+                controller: controller,
+                onPageChanged: (index) {
+                  currentpage = index;
+                  setState(() {});
+                },
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  RegisterForm(),
+                  AddressForm(),
+                  DocumentForm(),
+                  SelfieForm(pageController: controller)
+                ],
+              ),
             ),
-            Positioned(
-              bottom: 10,
-              left: 10,
-              right: 10,
-              child: Visibility(
-                visible: _biquerData.userLogged(),
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundColor:
-                      currentpage == 3 ? Colors.green : Colors.blue,
-                  child: IconButton(
-                    color: Colors.white,
-                    icon: Icon(
-                      currentpage == 3 ? Feather.check : Feather.arrow_right,
-                    ),
-                    onPressed: () {
-                      controller.nextPage(
-                          duration: Duration(milliseconds: 500),
-                          curve: Curves.easeIn);
-                    },
+            Container(
+              margin: EdgeInsets.all(4),
+              child: RaisedButton(
+                padding: EdgeInsets.all(20),
+                elevation: 0,
+                color: Colors.blueAccent,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                onPressed: !canMoveForward()
+                    ? null
+                    : () {
+                        nextPage(context);
+                      },
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(
+                        'Continuar'.toUpperCase(),
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w600),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -81,12 +99,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  void moveToPage(BuildContext context) {
-    if (currentpage != 0) {
-      controller.previousPage(
-          duration: Duration(milliseconds: 500), curve: Curves.easeIn);
-    } else {
-      Navigator.pop(context);
-    }
+  void nextPage(BuildContext context) {
+    controller.nextPage(
+        duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+  }
+
+  void previousPage(BuildContext context) {
+    controller.previousPage(
+        duration: Duration(milliseconds: 500), curve: Curves.easeIn);
   }
 }

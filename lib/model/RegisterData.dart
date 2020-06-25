@@ -1,12 +1,27 @@
-import 'package:Biquer/model/CEP.dart';
+import 'package:Biquer/model/Address.dart';
 import 'package:Biquer/model/Document.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 class RegisterData extends ChangeNotifier {
   FirebaseUser _user;
-  CEP _userCEP;
-  Document _document;
+  Address _userAddress;
+
+  Address get userAddress => _userAddress;
+
+  set userAddress(Address value) {
+    _userAddress = value;
+    notifyListeners();
+  }
+
+  Document _userDocument;
+
+  Document get userDocument => _userDocument;
+
+  set userDocument(Document value) {
+    _userDocument = value;
+    notifyListeners();
+  }
 
   FirebaseUser get user => _user;
 
@@ -22,20 +37,6 @@ class RegisterData extends ChangeNotifier {
   }
 
   String _userPicURL;
-
-  CEP get userCEP => _userCEP;
-
-  set userCEP(CEP value) {
-    _userCEP = value;
-    notifyListeners();
-  }
-
-  Document get document => _document;
-
-  set document(Document value) {
-    _document = value;
-    notifyListeners();
-  }
 
   String get userPicURL => _userPicURL;
 

@@ -1,11 +1,16 @@
 import 'dart:io';
 
+import 'package:Biquer/components/BaseForm.dart';
+import 'package:Biquer/components/FormInput.dart';
 import 'package:Biquer/components/PageTitle.dart';
 import 'package:Biquer/constants.dart';
+import 'package:Biquer/model/Document.dart';
+import 'package:Biquer/model/RegisterData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class DocumentForm extends StatefulWidget {
   @override
@@ -14,6 +19,7 @@ class DocumentForm extends StatefulWidget {
 
 class _DocumentFormState extends State<DocumentForm> {
   File _documentFront, _documentVerse;
+  String documentID;
   final picker = ImagePicker();
 
   Future pickDocumentFront() async {
@@ -32,106 +38,125 @@ class _DocumentFormState extends State<DocumentForm> {
     });
   }
 
+  bool docComplete() =>
+      _documentFront != null && _documentVerse != null && documentID != null;
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.all(8),
-        child: Column(
-          children: [
-            PageTitle('Documentos', kDocumentMessage),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                keyboardType: TextInputType.phone,
-                inputFormatters: <TextInputFormatter>[
-                  WhitelistingTextInputFormatter.digitsOnly
-                ], // Only numbers can be entered
-                decoration: InputDecoration(
-                    hintText: 'Número do documento(CPF, RG ou CNPJ)',
-                    hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                    )),
-              ),
-            ),
-            GestureDetector(
-              onTap: pickDocumentFront,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: kFileInputDecoration,
-                  padding: EdgeInsets.all(16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 4),
-                        child: Icon(
-                          _documentFront == null
-                              ? FlutterIcons.id_badge_faw5
-                              : FlutterIcons.check_faw,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 5),
-                        child: Text(
-                          _documentFront == null
-                              ? 'Enviar frente do documento'
-                              : 'Foto enviada',
-                          style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 20),
-                        ),
-                      )
-                    ],
+    RegisterData registerData =
+        Provider.of<RegisterData>(context, listen: true);
+    return BaseForm([
+      PageTitle('Documentos',
+          'Envie duas fotos com a frente e o verso de seu documento(RG, CNH ou inscrição estadual).'),
+      FormInput(
+        (newText) {
+          documentID = newText;
+          setState(() {});
+        },
+        inputAction: TextInputAction.go,
+        inputFormatter: [WhitelistingTextInputFormatter.digitsOnly],
+        keyBoardType: TextInputType.phone,
+        hintText: 'CPF ou CNPJ',
+      ),
+      Container(
+        margin: kDefaultMargin,
+        child: Center(
+          child: MaterialButton(
+            onPressed: pickDocumentFront,
+            elevation: 0,
+            padding: EdgeInsets.all(0),
+            child: Container(
+              padding: EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: LinearGradient(
+                      colors: _documentFront == null
+                          ? [Colors.purple, Colors.purpleAccent]
+                          : [Colors.green, Colors.greenAccent])),
+              child: Row(
+                children: [
+                  Icon(
+                    _documentFront == null ? AntDesign.idcard : AntDesign.check,
+                    size: 32,
+                    color: Colors.white,
                   ),
-                ),
-              ),
-            ),
-            GestureDetector(
-              onTap: pickDocumentVerse,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: kFileInputDecoration,
-                  padding: EdgeInsets.all(16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 4),
-                        child: Icon(
-                          _documentVerse == null
-                              ? FlutterIcons.id_badge_faw5s
-                              : FlutterIcons.check_faw5s,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 5),
-                        child: Text(
-                          _documentVerse == null
-                              ? 'Enviar verso do documento'
-                              : 'Foto enviada',
-                          style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 20),
-                        ),
-                      )
-                    ],
+                  SizedBox(
+                    width: 10,
                   ),
-                ),
+                  Text(
+                    _documentFront == null
+                        ? 'Enviar frente do documento'
+                        : 'Documento enviado!',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18),
+                  )
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
-    );
+      Container(
+        margin: kDefaultMargin,
+        child: Center(
+          child: MaterialButton(
+            onPressed: pickDocumentVerse,
+            elevation: 0,
+            padding: EdgeInsets.all(0),
+            child: Container(
+              padding: EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: LinearGradient(
+                      colors: _documentVerse == null
+                          ? [Colors.deepPurple, Colors.deepPurpleAccent]
+                          : [Colors.green, Colors.greenAccent])),
+              child: Row(
+                children: [
+                  Icon(
+                    _documentVerse == null
+                        ? AntDesign.profile
+                        : AntDesign.check,
+                    size: 32,
+                    color: Colors.white,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    _documentVerse == null
+                        ? 'Enviar verso do documento'
+                        : 'Documento enviado!',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      docComplete()
+          ? Center(
+              child: MaterialButton(
+                onPressed: () {
+                  registerData.userDocument = Document(
+                      documentID, [_documentFront.path, _documentVerse.path]);
+                },
+                child: !docComplete()
+                    ? SizedBox()
+                    : Text(
+                        'Confirmar informações',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.green),
+                      ),
+              ),
+            )
+          : SizedBox()
+    ]);
   }
 }

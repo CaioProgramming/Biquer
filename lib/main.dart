@@ -1,4 +1,4 @@
-import 'package:Biquer/model/BiquerData.dart';
+import 'package:Biquer/model/RegisterData.dart';
 import 'package:Biquer/screens/register/RegisterScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -37,20 +37,22 @@ class _MyAppState extends State<MyApp> {
       statusBarColor: Colors.orange, // status bar color
     ));
 
-    return ChangeNotifierProvider(
-      create: (context) => BiquerData(loggedUser),
-      child: MaterialApp(
-          title: 'Biquer',
-          theme: ThemeData(
-              fontFamily: 'Roboto',
-              accentColor: Colors.deepOrange,
-              primaryColorDark: Colors.deepOrange,
-              primaryColor: Colors.orange,
-              backgroundColor: Colors.white),
-          darkTheme: ThemeData.dark(),
-          home: Scaffold(
-            body: RegisterScreen(),
-          )),
-    );
+    return MaterialApp(
+        title: 'Biquer',
+        theme: ThemeData(
+            fontFamily: 'Roboto',
+            accentColor: Colors.deepOrange,
+            primaryColorDark: Colors.deepOrange,
+            primaryColor: Colors.orange,
+            backgroundColor: Colors.white),
+        darkTheme: ThemeData.dark().copyWith(
+            accentColor: Colors.deepOrange,
+            primaryColorDark: Colors.deepOrange,
+            primaryColor: Colors.orange,
+            backgroundColor: Colors.white),
+        home: Scaffold(
+          body: ChangeNotifierProvider(
+              create: (context) => RegisterData(), child: RegisterScreen()),
+        ));
   }
 }

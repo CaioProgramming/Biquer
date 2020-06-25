@@ -16,29 +16,12 @@ class CameraButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       bottom: 75,
-      left: 10,
-      right: 10,
+      left: 0,
+      right: 0,
       child: Container(
-        padding: EdgeInsets.all(8),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            GestureDetector(
-              onTap: onClose,
-              child: CircleAvatar(
-                backgroundColor: Theme.of(context).backgroundColor,
-                radius: 27,
-                child: CircleAvatar(
-                  child: Icon(
-                    MaterialCommunityIcons.close,
-                    color: Theme.of(context).backgroundColor,
-                  ),
-                  backgroundColor:
-                      Theme.of(context).primaryTextTheme.bodyText1.color,
-                  radius: 24,
-                ),
-              ),
-            ),
             GestureDetector(
               onTap: () {
                 imagepath == null
@@ -46,32 +29,16 @@ class CameraButtons extends StatelessWidget {
                     : resetImage();
               },
               child: CircleAvatar(
-                backgroundColor: Theme.of(context).backgroundColor,
+                backgroundColor: Theme.of(context).textTheme.bodyText1.color,
                 radius: 27,
                 child: CircleAvatar(
                   child: imagepath == null
                       ? null
                       : Icon(
                           MaterialCommunityIcons.close,
-                          color: Theme.of(context).backgroundColor,
+                          color: Theme.of(context).textTheme.bodyText1.color,
                         ),
-                  backgroundColor:
-                      Theme.of(context).primaryTextTheme.bodyText1.color,
-                  radius: 24,
-                ),
-              ),
-            ),
-            GestureDetector(
-              child: CircleAvatar(
-                backgroundColor: Theme.of(context).backgroundColor,
-                radius: 27,
-                child: CircleAvatar(
-                  child: Icon(
-                    MaterialCommunityIcons.camera_rear,
-                    color: Theme.of(context).backgroundColor,
-                  ),
-                  backgroundColor:
-                      Theme.of(context).primaryTextTheme.bodyText1.color,
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   radius: 24,
                 ),
               ),

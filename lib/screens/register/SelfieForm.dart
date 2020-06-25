@@ -71,7 +71,7 @@ class _SelfieFormState extends State<SelfieForm> {
                       ),
               )
             : FadeInImage(
-                placeholder: AssetImage('toucan.svg'),
+                placeholder: AssetImage('assets/images/toucan.svg'),
                 image: FileImage(
                   File(imageurl),
                 ),

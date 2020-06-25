@@ -1,4 +1,5 @@
-import 'package:Biquer/model/BiquerData.dart';
+import 'package:Biquer/model/RegisterData.dart';
+import 'package:Biquer/screens/register/AdressForm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -18,7 +19,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   int currentpage = 0;
   @override
   Widget build(BuildContext context) {
-    BiquerData _biquerData = Provider.of<BiquerData>(context);
+    RegisterData _biquerData = Provider.of<RegisterData>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -28,12 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         leading: IconButton(
           icon: Icon(currentpage == 0 ? AntDesign.close : AntDesign.arrowleft),
           onPressed: () {
-            if (currentpage != 0) {
-              controller.previousPage(
-                  duration: Duration(milliseconds: 500), curve: Curves.easeIn);
-            } else {
-              Navigator.pop(context);
-            }
+            moveToPage(context);
           },
         ),
       ),
@@ -50,6 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               physics: NeverScrollableScrollPhysics(),
               children: [
                 RegisterForm(),
+                AddressForm(),
                 DocumentForm(),
                 SelfieForm(pageController: controller)
               ],
@@ -59,17 +56,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
               left: 10,
               right: 10,
               child: Visibility(
-                visible: _biquerData.user != null,
+                visible: _biquerData.userLogged(),
                 child: CircleAvatar(
                   radius: 30,
                   backgroundColor:
-                      currentpage == 2 ? Colors.green : Colors.blue,
+                      currentpage == 3 ? Colors.green : Colors.blue,
                   child: IconButton(
                     color: Colors.white,
                     icon: Icon(
-                      currentpage == 2
-                          ? Feather.check
-                          : FlutterIcons.arrow_right_fea,
+                      currentpage == 3 ? Feather.check : Feather.arrow_right,
                     ),
                     onPressed: () {
                       controller.nextPage(
@@ -84,5 +79,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
+  }
+
+  void moveToPage(BuildContext context) {
+    if (currentpage != 0) {
+      controller.previousPage(
+          duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+    } else {
+      Navigator.pop(context);
+    }
   }
 }

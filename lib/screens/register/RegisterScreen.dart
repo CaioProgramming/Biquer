@@ -1,3 +1,4 @@
+import 'package:Biquer/constants.dart';
 import 'package:Biquer/model/RegisterData.dart';
 import 'package:Biquer/screens/register/AdressForm.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +18,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   PageController controller = PageController(initialPage: 0);
   int currentpage = 0;
+
   @override
   Widget build(BuildContext context) {
     RegisterData _biquerData = Provider.of<RegisterData>(context);
@@ -26,9 +28,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         case 0:
           return _biquerData.userLogged();
         case 1:
-          return _biquerData.userAddress != null;
+          return _biquerData.userAddress != null &&
+              _biquerData.userAddress.addressComplete();
         case 2:
-          return _biquerData.userDocument != null;
+          return _biquerData.userDocument != null &&
+              _biquerData.userDocument.isDocComplete();
         case 3:
           return _biquerData.userPicURL != null;
       }
@@ -71,8 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 padding: EdgeInsets.all(20),
                 elevation: 0,
                 color: Colors.blueAccent,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                shape: RoundedRectangleBorder(borderRadius: kDefaultBorder),
                 onPressed: !canMoveForward()
                     ? null
                     : () {

@@ -25,6 +25,7 @@ class _RegisterFormState extends State<RegisterForm> {
 
   set password(String password) {
     _password = password;
+    updateState();
   }
 
   String _passwordCheck;
@@ -33,6 +34,7 @@ class _RegisterFormState extends State<RegisterForm> {
 
   set passwordCheck(String passwordCheck) {
     _passwordCheck = passwordCheck;
+    updateState();
   }
 
   String _userName;
@@ -41,20 +43,37 @@ class _RegisterFormState extends State<RegisterForm> {
 
   set userName(String userName) {
     _userName = userName;
+    updateState();
+  }
+
+  void updateState() {
+    setState(() {});
   }
 
   String _userEmail;
 
   String get userEmail => _userEmail;
 
+  bool enableButton() =>
+      _userEmail != null &&
+      userEmail.isNotEmpty &&
+      _userName != null &&
+      userName.isNotEmpty &&
+      _password != null &&
+      _password.isNotEmpty &&
+      _passwordCheck != null &&
+      passwordCheck.isNotEmpty &&
+      password == _passwordCheck;
+
   set userEmail(String userEmail) {
     _userEmail = userEmail;
+    updateState();
   }
 
   Future signInWithGoogle(BuildContext context) async {
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
-    await googleSignInAccount.authentication;
+        await googleSignInAccount.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
@@ -69,141 +88,157 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   Future registerWithEmailAndPassword(BuildContext context) async {
-    AuthResult authResult = await _auth.createUserWithEmailAndPassword(
-        email: _userEmail, password: _password);
-    FirebaseUser newUser = authResult.user;
-    newUser.sendEmailVerification().then((value) {
+    try {
+      AuthResult authResult = await _auth.createUserWithEmailAndPassword(
+          email: _userEmail, password: _password);
+      FirebaseUser newUser = authResult.user;
+      newUser.sendEmailVerification().then((value) {
+        SnackBar snackBar = SnackBar(
+            content: Text(
+              'Enviamos um e-mail de confirmação para você!',
+            ));
+        Scaffold.of(context).showSnackBar(snackBar);
+      }, onError: (error) {
+        SnackBar snackBar = SnackBar(
+            content: Text(
+              'Não conseguimos validar o seu email, tente novamente!',
+            ));
+        Scaffold.of(context).showSnackBar(snackBar);
+      });
+      Provider
+          .of<RegisterData>(context, listen: true)
+          .user = newUser;
+    } on PlatformException catch (e) {
+      print(e.code);
       SnackBar snackBar = SnackBar(
           content: Text(
-            'Enviamos um e-mail de confirmação para você!',
+            'Ocorreu um erro(${e.message})',
           ));
       Scaffold.of(context).showSnackBar(snackBar);
-    }, onError: (error) {
-      SnackBar snackBar = SnackBar(
-          content: Text(
-            'Não conseguimos validar o seu email, tente novamente!',
-      ));
-      Scaffold.of(context).showSnackBar(snackBar);
-    });
-    Provider.of<RegisterData>(context, listen: true).user = newUser;
+      print(e);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     RegisterData _biquerData = Provider.of<RegisterData>(context);
 
-    return BaseForm([
-      PageTitle(
-          _biquerData.user == null
-              ? 'Cadastro'
-              : 'Bem-vindo ${_biquerData.user.displayName}',
-          _biquerData.user == null
-              ? kRegistermessage
-              : 'Seu email foi validado prossiga para concluir o cadastro!'),
+    return BaseForm(!_biquerData.userLogged()
+        ? [
+      PageTitle('Cadastro', kRegistermessage),
       FormInput(
-        (newText) => _userName = newText,
+            (newText) => _userName = newText,
         inputAction: TextInputAction.next,
-        hintText: _biquerData.user?.displayName ?? 'Nome Completo',
-        readonly: _biquerData.userLogged(),
+        hintText: 'Nome Completo',
         onSubmit: () {
           moveToNextInput(context);
         },
       ),
       FormInput(
-        (newText) => _userEmail = newText,
+            (newText) => userEmail = newText,
         inputAction: TextInputAction.next,
+        keyBoardType: TextInputType.emailAddress,
         hintText: _biquerData.user?.email ?? 'Email',
         readonly: _biquerData.userLogged(),
         onSubmit: () => moveToNextInput(context),
       ),
-      Visibility(
-        visible: _biquerData.user == null,
-        child: FormInput((newText) => password = newText,
-            inputAction: TextInputAction.next,
-            onSubmit: () => moveToNextInput(context),
-            hintText: 'Digite a senha',
-            obscureText: true),
+      FormInput((newText) {
+        password = newText;
+        updateState();
+      },
+          inputAction: TextInputAction.next,
+          onSubmit: () => moveToNextInput(context),
+          hintText: 'Digite a senha',
+          obscureText: true),
+      FormInput(
+            (newText) {
+          passwordCheck = newText;
+        },
+        inputAction: TextInputAction.go,
+        readonly: false,
+        onSubmit: () => registerWithEmailAndPassword(context),
+        obscureText: true,
+        hintText: 'Confirme a senha',
       ),
-      Visibility(
-        visible: _biquerData.user == null,
-        child: FormInput(
-          (newText) => passwordCheck = newText,
-          inputAction: TextInputAction.go,
-          readonly: false,
-          onSubmit: () => registerWithEmailAndPassword(context),
-          obscureText: true,
-          hintText: 'Confirme a senha',
-        ),
-      ),
-      Visibility(
-        visible: _biquerData.user == null,
-        child: Container(
-          margin: kDefaultMargin,
-          child: MaterialButton(
-            color: Colors.black,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            padding: EdgeInsets.all(0),
-            onPressed: () {
-              signInWithGoogle(context);
-            },
-            child: Container(
-              padding: EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(
-                    'Registrar-se'.toUpperCase(),
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w600),
-                  )
-                ],
-              ),
+      Container(
+        margin: kDefaultMargin,
+        child: MaterialButton(
+          color: Colors.black,
+          disabledColor: Theme
+              .of(context)
+              .hintColor
+              .withOpacity(0.50),
+          shape: RoundedRectangleBorder(borderRadius: kDefaultBorder),
+          padding: EdgeInsets.all(0),
+          onPressed: enableButton()
+              ? () {
+            registerWithEmailAndPassword(context);
+          }
+              : null,
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(
+                  'Registrar-se'.toUpperCase(),
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w600),
+                )
+              ],
             ),
           ),
         ),
       ),
-      Visibility(
-        visible: _biquerData.user == null,
-        child: Column(
-          children: [
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                      width: 100,
-                      child: Divider(
-                        color: Theme.of(context).hintColor,
-                      )),
-                  Text(
-                    'Ou Cadastre-se com',
-                    style: TextStyle(fontWeight: FontWeight.w100),
-                  ),
-                  SizedBox(
-                      width: 100,
-                      child: Divider(
-                        color: Theme.of(context).hintColor,
-                      )),
-                ],
-              ),
-            ),
-            Wrap(
+      Column(
+        children: [
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SocialLoginButton(
-                  'Google',
-                  AntDesign.googleplus,
-                  onTap: () => signInWithGoogle(context),
-                  backColor: Colors.red,
-                  textStyle: ThemeData.dark().textTheme.bodyText1,
-                  iconColor: Colors.white,
+                SizedBox(
+                    width: 100,
+                    child: Divider(
+                      color: Theme
+                          .of(context)
+                          .hintColor,
+                    )),
+                Text(
+                  'Ou Cadastre-se com',
+                  style: TextStyle(fontWeight: FontWeight.w100),
                 ),
+                SizedBox(
+                    width: 100,
+                    child: Divider(
+                      color: Theme
+                          .of(context)
+                          .hintColor,
+                    )),
               ],
-            )
-          ],
-        ),
+            ),
+          ),
+          Wrap(
+            children: [
+              SocialLoginButton(
+                'Google',
+                AntDesign.googleplus,
+                onTap: () => signInWithGoogle(context),
+                backColor: Colors.red,
+                textStyle: ThemeData
+                    .dark()
+                    .textTheme
+                    .bodyText1,
+                iconColor: Colors.white,
+              ),
+            ],
+          )
+        ],
       ),
+    ]
+        : [
+      PageTitle('Bem-vindo ${_biquerData.user.displayName}',
+          'Seu email foi validado prossiga para concluir o cadastro!')
     ]);
   }
 

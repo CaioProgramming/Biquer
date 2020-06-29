@@ -1,8 +1,9 @@
+import 'package:Biquer/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class FormInput extends StatelessWidget {
-  final bool readonly, obscureText, maxLenghtEnforced;
+  final bool readonly, obscureText, maxLenghtEnforced, autofocus;
   final Function textChange, onSubmit;
   final String hintText, errorText;
   final TextInputAction inputAction;
@@ -14,20 +15,22 @@ class FormInput extends StatelessWidget {
       {this.readonly = false,
       this.onSubmit,
       this.hintText,
-      this.obscureText,
+      this.obscureText = false,
       this.inputAction,
       this.inputFormatter,
       this.errorText,
       this.maxlenght,
       this.maxLenghtEnforced = false,
+      this.autofocus = false,
       this.keyBoardType});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: kDefaultMargin,
       child: TextField(
         readOnly: readonly,
+        obscureText: obscureText,
         inputFormatters: inputFormatter,
         textInputAction: inputAction ?? TextInputAction.none,
         onChanged: textChange,
@@ -38,7 +41,7 @@ class FormInput extends StatelessWidget {
         decoration: InputDecoration(
             hintText: hintText,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderRadius: kDefaultBorder,
             )),
       ),
     );

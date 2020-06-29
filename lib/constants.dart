@@ -17,7 +17,7 @@ const kRegistermessage = 'Cadastre-se para começar a divulgar seus serviços!';
 const kCepHelperURL = 'https://viacep.com.br/ws/';
 const kCEPHelperJsonReturn = '/json/';
 const kDefaultMargin = EdgeInsets.symmetric(vertical: 10);
-
+const kDefaultBorder = BorderRadius.all(Radius.circular(10));
 LinearGradient kButtonGradient = LinearGradient(
   colors: [
     Colors.blue,

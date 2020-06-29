@@ -1,3 +1,4 @@
+import 'package:Biquer/constants.dart';
 import 'package:flutter/material.dart';
 
 class SocialLoginButton extends StatelessWidget {
@@ -5,10 +6,10 @@ class SocialLoginButton extends StatelessWidget {
 
   SocialLoginButton(this.title, this.icon,
       {@required this.onTap,
-      this.backColor,
-      this.iconColor,
-      this.textStyle,
-      this.borderColor});
+        this.backColor,
+        this.iconColor,
+        this.textStyle,
+        this.borderColor});
 
   final String title;
   final IconData icon;
@@ -21,7 +22,8 @@ class SocialLoginButton extends StatelessWidget {
       margin: EdgeInsets.all(4),
       child: MaterialButton(
         color: backColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: kDefaultBorder),
         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
         onPressed: onTap,
         child: Row(

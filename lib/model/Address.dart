@@ -1,8 +1,14 @@
 class Address {
-  String cep;
-  int number;
+  String cep, urlComprovAdress;
+  var number;
 
-  Address(this.cep, this.number, this.urlComprovAdress);
+  Address({this.cep, this.number, this.urlComprovAdress});
 
-  String urlComprovAdress;
+  bool addressComplete() =>
+      cep != null &&
+      cep.isNotEmpty &&
+      urlComprovAdress != null &&
+      urlComprovAdress.isNotEmpty &&
+      number != null &&
+      number.isNotEmpty;
 }

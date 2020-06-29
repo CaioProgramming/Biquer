@@ -22,8 +22,12 @@ class CEP {
       cepWidgets.add(FormInput(null, readonly: true, hintText: uf));
     if (logradouro != null)
       cepWidgets.add(FormInput(null, readonly: true, hintText: logradouro));
-    cepWidgets.add(FormInput(numberField,
-        hintText: 'Número', keyBoardType: TextInputType.phone));
+    cepWidgets.add(FormInput(
+      numberField,
+      hintText: 'Número',
+      keyBoardType: TextInputType.phone,
+      autofocus: true,
+    ));
     if (bairro != null)
       cepWidgets.add(FormInput(null, readonly: true, hintText: bairro));
     if (localidade != null)

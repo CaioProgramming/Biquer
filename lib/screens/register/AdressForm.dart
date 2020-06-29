@@ -26,17 +26,19 @@ class _AddressFormState extends State<AddressForm> {
   CEP cepData;
   bool error = false;
 
+  File get addressProof => _addressProof;
+
   Future pickAddressProof() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
-    setState(() {
-      _addressProof = File(pickedFile.path);
-    });
+    if (pickedFile == null) return null;
+    RegisterData registerData =
+        Provider.of<RegisterData>(context, listen: true);
+    if (registerData.userAddress == null) registerData.userAddress = Address();
+    registerData.userAddress.urlComprovAdress = pickedFile.path;
   }
 
   @override
   Widget build(BuildContext context) {
-    int number;
     RegisterData registerData =
         Provider.of<RegisterData>(context, listen: true);
     return BaseForm([
@@ -65,7 +67,8 @@ class _AddressFormState extends State<AddressForm> {
                     child: Row(
                       children: [
                         Icon(
-                          _addressProof == null
+                          registerData.userDocument == null ||
+                              registerData.userDocument.docURL == null
                               ? AntDesign.cloudupload
                               : AntDesign.check,
                           size: 32,
@@ -75,13 +78,12 @@ class _AddressFormState extends State<AddressForm> {
                           width: 10,
                         ),
                         Text(
-                          _addressProof == null
+                          registerData.userDocument == null ||
+                              registerData.userDocument.docURL == null
                               ? 'Enviar comprovante de endereço'
                               : 'Comprovante enviado',
                           style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18),
+                              color: Colors.white, fontWeight: FontWeight.w600),
                         )
                       ],
                     ),
@@ -101,27 +103,13 @@ class _AddressFormState extends State<AddressForm> {
       ),
       cepData != null
           ? cepData.showCepInfo(context, (newValue) {
-              number = int.parse(newValue);
-              setState(() {});
-            })
+        RegisterData registerData =
+        Provider.of<RegisterData>(context, listen: true);
+        if (registerData.userAddress == null)
+          registerData.userAddress = Address();
+        registerData.userAddress?.number = newValue;
+      })
           : SizedBox(),
-      cepData != null
-          ? Center(
-              child: MaterialButton(
-                onPressed: () {
-                  registerData.userAddress =
-                      Address(cepData.cep, number, _addressProof.path);
-                },
-                child: _addressProof == null
-                    ? SizedBox()
-                    : Text(
-                        'Confirmar informações',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.green),
-                      ),
-              ),
-            )
-          : SizedBox()
     ]);
   }
 
@@ -130,6 +118,13 @@ class _AddressFormState extends State<AddressForm> {
     cepData = await cepHelper.getCepInfo();
     print('cep updated $cepData');
     error = cepData == null;
+    if (!error) {
+      RegisterData registerData =
+      Provider.of<RegisterData>(context, listen: true);
+      if (registerData.userAddress == null)
+        registerData.userAddress = Address();
+      registerData.userAddress.cep = cepData.cep;
+    }
     setState(() {});
   }
 }

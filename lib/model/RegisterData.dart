@@ -11,6 +11,7 @@ class RegisterData extends ChangeNotifier {
 
   set userAddress(Address value) {
     _userAddress = value;
+    print('Address updated');
     notifyListeners();
   }
 

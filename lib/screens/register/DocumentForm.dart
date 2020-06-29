@@ -23,19 +23,21 @@ class _DocumentFormState extends State<DocumentForm> {
   final picker = ImagePicker();
 
   Future pickDocumentFront() async {
+    RegisterData registerData =
+        Provider.of<RegisterData>(context, listen: true);
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
-    setState(() {
-      _documentFront = File(pickedFile.path);
-    });
+    checkRegisterDocument(registerData);
+    registerData.userDocument.docURL.add(pickedFile.path);
   }
 
   Future pickDocumentVerse() async {
+    RegisterData registerData =
+    Provider.of<RegisterData>(context, listen: true);
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
-    setState(() {
-      _documentVerse = File(pickedFile.path);
-    });
+    checkRegisterDocument(registerData);
+    registerData.userDocument.docURL.add(pickedFile.path);
   }
 
   bool docComplete() =>
@@ -50,8 +52,8 @@ class _DocumentFormState extends State<DocumentForm> {
           'Envie duas fotos com a frente e o verso de seu documento(RG, CNH ou inscrição estadual).'),
       FormInput(
         (newText) {
-          documentID = newText;
-          setState(() {});
+          checkRegisterDocument(registerData);
+          registerData.userDocument.id = newText;
         },
         inputAction: TextInputAction.go,
         inputFormatter: [WhitelistingTextInputFormatter.digitsOnly],
@@ -140,23 +142,11 @@ class _DocumentFormState extends State<DocumentForm> {
           ),
         ),
       ),
-      docComplete()
-          ? Center(
-              child: MaterialButton(
-                onPressed: () {
-                  registerData.userDocument = Document(
-                      documentID, [_documentFront.path, _documentVerse.path]);
-                },
-                child: !docComplete()
-                    ? SizedBox()
-                    : Text(
-                        'Confirmar informações',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.green),
-                      ),
-              ),
-            )
-          : SizedBox()
     ]);
+  }
+
+  void checkRegisterDocument(RegisterData registerData) {
+    if (registerData.userDocument == null)
+      registerData.userDocument = Document();
   }
 }

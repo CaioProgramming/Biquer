@@ -6,10 +6,10 @@ class SocialLoginButton extends StatelessWidget {
 
   SocialLoginButton(this.title, this.icon,
       {@required this.onTap,
-        this.backColor,
-        this.iconColor,
-        this.textStyle,
-        this.borderColor});
+      this.backColor,
+      this.iconColor,
+      this.textStyle,
+      this.borderColor});
 
   final String title;
   final IconData icon;

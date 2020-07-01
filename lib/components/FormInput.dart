@@ -5,16 +5,19 @@ import 'package:flutter/services.dart';
 class FormInput extends StatelessWidget {
   final bool readonly, obscureText, maxLenghtEnforced, autofocus;
   final Function textChange, onSubmit;
-  final String hintText, errorText;
+  final String hintText, labelText, errorText;
   final TextInputAction inputAction;
   final List<TextInputFormatter> inputFormatter;
   final TextInputType keyBoardType;
   final int maxlenght;
+  final Widget sufixIcon;
 
   FormInput(this.textChange,
       {this.readonly = false,
       this.onSubmit,
-      this.hintText,
+      this.sufixIcon,
+      @required this.hintText,
+      this.labelText,
       this.obscureText = false,
       this.inputAction,
       this.inputFormatter,
@@ -28,21 +31,39 @@ class FormInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: kDefaultMargin,
-      child: TextField(
-        readOnly: readonly,
-        obscureText: obscureText,
-        inputFormatters: inputFormatter,
-        textInputAction: inputAction ?? TextInputAction.none,
-        onChanged: textChange,
-        onSubmitted: (newText) => onSubmit(newText),
-        maxLength: maxlenght,
-        maxLengthEnforced: maxLenghtEnforced,
-        keyboardType: keyBoardType,
-        decoration: InputDecoration(
-            hintText: hintText,
-            border: OutlineInputBorder(
-              borderRadius: kDefaultBorder,
-            )),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+            child: Text(
+              hintText,
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Theme
+                      .of(context)
+                      .hintColor),
+            ),
+          ),
+          TextField(
+            readOnly: readonly,
+            obscureText: obscureText,
+            inputFormatters: inputFormatter,
+            textInputAction: inputAction ?? TextInputAction.none,
+            onChanged: textChange,
+            onSubmitted: (newText) => onSubmit(newText),
+            maxLength: maxlenght,
+            maxLengthEnforced: maxLenghtEnforced,
+            keyboardType: keyBoardType,
+            enabled: !readonly,
+            decoration: InputDecoration(
+                hintText: hintText,
+                suffixIcon: sufixIcon,
+                border: OutlineInputBorder(
+                  borderRadius: kDefaultBorder,
+                )),
+          ),
+        ],
       ),
     );
   }

@@ -17,6 +17,7 @@ class CepHelper {
       if (response.statusCode == 200) {
         var decodedData = jsonDecode(response.body);
         print(response.body);
+        if (decodedData['erro'] == true) return null;
         return CEP.mapToCep(decodedData);
       } else {
         print('Response error status: ${response.statusCode}');

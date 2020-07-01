@@ -24,6 +24,8 @@ dependencies:
   adobe_xd: ^0.1.0
   package_info: ^0.4.1
   image_picker: ^0.6.7+2
+  simple_animations: ^2.2.1
+  mask_text_input_formatter: ^1.0.7
 
 
 flutter_icons:

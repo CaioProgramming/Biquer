@@ -10,9 +10,14 @@ class BaseForm extends StatelessWidget {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: childs,
+        child: AnimatedSwitcher(
+          duration: Duration(seconds: 1),
+          transitionBuilder: (child, animation) =>
+              ScaleTransition(scale: animation, child: child),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: childs,
+          ),
         ),
       ),
     );

@@ -4,5 +4,5 @@ class Document {
 
   Document({this.id, this.docURL});
 
-  bool isDocComplete() => docURL.isNotEmpty;
+  bool isDocComplete() => docURL != null && docURL.isNotEmpty;
 }

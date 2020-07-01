@@ -35,6 +35,9 @@ class CEP {
     if (complemento != null && complemento.isNotEmpty)
       cepWidgets.add(FormInput(null, readonly: true, hintText: complemento));
 
-    return Column(children: cepWidgets);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: cepWidgets,
+    );
   }
 }

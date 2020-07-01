@@ -30,13 +30,6 @@ class _RegisterFormState extends State<RegisterForm> {
 
   String _passwordCheck;
 
-  String get passwordCheck => _passwordCheck;
-
-  set passwordCheck(String passwordCheck) {
-    _passwordCheck = passwordCheck;
-    updateState();
-  }
-
   String _userName;
 
   String get userName => _userName;
@@ -60,11 +53,7 @@ class _RegisterFormState extends State<RegisterForm> {
       _userName != null &&
       userName.isNotEmpty &&
       _password != null &&
-      _password.isNotEmpty &&
-      _passwordCheck != null &&
-      passwordCheck.isNotEmpty &&
-      password == _passwordCheck;
-
+      _password.isNotEmpty;
   set userEmail(String userEmail) {
     _userEmail = userEmail;
     updateState();
@@ -150,16 +139,6 @@ class _RegisterFormState extends State<RegisterForm> {
           onSubmit: () => moveToNextInput(context),
           hintText: 'Digite a senha',
           obscureText: true),
-      FormInput(
-            (newText) {
-          passwordCheck = newText;
-        },
-        inputAction: TextInputAction.go,
-        readonly: false,
-        onSubmit: () => registerWithEmailAndPassword(context),
-        obscureText: true,
-        hintText: 'Confirme a senha',
-      ),
       Container(
         margin: kDefaultMargin,
         child: MaterialButton(

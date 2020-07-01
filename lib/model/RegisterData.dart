@@ -24,6 +24,18 @@ class RegisterData extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateAddressURL(String url) {
+    if (userDocument == null) userDocument = Document();
+    _userAddress.urlComprovAdress = url;
+    notifyListeners();
+  }
+
+  void updateAddressNumber(int number) {
+    if (userDocument == null) userDocument = Document();
+    _userAddress.number = number;
+    notifyListeners();
+  }
+
   FirebaseUser get user => _user;
 
   bool userLogged() {

@@ -33,7 +33,7 @@ class _DocumentFormState extends State<DocumentForm> {
 
   Future pickDocumentVerse() async {
     RegisterData registerData =
-    Provider.of<RegisterData>(context, listen: true);
+        Provider.of<RegisterData>(context, listen: true);
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
     checkRegisterDocument(registerData);

@@ -16,28 +16,48 @@ class CEP {
       map['localidade'],
       map['uf']);
 
-  Widget showCepInfo(BuildContext context, Function numberField) {
+  Widget showCepInfo(BuildContext context) {
     List<Widget> cepWidgets = [];
     if (uf != null)
-      cepWidgets.add(FormInput(null, readonly: true, hintText: uf));
+      cepWidgets.add(FormInput(
+        null,
+        readonly: true,
+        hintText: uf,
+        labelText: 'UF',
+      ));
     if (logradouro != null)
-      cepWidgets.add(FormInput(null, readonly: true, hintText: logradouro));
-    cepWidgets.add(FormInput(
-      numberField,
-      hintText: 'Número',
-      keyBoardType: TextInputType.phone,
-      autofocus: true,
-    ));
+      cepWidgets.add(FormInput(
+        null,
+        readonly: true,
+        hintText: logradouro,
+        labelText: 'Logradouro',
+      ));
     if (bairro != null)
-      cepWidgets.add(FormInput(null, readonly: true, hintText: bairro));
+      cepWidgets.add(FormInput(null,
+          readonly: true, hintText: bairro, labelText: 'Bairro'));
     if (localidade != null)
-      cepWidgets.add(FormInput(null, readonly: true, hintText: localidade));
+      cepWidgets.add(FormInput(
+        null,
+        readonly: true,
+        hintText: localidade,
+        labelText: 'Localidade',
+      ));
     if (complemento != null && complemento.isNotEmpty)
-      cepWidgets.add(FormInput(null, readonly: true, hintText: complemento));
+      cepWidgets.add(FormInput(
+        null,
+        readonly: true,
+        hintText: complemento,
+        labelText: 'Complemento',
+      ));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: cepWidgets,
+      children: cepWidgets ??
+          [
+            Center(
+              child: CupertinoActivityIndicator(),
+            )
+          ],
     );
   }
 }

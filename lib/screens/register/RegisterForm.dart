@@ -84,19 +84,17 @@ class _RegisterFormState extends State<RegisterForm> {
       newUser.sendEmailVerification().then((value) {
         SnackBar snackBar = SnackBar(
             content: Text(
-              'Enviamos um e-mail de confirmação para você!',
-            ));
+          'Enviamos um e-mail de confirmação para você!',
+        ));
         Scaffold.of(context).showSnackBar(snackBar);
       }, onError: (error) {
         SnackBar snackBar = SnackBar(
             content: Text(
-              'Não conseguimos validar o seu email, tente novamente!',
-            ));
+          'Não conseguimos validar o seu email, tente novamente!',
+        ));
         Scaffold.of(context).showSnackBar(snackBar);
       });
-      Provider
-          .of<RegisterData>(context, listen: true)
-          .user = newUser;
+      Provider.of<RegisterData>(context, listen: true).user = newUser;
     } on PlatformException catch (e) {
       print(e.code);
       SnackBar snackBar = SnackBar(
@@ -117,7 +115,6 @@ class _RegisterFormState extends State<RegisterForm> {
       PageTitle('Cadastro', kRegistermessage),
       FormInput(
             (newText) => _userName = newText,
-        inputAction: TextInputAction.next,
         hintText: 'Nome Completo',
         onSubmit: () {
           moveToNextInput(context);
@@ -125,7 +122,6 @@ class _RegisterFormState extends State<RegisterForm> {
       ),
       FormInput(
             (newText) => userEmail = newText,
-        inputAction: TextInputAction.next,
         keyBoardType: TextInputType.emailAddress,
         hintText: _biquerData.user?.email ?? 'Email',
         readonly: _biquerData.userLogged(),
@@ -135,7 +131,7 @@ class _RegisterFormState extends State<RegisterForm> {
         password = newText;
         updateState();
       },
-          inputAction: TextInputAction.next,
+          inputAction: TextInputAction.go,
           onSubmit: () => moveToNextInput(context),
           hintText: 'Digite a senha',
           obscureText: true),
@@ -170,49 +166,49 @@ class _RegisterFormState extends State<RegisterForm> {
           ),
         ),
       ),
-      Column(
-        children: [
-          Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(
-                    width: 100,
-                    child: Divider(
-                      color: Theme
-                          .of(context)
-                          .hintColor,
-                    )),
-                Text(
-                  'Ou Cadastre-se com',
-                  style: TextStyle(fontWeight: FontWeight.w100),
-                ),
-                SizedBox(
-                    width: 100,
-                    child: Divider(
-                      color: Theme
-                          .of(context)
-                          .hintColor,
-                    )),
-              ],
-            ),
-          ),
-          Wrap(
-            children: [
-              SocialLoginButton(
-                'Google',
-                AntDesign.googleplus,
-                onTap: () => signInWithGoogle(context),
-                backColor: Colors.red,
-                textStyle: ThemeData
-                    .dark()
-                    .textTheme
-                    .bodyText1,
-                iconColor: Colors.white,
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                      width: 100,
+                      child: Divider(
+                        color: Theme
+                            .of(context)
+                            .hintColor,
+                      )),
+                  Text(
+                    'Ou Cadastre-se com',
+                    style: TextStyle(fontWeight: FontWeight.w100),
+                  ),
+                  SizedBox(
+                      width: 100,
+                      child: Divider(
+                        color: Theme
+                            .of(context)
+                            .hintColor,
+                      )),
+                ],
               ),
-            ],
-          )
-        ],
+            ),
+            SocialLoginButton(
+              'Google',
+              AntDesign.googleplus,
+              onTap: () => signInWithGoogle(context),
+              backColor: Colors.red,
+              textStyle: ThemeData
+                  .dark()
+                  .textTheme
+                  .bodyText1
+                  .copyWith(color: Colors.white),
+              iconColor: Colors.white,
+            ),
+          ],
+        ),
       ),
     ]
         : [

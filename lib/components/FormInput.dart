@@ -37,12 +37,10 @@ class FormInput extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
             child: Text(
-              hintText,
+              labelText ?? hintText,
               style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: Theme
-                      .of(context)
-                      .hintColor),
+                  color: Theme.of(context).hintColor),
             ),
           ),
           TextField(
@@ -50,14 +48,19 @@ class FormInput extends StatelessWidget {
             obscureText: obscureText,
             inputFormatters: inputFormatter,
             textInputAction: inputAction ?? TextInputAction.none,
-            onChanged: textChange,
-            onSubmitted: (newText) => onSubmit(newText),
+            onChanged: (newText) {
+              textChange(newText);
+            },
+            onSubmitted: (newText) {
+              onSubmit(newText);
+            },
             maxLength: maxlenght,
             maxLengthEnforced: maxLenghtEnforced,
             keyboardType: keyBoardType,
             enabled: !readonly,
             decoration: InputDecoration(
                 hintText: hintText,
+                errorText: errorText ?? null,
                 suffixIcon: sufixIcon,
                 border: OutlineInputBorder(
                   borderRadius: kDefaultBorder,

@@ -9,6 +9,5 @@ class Address {
       cep.isNotEmpty &&
       urlComprovAdress != null &&
       urlComprovAdress.isNotEmpty &&
-      number != null &&
-      number.isNotEmpty;
+      number != null;
 }

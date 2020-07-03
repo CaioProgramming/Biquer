@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:Biquer/constants.dart';
 import 'package:Biquer/model/RegisterData.dart';
 import 'package:Biquer/screens/register/AdressForm.dart';
@@ -33,7 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         case 2:
           return _biquerData.userDocument != null &&
               _biquerData.userDocument.isDocComplete();
-        case 3:
+        default:
           return _biquerData.userPicURL != null;
       }
     }
@@ -79,8 +81,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 onPressed: !canMoveForward()
                     ? null
                     : () {
-                        nextPage(context);
-                      },
+                  nextPage(context);
+                },
                 child: Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -102,9 +104,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  void nextPage(BuildContext context) {
-    controller.nextPage(
-        duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+  void nextPage(BuildContext context) async {
+    if (currentpage < 3) {
+      controller.nextPage(
+          duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+    } else {
+      showDialog(
+          context: context,
+          builder: (_) => CupertinoAlertDialog(
+                content: CupertinoActivityIndicator(),
+                title: Text('Salvando informações'),
+              ),
+          barrierDismissible: false);
+      RegisterData _biquerData = Provider.of<RegisterData>(context);
+      bool saved = await _biquerData.saveUserInfo();
+      if (saved) {
+        showDialog(
+            context: context,
+            builder: (_) => CupertinoAlertDialog(
+                  content: CupertinoActivityIndicator(),
+                  title: Text('Cadastro concluído com sucesso!'),
+                ),
+            barrierDismissible: true);
+        Timer(Duration(seconds: 5), () => Navigator.pop(context));
+      } else {
+        showDialog(
+            context: context,
+            builder: (_) => CupertinoAlertDialog(
+                  content: CupertinoActivityIndicator(),
+                  title: Text('Ocorreu um erro durante o cadastro!'),
+                ),
+            barrierDismissible: true);
+      }
+    }
   }
 
   void previousPage(BuildContext context) {

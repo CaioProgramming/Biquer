@@ -28,8 +28,6 @@ class _RegisterFormState extends State<RegisterForm> {
     updateState();
   }
 
-  String _passwordCheck;
-
   String _userName;
 
   String get userName => _userName;
@@ -99,8 +97,8 @@ class _RegisterFormState extends State<RegisterForm> {
       print(e.code);
       SnackBar snackBar = SnackBar(
           content: Text(
-            'Ocorreu um erro(${e.message})',
-          ));
+        'Ocorreu um erro(${e.message})',
+      ));
       Scaffold.of(context).showSnackBar(snackBar);
       print(e);
     }

@@ -2,22 +2,18 @@ import 'package:flutter/material.dart';
 
 class BaseForm extends StatelessWidget {
   final List<Widget> childs;
+  final bool padding;
 
-  BaseForm(this.childs);
+  BaseForm(this.childs, {this.padding = true});
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: AnimatedSwitcher(
-          duration: Duration(seconds: 1),
-          transitionBuilder: (child, animation) =>
-              ScaleTransition(scale: animation, child: child),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: childs,
-          ),
+        padding: padding ? EdgeInsets.all(16) : EdgeInsets.all(0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: childs,
         ),
       ),
     );

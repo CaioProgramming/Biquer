@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:path/path.dart';
@@ -7,44 +8,43 @@ import 'package:path_provider/path_provider.dart';
 class CameraButtons extends StatelessWidget {
   final Function onClose, onPictureTake, resetImage;
   final CameraController controller;
-  final String imagepath;
+  final bool canshowotherButtons;
 
-  CameraButtons(this.controller, this.imagepath,
-      {this.onClose, this.onPictureTake, this.resetImage});
+  CameraButtons(this.controller,
+      {this.onClose,
+      this.onPictureTake,
+      this.resetImage,
+      this.canshowotherButtons = false});
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      bottom: 75,
-      left: 0,
-      right: 0,
-      child: Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: () {
-                imagepath == null
-                    ? takePicture(context, controller)
-                    : resetImage();
-              },
-              child: CircleAvatar(
-                backgroundColor: Theme.of(context).textTheme.bodyText1.color,
-                radius: 27,
-                child: CircleAvatar(
-                  child: imagepath == null
-                      ? null
-                      : Icon(
-                          MaterialCommunityIcons.close,
-                          color: Theme.of(context).textTheme.bodyText1.color,
-                        ),
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  radius: 24,
-                ),
-              ),
-            ),
-          ],
-        ),
+    return Container(
+      decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(10))),
+      height: 100,
+      padding: EdgeInsets.only(top: 10, bottom: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              !canshowotherButtons
+                  ? takePicture(context, controller)
+                  : resetImage();
+            },
+            elevation: 0,
+            backgroundColor: Theme.of(context).textTheme.bodyText1.color,
+            child: !canshowotherButtons
+                ? onPictureTake == null
+                    ? CupertinoActivityIndicator()
+                    : SizedBox()
+                : Icon(
+                    MaterialCommunityIcons.close,
+                    color: Theme.of(context).backgroundColor,
+                  ),
+          ),
+        ],
       ),
     );
   }

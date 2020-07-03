@@ -1,13 +1,17 @@
 class Address {
-  String cep, urlComprovAdress;
+  String cep, urlComprovAddress;
   var number;
 
-  Address({this.cep, this.number, this.urlComprovAdress});
+  Address({this.cep, this.number, this.urlComprovAddress});
+
+  Map<String, dynamic> map() {
+    return {'cep': this.cep, 'urlComprovAddress': this.urlComprovAddress};
+  }
 
   bool addressComplete() =>
       cep != null &&
       cep.isNotEmpty &&
-      urlComprovAdress != null &&
-      urlComprovAdress.isNotEmpty &&
+      urlComprovAddress != null &&
+      urlComprovAddress.isNotEmpty &&
       number != null;
 }

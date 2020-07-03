@@ -1,7 +1,10 @@
 import 'package:Biquer/model/Address.dart';
 import 'package:Biquer/model/Document.dart';
+import 'package:Biquer/model/UserData.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+
+import 'User.dart';
 
 class RegisterData extends ChangeNotifier {
   FirebaseUser _user;
@@ -43,7 +46,7 @@ class RegisterData extends ChangeNotifier {
       userAddress = Address(
           cep: _addressCEP,
           number: int.parse(addressNumber),
-          urlComprovAdress: _addressURL);
+          urlComprovAddress: _addressURL);
       print('updated address');
     }
   }
@@ -65,7 +68,6 @@ class RegisterData extends ChangeNotifier {
   void updateDocID(String id) {
     docID = id;
     checkDocument();
-    notifyListeners();
     print('updated docID $id on provider');
   }
 
@@ -103,5 +105,10 @@ class RegisterData extends ChangeNotifier {
   set userPicURL(String value) {
     _userPicURL = value;
     notifyListeners();
+  }
+
+  Future<bool> saveUserInfo() async {
+    User user = User(_user.uid, _userPicURL, _userAddress, _userDocument);
+    return await UserData().saveUserInfo(user, _user.displayName.trim());
   }
 }

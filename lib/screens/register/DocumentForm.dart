@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:Biquer/components/BaseForm.dart';
-import 'package:Biquer/components/FormInput.dart';
 import 'package:Biquer/components/PageTitle.dart';
 import 'package:Biquer/constants.dart';
 import 'package:Biquer/model/RegisterData.dart';
@@ -45,15 +44,62 @@ class _DocumentFormState extends State<DocumentForm> {
     registerData.updateDocID(doc);
   }
 
-  mask() {
-    if (selected == 0) {
-      return MaskTextInputFormatter(
-          mask: '###.###.###-##', filter: {"#": RegExp(r'[0-9]')});
-    } else {
-      print('cnpj mask found');
-      return MaskTextInputFormatter(
-          mask: '##.###.###/###-##', filter: {"#": RegExp(r'[0-9]')});
+  Widget input() {
+    if (selected == 1) {
+      return Column(
+        children: [
+          Text(
+            'CNPJ',
+            style: Theme.of(context).textTheme.caption,
+          ),
+          TextField(
+            autofocus: true,
+            onChanged: (newText) {
+              print(newText);
+            },
+            inputFormatters: [
+              MaskTextInputFormatter(
+                  mask: '##.###.###/###-##', filter: {"#": RegExp(r'[0-9]')})
+            ],
+            maxLength: 18,
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.phone,
+            style: Theme.of(context)
+                .textTheme
+                .headline4
+                .copyWith(color: Theme.of(context).primaryColor),
+            decoration: InputDecoration(border: InputBorder.none),
+          ),
+        ],
+      );
     }
+    return Column(
+      children: [
+        Text(
+          'CPF',
+          style: Theme.of(context).textTheme.caption,
+        ),
+        TextField(
+          autofocus: true,
+          inputFormatters: [
+            MaskTextInputFormatter(
+                mask: '###.###.###-##', filter: {"#": RegExp(r'[0-9]')})
+          ],
+          onChanged: (newText) {
+            print(newText);
+            updateDocData(newText);
+          },
+          maxLength: 14,
+          textAlign: TextAlign.center,
+          keyboardType: TextInputType.phone,
+          style: Theme.of(context)
+              .textTheme
+              .headline4
+              .copyWith(color: Theme.of(context).primaryColor),
+          decoration: InputDecoration(border: InputBorder.none, hintText: '0'),
+        ),
+      ],
+    );
   }
 
   @override
@@ -69,9 +115,9 @@ class _DocumentFormState extends State<DocumentForm> {
         alignment: WrapAlignment.spaceAround,
         children: [
           UserTypeCard(
-            typename: 'Empresa',
+            typename: 'Autonômo',
             typeImageURl:
-                'https://mixkit.imgix.net/art/preview/mixkit-girl-leading-a-team-meeting-at-work-543-square-large.png?w=441&h=441&q=80&auto=format%2Ccompress&q=80&dpr=1',
+            'https://mixkit.imgix.net/art/preview/mixkit-person-arranging-a-series-of-designs-on-an-office-wall-28-desktop-wallpaper-medium.png?w=390&h=219&q=80&auto=format%2Ccompress&q=80&dpr=1',
             selected: selected == 0,
             onSelect: () {
               setState(() {
@@ -80,9 +126,9 @@ class _DocumentFormState extends State<DocumentForm> {
             },
           ),
           UserTypeCard(
-            typename: 'Autonômo',
+            typename: 'Empresa',
             typeImageURl:
-                'https://mixkit.imgix.net/art/preview/mixkit-person-arranging-a-series-of-designs-on-an-office-wall-28-desktop-wallpaper-medium.png?w=390&h=219&q=80&auto=format%2Ccompress&q=80&dpr=1',
+            'https://mixkit.imgix.net/art/preview/mixkit-girl-leading-a-team-meeting-at-work-543-square-large.png?w=441&h=441&q=80&auto=format%2Ccompress&q=80&dpr=1',
             selected: selected == 1,
             onSelect: () {
               setState(() {
@@ -96,20 +142,16 @@ class _DocumentFormState extends State<DocumentForm> {
           ? SizedBox()
           : Column(
               children: [
-                FormInput(
-                  (newText) {
-                    updateDocData(newText);
-                  },
-                  inputAction: TextInputAction.go,
-                  hintText: selected == 0 ? 'CPF' : 'CNPJ',
-                ),
+                input(),
                 Container(
                   margin: kDefaultMargin,
                   child: Center(
                     child: MaterialButton(
                       onPressed: pickDocumentFront,
                       elevation: 0,
-                      color: Theme.of(context).scaffoldBackgroundColor,
+                      color: Theme
+                          .of(context)
+                          .scaffoldBackgroundColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -187,7 +229,6 @@ class UserTypeCard extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  margin: EdgeInsets.all(8),
                   width: selected ? 160 : 130,
                   height: selected ? 160 : 130,
                   decoration: BoxDecoration(
@@ -203,7 +244,15 @@ class UserTypeCard extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     typename,
-                    style: TextStyle(fontWeight: FontWeight.w700),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: selected
+                            ? Colors.white
+                            : Theme
+                            .of(context)
+                            .textTheme
+                            .bodyText1
+                            .color),
                   ),
                 )
               ],

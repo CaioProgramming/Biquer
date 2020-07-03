@@ -120,7 +120,7 @@ class _SelfieFormState extends State<SelfieForm> {
                           'Para tirar outra foto deslize para baixo',
                           style: TextStyle(color: Colors.white),
                         ),
-                        Icon(AntDesign.arrowdown, color: Colors.white)
+                        Icon(AntDesign.down, color: Colors.white)
                       ],
                     ),
                   ),

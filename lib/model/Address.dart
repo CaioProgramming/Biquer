@@ -5,7 +5,11 @@ class Address {
   Address({this.cep, this.number, this.urlComprovAddress});
 
   Map<String, dynamic> map() {
-    return {'cep': this.cep, 'urlComprovAddress': this.urlComprovAddress};
+    return {
+      'cep': this.cep,
+      'urlComprovAddress': this.urlComprovAddress,
+      'number': this.number
+    };
   }
 
   bool addressComplete() =>

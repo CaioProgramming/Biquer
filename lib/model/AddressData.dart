@@ -8,7 +8,7 @@ class AddressData {
   Future<String> uploadDoc(Address address, String uid) async {
     StorageReference storageReference = FirebaseStorage.instance
         .ref()
-        .child('$uid/documents/address/${address.cep}');
+        .child('$uid/documents/address${address.cep}');
     File image = File(address.urlComprovAddress);
     if (!image.existsSync()) {
       return Future.error('Erro ao encontrar foto');

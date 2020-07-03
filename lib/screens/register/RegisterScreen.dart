@@ -1,8 +1,7 @@
-import 'dart:async';
-
 import 'package:Biquer/constants.dart';
 import 'package:Biquer/model/RegisterData.dart';
 import 'package:Biquer/screens/register/AdressForm.dart';
+import 'package:Biquer/screens/register/SavingScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -24,7 +23,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     RegisterData _biquerData = Provider.of<RegisterData>(context);
-
+    bool saving = false;
+    String message = 'Salvando informações';
     bool canMoveForward() {
       switch (currentpage) {
         case 0:
@@ -40,17 +40,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
     }
 
+    void nextPage(BuildContext context) async {
+      controller.nextPage(
+          duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+    }
+
+    void previousPage(BuildContext context) {
+      controller.previousPage(
+          duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+    }
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        leading: IconButton(
-          icon: Icon(currentpage == 0 ? AntDesign.close : AntDesign.arrowleft),
-          onPressed: () {
-            previousPage(context);
-          },
-        ),
+        leading: currentpage == 4
+            ? null
+            : IconButton(
+                icon: Icon(
+                    currentpage == 0 ? AntDesign.close : AntDesign.arrowleft),
+                onPressed: () {
+                  previousPage(context);
+                },
+              ),
       ),
       body: SafeArea(
         child: Column(
@@ -67,17 +80,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   RegisterForm(),
                   AddressForm(),
                   DocumentForm(),
-                  SelfieForm(pageController: controller)
+                  SelfieForm(pageController: controller),
+                  SavingScreen()
                 ],
               ),
             ),
-            Container(
+            currentpage != 4
+                ? Container(
               margin: EdgeInsets.all(4),
-              child: RaisedButton(
+              child: MaterialButton(
                 padding: EdgeInsets.all(20),
                 elevation: 0,
-                color: Colors.blueAccent,
-                shape: RoundedRectangleBorder(borderRadius: kDefaultBorder),
+                color: currentpage < 3 ? Colors.blueAccent : Colors.green,
+                shape:
+                RoundedRectangleBorder(borderRadius: kDefaultBorder),
                 onPressed: !canMoveForward()
                     ? null
                     : () {
@@ -89,58 +105,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        'Continuar'.toUpperCase(),
+                        currentpage < 3 ? 'CONTINUAR' : 'CONCLUIR',
                         style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.w600),
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600),
                       )
                     ],
                   ),
                 ),
               ),
             )
+                : SizedBox()
           ],
         ),
       ),
     );
-  }
-
-  void nextPage(BuildContext context) async {
-    if (currentpage < 3) {
-      controller.nextPage(
-          duration: Duration(milliseconds: 500), curve: Curves.easeIn);
-    } else {
-      showDialog(
-          context: context,
-          builder: (_) => CupertinoAlertDialog(
-                content: CupertinoActivityIndicator(),
-                title: Text('Salvando informações'),
-              ),
-          barrierDismissible: false);
-      RegisterData _biquerData = Provider.of<RegisterData>(context);
-      bool saved = await _biquerData.saveUserInfo();
-      if (saved) {
-        showDialog(
-            context: context,
-            builder: (_) => CupertinoAlertDialog(
-                  content: CupertinoActivityIndicator(),
-                  title: Text('Cadastro concluído com sucesso!'),
-                ),
-            barrierDismissible: true);
-        Timer(Duration(seconds: 5), () => Navigator.pop(context));
-      } else {
-        showDialog(
-            context: context,
-            builder: (_) => CupertinoAlertDialog(
-                  content: CupertinoActivityIndicator(),
-                  title: Text('Ocorreu um erro durante o cadastro!'),
-                ),
-            barrierDismissible: true);
-      }
-    }
-  }
-
-  void previousPage(BuildContext context) {
-    controller.previousPage(
-        duration: Duration(milliseconds: 500), curve: Curves.easeIn);
   }
 }

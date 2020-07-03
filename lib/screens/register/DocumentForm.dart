@@ -117,7 +117,7 @@ class _DocumentFormState extends State<DocumentForm> {
           UserTypeCard(
             typename: 'Autonômo',
             typeImageURl:
-            'https://mixkit.imgix.net/art/preview/mixkit-person-arranging-a-series-of-designs-on-an-office-wall-28-desktop-wallpaper-medium.png?w=390&h=219&q=80&auto=format%2Ccompress&q=80&dpr=1',
+                'https://mixkit.imgix.net/art/preview/mixkit-person-arranging-a-series-of-designs-on-an-office-wall-28-desktop-wallpaper-medium.png?w=390&h=219&q=80&auto=format%2Ccompress&q=80&dpr=1',
             selected: selected == 0,
             onSelect: () {
               setState(() {

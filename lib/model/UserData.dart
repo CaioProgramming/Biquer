@@ -20,8 +20,8 @@ class UserData {
     user.picURL = profilepicture;
     print('$address\n$document\n$profilepicture');
     if (address == null || document == null) {
-      Future.error('Erro ao fazer upload de imagens');
-      return false;
+      return Future.error(
+          'Erro ao recuperar informações de endereço e documento');
     }
     bool success = false;
     await _firestore
@@ -37,7 +37,7 @@ class UserData {
 
   Future<String> uploadPic(String url, String uid, String name) async {
     StorageReference storageReference =
-        FirebaseStorage.instance.ref().child('$uid/documents/$name');
+        FirebaseStorage.instance.ref().child('$uid/documents/profile$name');
     File image = File(url);
     if (!image.existsSync()) {
       return Future.error('Erro ao encontrar foto\n$url');

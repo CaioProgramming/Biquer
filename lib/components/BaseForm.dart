@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 
 class BaseForm extends StatelessWidget {
   final List<Widget> childs;
-  final bool padding;
 
-  BaseForm(this.childs, {this.padding = true});
+  BaseForm(
+    this.childs,
+  );
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: padding ? EdgeInsets.all(16) : EdgeInsets.all(0),
+        padding: EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: childs,
         ),
       ),

@@ -1,9 +1,6 @@
 import 'dart:io';
 
-import 'package:Biquer/components/BaseForm.dart';
-import 'package:Biquer/components/FormInput.dart';
-import 'package:Biquer/components/PageTitle.dart';
-import 'package:Biquer/constants.dart';
+import 'package:Biquer/components/PickerOptions.dart';
 import 'package:Biquer/model/CEP.dart';
 import 'package:Biquer/model/CepData.dart';
 import 'package:Biquer/model/RegisterData.dart';
@@ -11,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +22,6 @@ class AddressForm extends StatefulWidget {
 
 class _AddressFormState extends State<AddressForm> {
   var _addressProof;
-  final picker = ImagePicker();
   CEP cepData;
   bool error = false;
   bool loading = false;
@@ -34,122 +31,179 @@ class _AddressFormState extends State<AddressForm> {
   var maskFormatter = new MaskTextInputFormatter(
       mask: '#####-###', filter: {"#": RegExp(r'[0-9]')});
 
+  Widget title() {
+    if (cepData != null && number != null && addressProof == null) {
+      return Column(
+        children: [
+          Text(
+            'Comprovante',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            'Para concluir é só enviar um comprovante de endereço',
+            style: Theme.of(context)
+                .textTheme
+                .caption
+                .copyWith(color: Colors.white.withOpacity(0.50)),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
+    }
+    if (cepData != null && number != null && addressProof != null) {
+      return Column(
+        children: [
+          Text(
+            'Concluído',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            'Seus dados de endereço foram salvos com sucesso! Continue com o cadastro',
+            style: Theme.of(context)
+                .textTheme
+                .caption
+                .copyWith(color: Colors.white.withOpacity(0.50)),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
+    }
+    if (cepData != null && number == null) {
+      return Column(
+        children: [
+          Text(
+            'Endereço identificado',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            'Informe o número da residência para prosseguir',
+            style: Theme.of(context)
+                .textTheme
+                .caption
+                .copyWith(color: Colors.white.withOpacity(0.50)),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        Text(
+          'Informe seu endereço',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          'Suas informações não serão compartilhadas externamente.',
+          style: Theme.of(context)
+              .textTheme
+              .caption
+              .copyWith(color: Colors.white.withOpacity(0.50)),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     RegisterData registerData =
         Provider.of<RegisterData>(context, listen: true);
-    return BaseForm([
-      PageTitle(
-          'Endereço',
-          cepData == null
-              ? kAddressMessage
-              : 'Para concluir informe o número da residência e anexe um comprovante de endereço.'),
-      FormInput(
-        (newText) => getCepData(newText),
-        onSubmit: (newText) => getCepData(newText),
-        inputAction: TextInputAction.go,
-        inputFormatter: [maskFormatter],
-        maxlenght: 9,
-        maxLenghtEnforced: true,
-        keyBoardType: TextInputType.phone,
-        hintText: 'CEP',
-        errorText: error ? 'Informe o CEP correto' : null,
-        sufixIcon: loading && cepData == null
-            ? CupertinoActivityIndicator()
-            : cepData == null && !loading == null
-                ? Icon(
-                    AntDesign.close,
-                    color: Colors.red,
-                  )
-                : cepData != null
-                    ? Icon(
-                        AntDesign.checkcircle,
-                        color: Colors.green,
-                      )
-                    : null,
-      ),
-      cepData == null
-          ? SizedBox()
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Número',
-                  style: Theme.of(context).textTheme.caption,
-                ),
-                TextField(
-                  autofocus: true,
-                  onChanged: (newText) {
-                    updateAddressNumber(newText);
-                  },
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.phone,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline3
-                      .copyWith(color: Theme.of(context).primaryColor),
-                  decoration:
-                      InputDecoration(border: InputBorder.none, hintText: '0'),
-                ),
-                registerData.addressNumber != null &&
-                        registerData.addressNumber.isNotEmpty
-                    ? MaterialButton(
-                        onPressed: pickAddressProof,
-                        elevation: 1,
-                        padding: EdgeInsets.all(16),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: BorderSide(color: Colors.blue, width: 1)),
-                        child: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            Icon(
-                              _addressProof == null
-                                  ? AntDesign.clouduploado
-                                  : AntDesign.check,
-                              color: Colors.blue,
-                            ),
-                            SizedBox(width: 15),
-                            Text(
-                              _addressProof == null
-                                  ? 'Enviar comprovante de endereço'
-                                  : 'Comprovante enviado',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.blue),
-                            )
-                          ],
-                        ),
-                      )
-                    : SizedBox()
-              ],
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              'images/location.svg',
+              height: 250,
+              width: 250,
             ),
-      cepData == null ? SizedBox() : cepData.showCepInfo(context),
-    ]);
+            title(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Visibility(
+                child: CupertinoActivityIndicator(),
+                visible: loading,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+                inputFormatters: [maskFormatter],
+                onChanged: (newText) => getCepData(newText),
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'CEP',
+                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.50)),
+                  isDense: false,
+                  suffixIcon: cepData == null
+                      ? null
+                      : Icon(
+                          AntDesign.check,
+                          color: Colors.green,
+                        ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide:
+                          BorderSide(style: BorderStyle.none, width: 0)),
+                ),
+              ),
+            ),
+            Visibility(
+              visible: cepData != null,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 40),
+                      onChanged: (newText) => updateAddressNumber(newText),
+                      keyboardType: TextInputType.phone,
+                      textAlign: TextAlign.center,
+                      inputFormatters: [
+                        WhitelistingTextInputFormatter.digitsOnly
+                      ],
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Número',
+                        hintStyle: TextStyle(
+                          color: Colors.white.withOpacity(0.50),
+                        ),
+                      ),
+                    ),
+                  ),
+                  PickerOptions((PickedFile file) {
+                    registerData.updateAddressURL(file.path);
+                    setState(() {
+                      _addressProof = file;
+                    });
+                  }),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void updateAddressNumber(String number) async {
     RegisterData registerData =
         Provider.of<RegisterData>(context, listen: true);
     registerData.updateAddressNumber(number);
-  }
-
-  Future pickAddressProof() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    if (pickedFile == null) {
-      var snack = SnackBar(
-        content: Text('Ocorreu um erro ao recuperar o documento'),
-      );
-      Scaffold.of(context).showSnackBar(snack);
-      return null;
-    }
-    RegisterData registerData =
-        Provider.of<RegisterData>(context, listen: true);
-    registerData.updateAddressURL(pickedFile.path);
-    setState(() {
-      _addressProof = pickedFile;
-    });
   }
 
   void getCepData(String cepInput) async {
@@ -167,13 +221,13 @@ class _AddressFormState extends State<AddressForm> {
 
     var cepHelper = CepHelper(cepInput.replaceAll(Utils.intRegex(), ''));
     cepData = await cepHelper.getCepInfo();
+    FocusScope.of(context).nextFocus();
     print('cep updated $cepData');
     error = cepData == null;
     if (!error) {
       RegisterData registerData =
-          Provider.of<RegisterData>(context, listen: true);
+      Provider.of<RegisterData>(context, listen: true);
       registerData.updateAddressCEP(cepData.cep);
-      FocusScope.of(context).nextFocus();
     }
     setState(() {
       loading = false;

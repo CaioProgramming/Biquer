@@ -1,6 +1,11 @@
 import 'package:Biquer/model/Address.dart';
 import 'package:Biquer/model/Document.dart';
 
+enum UserType {
+  individual,
+  company,
+}
+
 class User {
   String uid, picURL;
   Address address;

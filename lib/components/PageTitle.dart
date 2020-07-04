@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class PageTitle extends StatelessWidget {
   final String title, message;
+  final Color textColor;
 
-  const PageTitle(this.title, this.message);
+  const PageTitle(this.title, this.message, {this.textColor});
+
   @override
   Widget build(BuildContext context) {
     return Column(

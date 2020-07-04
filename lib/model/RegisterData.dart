@@ -13,6 +13,7 @@ class RegisterData extends ChangeNotifier {
   String addressNumber = "";
   String docID;
   String docurl;
+  Color backcolor;
 
   Address get userAddress => _userAddress;
 

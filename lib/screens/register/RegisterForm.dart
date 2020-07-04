@@ -1,6 +1,5 @@
 import 'package:Biquer/components/BaseForm.dart';
-import 'package:Biquer/components/FormInput.dart';
-import 'package:Biquer/components/PageTitle.dart';
+import 'package:Biquer/components/CenteredTitle.dart';
 import 'package:Biquer/components/SocialLoginButton.dart';
 import 'package:Biquer/constants.dart';
 import 'package:Biquer/model/RegisterData.dart';
@@ -8,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
@@ -110,109 +110,160 @@ class _RegisterFormState extends State<RegisterForm> {
 
     return BaseForm(!_biquerData.userLogged()
         ? [
-      PageTitle('Cadastro', kRegistermessage),
-      FormInput(
-            (newText) => _userName = newText,
-        hintText: 'Nome Completo',
-        onSubmit: () {
-          moveToNextInput(context);
-        },
-      ),
-      FormInput(
-            (newText) => userEmail = newText,
-        keyBoardType: TextInputType.emailAddress,
-        hintText: _biquerData.user?.email ?? 'Email',
-        readonly: _biquerData.userLogged(),
-        onSubmit: () => moveToNextInput(context),
-      ),
-      FormInput((newText) {
-        password = newText;
-        updateState();
-      },
-          inputAction: TextInputAction.go,
-          onSubmit: () => moveToNextInput(context),
-          hintText: 'Digite a senha',
-          obscureText: true),
-      Container(
-        margin: kDefaultMargin,
-        child: MaterialButton(
-          color: Colors.black,
-          disabledColor: Theme
-              .of(context)
-              .hintColor
-              .withOpacity(0.50),
-          shape: RoundedRectangleBorder(borderRadius: kDefaultBorder),
-          padding: EdgeInsets.all(0),
-          onPressed: enableButton()
-              ? () {
-            registerWithEmailAndPassword(context);
-          }
-              : null,
-          child: Container(
-            padding: EdgeInsets.all(20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Text(
-                  'Registrar-se'.toUpperCase(),
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w600),
-                )
-              ],
+            SvgPicture.asset(
+              'images/toucan.svg',
+              width: 200,
+              height: 200,
             ),
-          ),
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                      width: 100,
-                      child: Divider(
-                        color: Theme
-                            .of(context)
-                            .hintColor,
-                      )),
-                  Text(
-                    'Ou Cadastre-se com',
-                    style: TextStyle(fontWeight: FontWeight.w100),
+            CenteredTitle(
+              title: 'Cadastro',
+              subtitle: kRegistermessage,
+              textColor: Colors.white,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.w200),
+                onChanged: (newText) {
+                  setState(() {
+                    userName = newText;
+                  });
+                },
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'Nome completo',
+                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.50)),
+                  isDense: false,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide:
+                          BorderSide(style: BorderStyle.none, width: 0)),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.w200),
+                onChanged: (newText) {
+                  setState(() {
+                    userEmail = newText;
+                  });
+                },
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'Email',
+                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.50)),
+                  isDense: false,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide:
+                          BorderSide(style: BorderStyle.none, width: 0)),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.w200),
+                onChanged: (newText) {
+                  setState(() {
+                    password = newText;
+                  });
+                },
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'Senha',
+                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.50)),
+                  isDense: false,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide:
+                          BorderSide(style: BorderStyle.none, width: 0)),
+                ),
+              ),
+            ),
+            Container(
+              margin: kDefaultMargin,
+              child: MaterialButton(
+                color: Colors.black,
+                disabledColor: Colors.grey,
+                shape: RoundedRectangleBorder(borderRadius: kDefaultBorder),
+                padding: EdgeInsets.all(0),
+                onPressed: enableButton()
+                    ? () {
+                        registerWithEmailAndPassword(context);
+                      }
+                    : null,
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(
+                        'Registrar-se'.toUpperCase(),
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w600),
+                      )
+                    ],
                   ),
-                  SizedBox(
-                      width: 100,
-                      child: Divider(
-                        color: Theme
-                            .of(context)
-                            .hintColor,
-                      )),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                            width: 100,
+                            child: Divider(
+                              color: Theme.of(context).hintColor,
+                            )),
+                        Text(
+                          'Ou Cadastre-se com',
+                          style: TextStyle(fontWeight: FontWeight.w100),
+                        ),
+                        SizedBox(
+                            width: 100,
+                            child: Divider(
+                              color: Theme.of(context).hintColor,
+                            )),
+                      ],
+                    ),
+                  ),
+                  SocialLoginButton(
+                    'Google',
+                    AntDesign.googleplus,
+                    onTap: () => signInWithGoogle(context),
+                    backColor: Colors.red,
+                    textStyle: ThemeData.dark()
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: Colors.white),
+                    iconColor: Colors.white,
+                  ),
                 ],
               ),
             ),
-            SocialLoginButton(
-              'Google',
-              AntDesign.googleplus,
-              onTap: () => signInWithGoogle(context),
-              backColor: Colors.red,
-              textStyle: ThemeData
-                  .dark()
-                  .textTheme
-                  .bodyText1
-                  .copyWith(color: Colors.white),
-              iconColor: Colors.white,
-            ),
-          ],
-        ),
-      ),
-    ]
+          ]
         : [
-      PageTitle('Bem-vindo ${_biquerData.user.displayName}',
-          'Seu email foi validado prossiga para concluir o cadastro!')
-    ]);
+            CenteredTitle(
+                title: 'Bem-vindo ${_biquerData.user.displayName}',
+                subtitle:
+                    'Seu email foi validado prossiga para concluir o cadastro!',
+                textColor: Colors.white)
+          ]);
   }
 
   void moveToNextInput(BuildContext context) {

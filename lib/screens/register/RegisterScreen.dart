@@ -1,4 +1,3 @@
-import 'package:Biquer/constants.dart';
 import 'package:Biquer/model/RegisterData.dart';
 import 'package:Biquer/screens/register/AdressForm.dart';
 import 'package:Biquer/screens/register/SavingScreen.dart';
@@ -40,6 +39,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
     }
 
+    Color backColor() {
+      switch (currentpage) {
+        case 0:
+          return Theme.of(context).primaryColor;
+        case 1:
+          return Colors.teal;
+        case 2:
+          return Colors.deepPurple;
+      }
+    }
+
     void nextPage(BuildContext context) async {
       controller.nextPage(
           duration: Duration(milliseconds: 500), curve: Curves.easeIn);
@@ -51,72 +61,54 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        leading: currentpage == 4
-            ? null
-            : IconButton(
-                icon: Icon(
-                    currentpage == 0 ? AntDesign.close : AntDesign.arrowleft),
-                onPressed: () {
-                  previousPage(context);
-                },
-              ),
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: PageView(
-                controller: controller,
-                onPageChanged: (index) {
-                  currentpage = index;
-                  setState(() {});
-                },
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  RegisterForm(),
-                  AddressForm(),
-                  DocumentForm(),
-                  SelfieForm(pageController: controller),
-                  SavingScreen()
-                ],
-              ),
-            ),
-            currentpage != 4
-                ? Container(
-              margin: EdgeInsets.all(4),
-              child: MaterialButton(
-                padding: EdgeInsets.all(20),
-                elevation: 0,
-                color: currentpage < 3 ? Colors.blueAccent : Colors.green,
-                shape:
-                RoundedRectangleBorder(borderRadius: kDefaultBorder),
-                onPressed: !canMoveForward()
-                    ? null
-                    : () {
-                  nextPage(context);
-                },
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(
-                        currentpage < 3 ? 'CONTINUAR' : 'CONCLUIR',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600),
-                      )
-                    ],
-                  ),
+      backgroundColor: backColor(),
+      body: Container(
+        child: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: PageView(
+                  controller: controller,
+                  onPageChanged: (index) {
+                    currentpage = index;
+                    setState(() {});
+                  },
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    RegisterForm(),
+                    AddressForm(),
+                    DocumentForm(),
+                    SelfieForm(pageController: controller),
+                    SavingScreen()
+                  ],
                 ),
               ),
-            )
-                : SizedBox()
-          ],
+              Visibility(
+                  visible: currentpage < 4 && canMoveForward(),
+                  child: Padding(
+                    padding: EdgeInsets.all(4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Visibility(
+                          visible: currentpage > 0,
+                          child: MaterialButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            onPressed: () => previousPage(context),
+                            child: Icon(AntDesign.arrowleft),
+                          ),
+                        ),
+                        SizedBox(),
+                        MaterialButton(
+                          onPressed: () => nextPage(context),
+                          child: Icon(AntDesign.arrowright),
+                        ),
+                      ],
+                    ),
+                  ))
+            ],
+          ),
         ),
       ),
     );

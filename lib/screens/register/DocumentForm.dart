@@ -1,18 +1,14 @@
-import 'dart:io';
-
 import 'package:Biquer/components/BaseForm.dart';
-import 'package:Biquer/components/PageTitle.dart';
-import 'package:Biquer/constants.dart';
+import 'package:Biquer/components/PickerOptions.dart';
 import 'package:Biquer/model/RegisterData.dart';
+import 'package:Biquer/model/User.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
-
-import '../../utils.dart';
 
 class DocumentForm extends StatefulWidget {
   @override
@@ -20,23 +16,7 @@ class DocumentForm extends StatefulWidget {
 }
 
 class _DocumentFormState extends State<DocumentForm> {
-  var _documentFront;
-  int selected;
-  final picker = ImagePicker();
-
-  Future pickDocumentFront() async {
-    RegisterData registerData =
-        Provider.of<RegisterData>(context, listen: true);
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      print('updating document');
-      registerData.updateDocURL(pickedFile.path);
-      setState(() {
-        _documentFront = File(pickedFile.path);
-      });
-    }
-  }
+  UserType selected = UserType.individual;
 
   void updateDocData(String doc) async {
     RegisterData registerData =
@@ -44,41 +24,93 @@ class _DocumentFormState extends State<DocumentForm> {
     registerData.updateDocID(doc);
   }
 
-  Widget input() {
-    if (selected == 1) {
+  Widget title() {
+    if (selected == UserType.individual) {
       return Column(
         children: [
           Text(
-            'CNPJ',
-            style: Theme.of(context).textTheme.caption,
+            'Documento autônomo',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+            textAlign: TextAlign.center,
           ),
+          Text(
+            'Preencha seu cpf e envie uma foto do documento(RG ou CNH)',
+            style: Theme.of(context)
+                .textTheme
+                .caption
+                .copyWith(color: Colors.white.withOpacity(0.50)),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
+    } else if (selected == UserType.company) {
+      return Column(
+        children: [
+          Text(
+            'Documento empresa',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            'Preencha seu cnpj e envie uma foto ou pdf do comprovante de inscrição estadual',
+            style: Theme.of(context)
+                .textTheme
+                .caption
+                .copyWith(color: Colors.white.withOpacity(0.50)),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        Text(
+          'Documento',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          'Suas informações não serão compartilhadas externamente.',
+          style: Theme.of(context)
+              .textTheme
+              .caption
+              .copyWith(color: Colors.white.withOpacity(0.50)),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
+  Widget input() {
+    if (selected == UserType.company) {
+      return Column(
+        children: [
           TextField(
             autofocus: true,
             onChanged: (newText) {
-              print(newText);
+              setState(() {
+                updateDocData(newText);
+              });
             },
             inputFormatters: [
               MaskTextInputFormatter(
                   mask: '##.###.###/###-##', filter: {"#": RegExp(r'[0-9]')})
             ],
-            maxLength: 18,
             textAlign: TextAlign.center,
             keyboardType: TextInputType.phone,
             style: Theme.of(context)
                 .textTheme
                 .headline4
-                .copyWith(color: Theme.of(context).primaryColor),
-            decoration: InputDecoration(border: InputBorder.none),
+                .copyWith(color: Colors.white, fontWeight: FontWeight.w100),
+            decoration:
+                InputDecoration(border: InputBorder.none, hintText: 'CNPJ'),
           ),
         ],
       );
     }
     return Column(
       children: [
-        Text(
-          'CPF',
-          style: Theme.of(context).textTheme.caption,
-        ),
         TextField(
           autofocus: true,
           inputFormatters: [
@@ -89,14 +121,15 @@ class _DocumentFormState extends State<DocumentForm> {
             print(newText);
             updateDocData(newText);
           },
-          maxLength: 14,
           textAlign: TextAlign.center,
           keyboardType: TextInputType.phone,
-          style: Theme.of(context)
+          style: Theme
+              .of(context)
               .textTheme
-              .headline4
-              .copyWith(color: Theme.of(context).primaryColor),
-          decoration: InputDecoration(border: InputBorder.none, hintText: '0'),
+              .headline3
+              .copyWith(color: Colors.white, fontWeight: FontWeight.w100),
+          decoration:
+          InputDecoration(border: InputBorder.none, hintText: 'CPF'),
         ),
       ],
     );
@@ -105,109 +138,58 @@ class _DocumentFormState extends State<DocumentForm> {
   @override
   Widget build(BuildContext context) {
     return BaseForm([
-      PageTitle(
-          'Documentos',
-          selected == null
-              ? 'Selecione o tipo de servidor que você é'
-              : 'Insira seus dados e envie uma foto com frente e verso de seu documento(RG, CNH ou inscrição estadual).'),
       Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
-        alignment: WrapAlignment.spaceAround,
+        alignment: WrapAlignment.center,
         children: [
           UserTypeCard(
             typename: 'Autonômo',
-            typeImageURl:
-                'https://mixkit.imgix.net/art/preview/mixkit-person-arranging-a-series-of-designs-on-an-office-wall-28-desktop-wallpaper-medium.png?w=390&h=219&q=80&auto=format%2Ccompress&q=80&dpr=1',
-            selected: selected == 0,
+            image: SvgPicture.asset(
+              'images/lonely.svg',
+              width: selected == UserType.individual ? 160 : 130,
+              height: selected == UserType.individual ? 160 : 130,
+            ),
             onSelect: () {
-              setState(() {
-                selected = 0;
-              });
+              selected = UserType.individual;
+              setState(() {});
             },
+            selected: selected == UserType.individual,
           ),
           UserTypeCard(
             typename: 'Empresa',
-            typeImageURl:
-            'https://mixkit.imgix.net/art/preview/mixkit-girl-leading-a-team-meeting-at-work-543-square-large.png?w=441&h=441&q=80&auto=format%2Ccompress&q=80&dpr=1',
-            selected: selected == 1,
+            image: SvgPicture.asset(
+              'images/team.svg',
+              width: selected == UserType.company ? 160 : 130,
+              height: selected == UserType.company ? 160 : 130,
+            ),
             onSelect: () {
               setState(() {
-                selected = 1;
+                selected = UserType.company;
               });
             },
-          )
+            selected: selected == UserType.company,
+          ),
         ],
       ),
-      selected == null
-          ? SizedBox()
-          : Column(
-              children: [
-                input(),
-                Container(
-                  margin: kDefaultMargin,
-                  child: Center(
-                    child: MaterialButton(
-                      onPressed: pickDocumentFront,
-                      elevation: 0,
-                      color: Theme
-                          .of(context)
-                          .scaffoldBackgroundColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: EdgeInsets.all(0),
-                      child: Container(
-                        padding: EdgeInsets.all(24),
-                        child: Column(
-                          children: [
-                            CircleAvatar(
-                              radius: 64,
-                              backgroundColor: Colors.blue,
-                              child: Icon(
-                                _documentFront == null
-                                    ? Entypo.upload
-                                    : AntDesign.check,
-                                color: Colors.white,
-                                size: 64,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              _documentFront == null
-                                  ? 'Enviar documento'
-                                  : 'Documento enviado!',
-                              style: Theme.of(context).textTheme.subtitle1,
-                            ),
-                            _documentFront == null
-                                ? SizedBox()
-                                : Text(
-                                    '${Utils.getFileSize(_documentFront)}',
-                                    style: Theme.of(context).textTheme.caption,
-                                  ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+      title(),
+      input(),
+      PickerOptions((PickedFile file) {
+        Provider.of<RegisterData>(context, listen: true)
+            .updateDocURL(file.path);
+      })
     ]);
   }
 }
 
 class UserTypeCard extends StatelessWidget {
-  final String typeImageURl, typename;
+  final String typename;
   final bool selected;
   final Function onSelect;
+  final SvgPicture image;
 
-  UserTypeCard(
-      {this.typeImageURl,
-      this.typename,
-      this.selected,
-      @required this.onSelect});
+  UserTypeCard({@required this.image,
+    this.typename,
+    this.selected,
+    @required this.onSelect});
 
   @override
   Widget build(BuildContext context) {
@@ -228,31 +210,24 @@ class UserTypeCard extends StatelessWidget {
             margin: EdgeInsets.all(4),
             child: Column(
               children: [
-                Container(
-                  width: selected ? 160 : 130,
-                  height: selected ? 160 : 130,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(
-                          typeImageURl,
-                        )),
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
-                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    typename,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: selected
-                            ? Colors.white
-                            : Theme
-                            .of(context)
-                            .textTheme
-                            .bodyText1
-                            .color),
+                  child: Column(
+                    children: [
+                      image,
+                      Text(
+                        typename,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: selected
+                                ? Colors.white
+                                : Theme
+                                .of(context)
+                                .textTheme
+                                .bodyText1
+                                .color),
+                      ),
+                    ],
                   ),
                 )
               ],

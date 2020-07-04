@@ -1,52 +1,30 @@
 import 'dart:io';
 
 import 'package:Biquer/components/BaseForm.dart';
-import 'package:Biquer/components/CameraButtons.dart';
-import 'package:Biquer/components/PageTitle.dart';
+import 'package:Biquer/components/CenteredTitle.dart';
+import 'package:Biquer/components/PickerOptions.dart';
 import 'package:Biquer/model/RegisterData.dart';
-import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class SelfieForm extends StatefulWidget {
   final PageController pageController;
 
   const SelfieForm({@required this.pageController});
+
   @override
   _SelfieFormState createState() => _SelfieFormState();
 }
 
 class _SelfieFormState extends State<SelfieForm> {
-  CameraController controller;
-  List<CameraDescription> cameras;
   String imageurl;
 
   @override
   void initState() {
     super.initState();
-    initializeCamera();
-  }
-
-  void initializeCamera() async {
-    imageurl = null;
-
-    availableCameras().then((value) {
-      cameras = value;
-      controller = CameraController(cameras[1], ResolutionPreset.max);
-      controller.initialize().then((_) {
-        if (!mounted) {
-          return;
-        }
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
   }
 
   void showPicture(String path) async {
@@ -56,11 +34,6 @@ class _SelfieFormState extends State<SelfieForm> {
     setState(() {
       imageurl = path;
     });
-  }
-
-  void closeCamera() {
-    widget.pageController.previousPage(
-        duration: Duration(milliseconds: 500), curve: Curves.easeIn);
   }
 
   void resetImage() {
@@ -73,61 +46,43 @@ class _SelfieFormState extends State<SelfieForm> {
 
   Widget preview() {
     if (imageurl != null) {
-      return FadeInImage(
-        placeholder: AssetImage('assets/images/toucan.svg'),
-        image: FileImage(
-          File(imageurl),
+      return Padding(
+        padding: EdgeInsets.all(16),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: FadeInImage(
+            placeholder: AssetImage('images/toucan.svg'),
+            image: FileImage(
+              File(imageurl),
+            ),
+          ),
         ),
       );
     }
-    if (cameras != null && imageurl == null) {
-      return AspectRatio(
-          aspectRatio: 3 / 4.3, child: CameraPreview(controller));
-    }
-    return CupertinoActivityIndicator();
+
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: CupertinoActivityIndicator(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return BaseForm(
       [
-        PageTitle('Reconhecimento',
-            'Tire uma foto sua com seus documentos para concluir o cadastro!'),
-        Stack(
-          children: [
-            preview(),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              left: 0,
-              child: CameraButtons(
-                controller,
-                onClose: closeCamera,
-                onPictureTake: (newPath) => showPicture(newPath),
-                resetImage: this.resetImage,
-                canshowotherButtons: imageurl != null,
-              ),
-            ),
-            imageurl == null
-                ? SizedBox()
-                : Positioned(
-                    bottom: 200,
-                    right: 0,
-                    left: 0,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Para tirar outra foto deslize para baixo',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        Icon(AntDesign.down, color: Colors.white)
-                      ],
-                    ),
-                  ),
-          ],
-        )
+        SvgPicture.asset('images/camera.svg', width: 250, height: 250),
+        CenteredTitle(
+          title: imageurl == null ? 'Reconhecimento facial' : 'Perfeito!',
+          subtitle: imageurl == null
+              ? 'Para concluir envie uma foto sua com o documento em mãos para comprovar a identidade.'
+              : 'Muito bem agora você está pronto pressione a seta para concluir seu cadastro!',
+          textColor: Colors.white,
+        ),
+        preview(),
+        PickerOptions((PickedFile file) {
+          showPicture(file.path);
+        })
       ],
-      padding: false,
     );
   }
 }

@@ -37,7 +37,8 @@ class _AddressFormState extends State<AddressForm> {
         children: [
           Text(
             'Comprovante',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 40, color: Colors.white),
             textAlign: TextAlign.center,
           ),
           Text(
@@ -56,7 +57,8 @@ class _AddressFormState extends State<AddressForm> {
         children: [
           Text(
             'Concluído',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 40, color: Colors.white),
             textAlign: TextAlign.center,
           ),
           Text(
@@ -75,7 +77,8 @@ class _AddressFormState extends State<AddressForm> {
         children: [
           Text(
             'Endereço identificado',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 40, color: Colors.white),
             textAlign: TextAlign.center,
           ),
           Text(
@@ -226,7 +229,7 @@ class _AddressFormState extends State<AddressForm> {
     error = cepData == null;
     if (!error) {
       RegisterData registerData =
-      Provider.of<RegisterData>(context, listen: true);
+          Provider.of<RegisterData>(context, listen: true);
       registerData.updateAddressCEP(cepData.cep);
     }
     setState(() {

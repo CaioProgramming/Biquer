@@ -1,53 +1,41 @@
 import 'package:Biquer/components/FormInput.dart';
+import 'package:Biquer/components/MessageBubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CEP {
-  String cep, logradouro, complemento, bairro, localidade, uf;
+  String cep, state, city, neighborhood, street;
 
-  CEP(this.cep, this.logradouro, this.complemento, this.bairro, this.localidade,
-      this.uf);
+  CEP(
+    this.cep,
+    this.state,
+    this.city,
+    this.neighborhood,
+    this.street,
+  );
 
-  static CEP mapToCep(Map<String, dynamic> map) => CEP(
-      map['cep'],
-      map['logradouro'],
-      map['complemento'],
-      map['bairro'],
-      map['localidade'],
-      map['uf']);
+  static CEP mapToCep(Map<String, dynamic> map) => CEP(map['cep'], map['state'],
+      map['city'], map['neighborhood'], map['street']);
 
   Widget showCepInfo(BuildContext context) {
     List<Widget> cepWidgets = [];
-    if (uf != null)
+    if (state != null)
       cepWidgets.add(FormInput(
         null,
         readonly: true,
-        hintText: uf,
-        labelText: 'UF',
+        hintText: state,
+        labelText: 'state',
       ));
-    if (logradouro != null)
-      cepWidgets.add(FormInput(
-        null,
-        readonly: true,
-        hintText: logradouro,
-        labelText: 'Logradouro',
-      ));
-    if (bairro != null)
+
+    if (neighborhood != null)
       cepWidgets.add(FormInput(null,
-          readonly: true, hintText: bairro, labelText: 'Bairro'));
-    if (localidade != null)
+          readonly: true, hintText: neighborhood, labelText: 'neighborhood'));
+    if (city != null)
       cepWidgets.add(FormInput(
         null,
         readonly: true,
-        hintText: localidade,
-        labelText: 'Localidade',
-      ));
-    if (complemento != null && complemento.isNotEmpty)
-      cepWidgets.add(FormInput(
-        null,
-        readonly: true,
-        hintText: complemento,
-        labelText: 'Complemento',
+        hintText: city,
+        labelText: 'city',
       ));
 
     return Column(
@@ -59,5 +47,21 @@ class CEP {
             )
           ],
     );
+  }
+
+  List<MessageBubble> cepMessages() {
+    List<MessageBubble> cepbubbles = [];
+    if (state != null)
+      cepbubbles.add(
+          MessageBubble(messageChild: MessageBubble.defaultMessageText(state)));
+
+    if (neighborhood != null)
+      cepbubbles.add(MessageBubble(
+          messageChild: MessageBubble.defaultMessageText(neighborhood)));
+    if (city != null)
+      cepbubbles.add(
+          MessageBubble(messageChild: MessageBubble.defaultMessageText(city)));
+
+    return cepbubbles;
   }
 }

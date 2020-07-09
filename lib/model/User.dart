@@ -7,16 +7,23 @@ enum UserType {
 }
 
 class User {
-  String uid, picURL;
+  String uid, safetyPic;
   Address address;
   Document document;
+  UserType type;
 
-  User(this.uid, this.picURL, this.address, this.document);
+  User(
+      {this.uid,
+      this.safetyPic,
+      this.address,
+      this.document,
+      this.type = UserType.individual});
 
   Map<String, dynamic> map() {
     return {
       'uid': this.uid,
-      'picURL': this.picURL,
+      'safetyPic': this.safetyPic,
+      'type': this.type,
       'address': address.map(),
       'document': document.map()
     };

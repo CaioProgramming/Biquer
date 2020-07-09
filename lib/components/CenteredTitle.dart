@@ -32,6 +32,5 @@ class CenteredTitle extends StatelessWidget {
         ),
       ],
     );
-    ;
   }
 }

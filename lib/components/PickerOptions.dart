@@ -9,7 +9,8 @@ class PickerOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Wrap(
+      alignment: WrapAlignment.center,
       children: [
         MaterialButton(
           color: Colors.black,

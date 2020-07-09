@@ -11,7 +11,7 @@ class CepHelper {
 
   Future<CEP> getCepInfo() async {
     try {
-      String url = '$kCepHelperURL$cepRequest$kCEPHelperJsonReturn';
+      String url = '$kCepHelperURL$cepRequest';
       print('requesting -> $url');
       http.Response response = await http.get(url);
       if (response.statusCode == 200) {

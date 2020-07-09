@@ -30,6 +30,8 @@ dependencies:
   simple_animations: ^2.2.1
   mask_text_input_formatter: ^1.0.7
   flutter_svg: ^0.17.0
+  email_validator: ^1.0.0
+  cpf_cnpj_validator: ^1.0.5
 
 
 flutter_icons:

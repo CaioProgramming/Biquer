@@ -4,6 +4,7 @@ import 'package:Biquer/components/MessageBubble.dart';
 import 'package:Biquer/constants.dart';
 import 'package:Biquer/model/AddressData.dart';
 import 'package:Biquer/model/DocumentData.dart';
+import 'package:Biquer/model/RegisterData.dart';
 import 'package:Biquer/model/User.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,7 +20,8 @@ enum UserStage { email, password }
 class UserData {
   Firestore _firestore = Firestore.instance;
 
-  Future<bool> saveUserInfo(User user, String name) async {
+  Future<bool> saveUserInfo(
+      User user, String name, RegisterData registerData) async {
     AddressData addressData = AddressData();
     DocumentData documentData = DocumentData();
     String address = await addressData.uploadDoc(user.address, user.uid);
@@ -86,6 +88,7 @@ class UserData {
           email: useremail, password: userpassword);
       FirebaseUser newUser = authResult.user;
       newUser.sendEmailVerification();
+
       return newUser;
     } on PlatformException catch (e) {
       print(e.code);

@@ -73,7 +73,8 @@ class PickerOptions extends StatelessWidget {
     );
   }
 
-  Future pickAddressProof(BuildContext context, ImageSource source) async {
+  Future<PickedFile> pickAddressProof(
+      BuildContext context, ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: source);
     if (pickedFile == null) {
@@ -82,7 +83,9 @@ class PickerOptions extends StatelessWidget {
       );
       Scaffold.of(context).showSnackBar(snack);
       return null;
+    } else {
+      print('File ${pickedFile.path}');
+      onFilePick(pickedFile.path);
     }
-    onFilePick(pickedFile);
   }
 }

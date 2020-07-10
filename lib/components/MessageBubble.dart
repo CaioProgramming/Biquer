@@ -54,7 +54,7 @@ class _MessageBubbleState extends State<MessageBubble>
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       child: Column(
         crossAxisAlignment: widget.messageType == MessageType.send
             ? CrossAxisAlignment.end
@@ -64,8 +64,8 @@ class _MessageBubbleState extends State<MessageBubble>
             child: widget.messageChild,
             padding: EdgeInsets.all(16),
             margin: widget.messageType != MessageType.send
-                ? EdgeInsets.only(right: 64)
-                : EdgeInsets.only(left: 64),
+                ? EdgeInsets.only(right: 88)
+                : EdgeInsets.only(left: 88),
             decoration: BoxDecoration(
                 color: widget.messageType == MessageType.reply
                     ? widget.backcolor ?? Theme.of(context).primaryColor

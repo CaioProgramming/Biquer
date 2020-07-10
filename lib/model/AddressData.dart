@@ -6,7 +6,6 @@ import 'package:Biquer/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import 'Address.dart';
@@ -15,6 +14,8 @@ enum AddressStage { cep, number, proof }
 
 class AddressData {
   Future<String> uploadDoc(Address address, String uid) async {
+    print('uploading doc ${address.cep} -> ${address.urlComprovAddress}');
+
     StorageReference storageReference = FirebaseStorage.instance
         .ref()
         .child('$uid/documents/address${address.cep}');
@@ -89,8 +90,8 @@ class AddressData {
         );
         break;
       case AddressStage.proof:
-        return PickerOptions((PickedFile file) {
-          onFilePick(file.path);
+        return PickerOptions((dynamic file) async {
+          onFilePick(file);
         });
         break;
     }

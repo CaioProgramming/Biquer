@@ -18,10 +18,19 @@ const kCepHelperURL = 'https://brasilapi.com.br/api/cep/v1/';
 const kDefaultMargin = EdgeInsets.symmetric(vertical: 10);
 const kDefaultBorder = BorderRadius.all(Radius.circular(5));
 
-const kUserMessageBorder = BorderRadius.horizontal(left: Radius.circular(20));
+const kUserMessageBorder = BorderRadius.only(
+  topRight: Radius.circular(0),
+  topLeft: Radius.circular(20),
+  bottomLeft: Radius.circular(20),
+  bottomRight: Radius.circular(20),
+);
 
-const kSenderMessageBorder =
-    BorderRadius.horizontal(right: Radius.circular(20));
+const kSenderMessageBorder = BorderRadius.only(
+  topRight: Radius.circular(20),
+  topLeft: Radius.circular(0),
+  bottomLeft: Radius.circular(20),
+  bottomRight: Radius.circular(20),
+);
 
 const kMessageFieldDecoration = InputDecoration(
   border: OutlineInputBorder(

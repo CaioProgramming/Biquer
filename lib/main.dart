@@ -2,7 +2,7 @@ import 'package:Biquer/model/RegisterData.dart';
 import 'package:Biquer/screens/register/RegisterScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -33,26 +33,22 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.orange, // status bar color
-    ));
-
+    TextTheme textTheme(TextTheme appTheme) =>
+        GoogleFonts.ubuntuTextTheme(appTheme);
     return MaterialApp(
-        title: 'Biquer',
-        theme: ThemeData(
-            fontFamily: 'OpenSans',
-            accentColor: Colors.deepOrange,
-            primaryColorDark: Colors.deepOrange,
-            primaryColor: Colors.orange,
-            backgroundColor: Colors.white),
-        darkTheme: ThemeData.dark().copyWith(
-            accentColor: Colors.deepOrange,
-            primaryColorDark: Colors.deepOrange,
-            primaryColor: Colors.orange,
-            backgroundColor: Colors.white),
-        home: Scaffold(
-          body: ChangeNotifierProvider(
-              create: (context) => RegisterData(), child: RegisterScreen()),
-        ));
+      title: 'Biquer',
+      theme: ThemeData(
+          textTheme: textTheme(Theme.of(context).textTheme),
+          accentColor: Colors.deepOrange,
+          primaryColorDark: Colors.deepOrange,
+          primaryColor: Colors.orange),
+      darkTheme: ThemeData.dark().copyWith(
+          textTheme: textTheme(ThemeData.dark().textTheme),
+          accentColor: Colors.deepOrange,
+          primaryColorDark: Colors.deepOrange,
+          primaryColor: Colors.orange),
+      home: ChangeNotifierProvider(
+          create: (context) => RegisterData(), child: RegisterScreen()),
+    );
   }
 }

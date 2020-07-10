@@ -23,16 +23,11 @@ class RegisterData extends ChangeNotifier {
   AddressStage addressStage = AddressStage.cep;
   UserStage userStage = UserStage.email;
   DocumentStage documentStage = DocumentStage.selectype;
-
-  User get myUser => _myUser;
-
-  set myUser(User value) {
-    _myUser = value;
-  }
-
   Address _userAddress;
   User _myUser;
+
   Document _userDocument;
+  String useremail, userpass, _userPicURL;
 
   RegisterData() {
     userAddress = Address();
@@ -42,13 +37,17 @@ class RegisterData extends ChangeNotifier {
 
   Address get userAddress => _userAddress;
 
+  User get myUser => _myUser;
+
   set userAddress(Address value) {
     _userAddress = value;
     print('Address updated');
     notifyListeners();
   }
 
-  List<MessageBubble> messages = [];
+  List<MessageBubble> _messages = [];
+
+  List<MessageBubble> get messages => List.of(_messages.reversed);
 
   void initializeRegister() async {
     var udata = UserData();
@@ -60,6 +59,7 @@ class RegisterData extends ChangeNotifier {
         sendSuccessMessage(
             'Seus dados foram validados ${user.displayName} vamos prosseguir com o cadastro');
         this.user = firebaseuser;
+        _myUser.uid = user.uid;
         stage = RegisterStage.address;
         initializeAddress();
       } else {
@@ -83,13 +83,13 @@ class RegisterData extends ChangeNotifier {
       sendReply('Só um momento...');
     }
     for (MessageBubble message in messageBubbles) {
-      messages.add(message);
+      _messages.add(message);
       notifyListeners();
       await Future.delayed(Duration(seconds: 2), () {
         print('can add another bubble now');
       });
     }
-    print('added ${messages.length} bubbles');
+    print('added ${_messages.length} bubbles');
   }
 
   void updateMessages(Widget child, MessageType messageType) {
@@ -97,7 +97,7 @@ class RegisterData extends ChangeNotifier {
   }
 
   void createMessage(MessageBubble bubble) {
-    messages.add(bubble);
+    _messages.add(bubble);
   }
 
   void sendData(dynamic msg) {
@@ -138,8 +138,6 @@ class RegisterData extends ChangeNotifier {
     }
   }
 
-  String useremail, userpass;
-
   void handleUser(String data) async {
     switch (userStage) {
       case UserStage.email:
@@ -155,10 +153,11 @@ class RegisterData extends ChangeNotifier {
     userpass = data;
     loadMessage();
     user = await UserData().registerWithEmailAndPassword(useremail, userpass);
-    messages.removeLast();
+    _messages.removeLast();
     if (user != null) {
       sendSuccessMessage(
-          'Seu email foi validado com sucesso ${user.displayName} vamos continuar com o cadastro');
+          'Seu email foi validado com sucesso ${user
+              .displayName} vamos continuar com o cadastro');
       stage = RegisterStage.address;
       initializeAddress();
     } else {
@@ -197,9 +196,9 @@ class RegisterData extends ChangeNotifier {
   }
 
   void updateUserType(data) {
-    myUser.type = data;
+    _myUser.type = data;
     documentStage = DocumentStage.docid;
-    String type = myUser.type == UserType.individual ? 'CPF' : 'CNPJ';
+    String type = _myUser.type == UserType.individual ? 'CPF' : 'CNPJ';
     sendReply('Ok agora insira seu $type');
   }
 
@@ -211,16 +210,16 @@ class RegisterData extends ChangeNotifier {
     print('cep updated $cepData');
     var error = cepData == null;
     if (!error) {
-      messages.removeLast();
+      _messages.removeLast();
       sendSuccessMessage(
           'Endereço validado com sucesso veja a seguir se as informações estão corretas');
       updateAddressCEP(cepData.cep);
       addBubbles(cepData.cepMessages()).then((value) {
-        addressStage = AddressStage.number;
         sendReply('Ok agora envie o número da residência');
+        addressStage = AddressStage.number;
       });
     } else {
-      messages.removeLast();
+      _messages.removeLast();
       sendReply(
           'Opss, não consegui encontrar seu CEP, poderia digitar novamente?');
       notifyListeners();
@@ -246,12 +245,12 @@ class RegisterData extends ChangeNotifier {
   }
 
   void loadMessage() {
-    messages.add(MessageBubble(
+    _messages.add(MessageBubble(
         messageChild: FadeInImage(
             width: 100,
             height: 100,
-            placeholder: AssetImage('images/caiomoji.jpeg'),
-            image: AssetImage('images/deboramoji.webp')),
+            placeholder: AssetImage('images/chick.png'),
+            image: AssetImage('images/debtyping.png')),
         messageType: MessageType.reply,
         backcolor: Colors.transparent));
     notifyListeners();
@@ -266,35 +265,38 @@ class RegisterData extends ChangeNotifier {
   void updateAddressNumber(String number) {
     userAddress.number = number;
     sendMessage(Text(number));
-    addressStage = AddressStage.proof;
     sendReply('Muito bem agora envie um comprovante de endereço');
+    addressStage = AddressStage.proof;
   }
 
   void updateDocID(String id) {
     _userDocument.id = id;
-    sendData(id);
-    documentStage = DocumentStage.docUrl;
+    sendMessage(Text(id));
     sendReply(
         'Perfeito agora envie a foto de seu documento para comprovar sua identidade');
+    documentStage = DocumentStage.docUrl;
+
     print('updated docID $id on provider');
   }
 
   void updateAddressURL(String url) async {
+    print('Getting file $url');
     _userAddress.urlComprovAddress = url;
     updateMessages(
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: FadeInImage(
               width: 200,
+              fit: BoxFit.cover,
               height: 200,
-              placeholder: AssetImage('images/caiomoji.jpeg'),
+              placeholder: AssetImage('images/chick.png'),
               image: FileImage(
                 File(url),
               )),
         ),
         MessageType.send);
-    stage = RegisterStage.document;
     sendReply('Perfeito vamos prosseguir com o cadastro');
+    stage = RegisterStage.document;
     addBubbles(await DocumentData().docMessages((usertype) {
       _myUser.type = usertype;
       if (usertype == UserType.individual) {
@@ -309,14 +311,14 @@ class RegisterData extends ChangeNotifier {
   }
 
   void updateDocURL(String url) {
-    userAddress.urlComprovAddress = url;
+    _userDocument.docURL = url;
     updateMessages(
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: FadeInImage(
               width: 200,
               height: 200,
-              placeholder: AssetImage('images/caiomoji.jpeg'),
+              placeholder: AssetImage('images/chick.png'),
               image: FileImage(
                 File(url),
               )),
@@ -324,25 +326,38 @@ class RegisterData extends ChangeNotifier {
         MessageType.send);
     sendReply('Perfeito hora da última etapa');
 
-    stage = RegisterStage.photo;
     sendReply(
         'Para finalizar você precisa enviar uma foto de rosto com seu documento em mãos');
+    stage = RegisterStage.photo;
     notifyListeners();
   }
 
   void updateUserPic(String url) async {
     _myUser.safetyPic = url;
     notifyListeners();
+    updateMessages(
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: FadeInImage(
+              width: 200,
+              height: 200,
+              placeholder: AssetImage('images/chick.png'),
+              image: FileImage(
+                File(url),
+              )),
+        ),
+        MessageType.send);
     sendReply('Ok isso é tudo vou processar seu cadastro');
     loadMessage();
     bool saved = await saveUserInfo();
     if (saved) {
-      sendReply(
+      sendSuccessMessage(
           'Seu cadastro foi concluído com sucesso, você já está pronto para usar a bico!');
       stage = RegisterStage.complete;
     } else {
       sendReply(
           'Ocorreu um erro ao processar seu cadastro já estou verificando isso');
+      sendData(url);
     }
   }
 
@@ -357,21 +372,15 @@ class RegisterData extends ChangeNotifier {
     return user != null;
   }
 
-  String _userPicURL;
-
-  String get userPicURL => _userPicURL;
-
   set userPicURL(String value) {
     _userPicURL = value;
     notifyListeners();
   }
 
   Future<bool> saveUserInfo() async {
-    User myuser = User(
-        uid: user.uid,
-        safetyPic: _userPicURL,
-        address: _userAddress,
-        document: _userDocument);
-    return await UserData().saveUserInfo(myuser, user.displayName.trim());
+    _myUser.document = _userDocument;
+    _myUser.address = _userAddress;
+    return await UserData()
+        .saveUserInfo(_myUser, user.displayName.trim(), this);
   }
 }

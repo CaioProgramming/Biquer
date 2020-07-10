@@ -12,12 +12,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 
+import '../constants.dart';
 import 'RegisterData.dart';
 
 enum DocumentStage { selectype, docid, docUrl }
 
 class DocumentData {
   Future<String> uploadDoc(Document document, String uid) async {
+    print('uploading doc ${document.id} -> ${document.docURL}');
     StorageReference storageReference = FirebaseStorage.instance
         .ref()
         .child('$uid/documents/docproof${document.id}');
@@ -91,8 +93,8 @@ class DocumentData {
           return 'Escreva seu cnpj...';
         }
         break;
-      case DocumentStage.docUrl:
-        // TODO: Handle this case.
+      default:
+        return '';
         break;
     }
   }
@@ -124,23 +126,23 @@ class DocumentData {
                 typename: 'Autonômo',
                 image: SvgPicture.asset(
                   'images/lonely.svg',
-                  height: 50,
-                  width: 50,
+                  height: 120,
+                  width: 120,
                 ),
                 onSelect: () {
                   var _biquerData = Provider.of<RegisterData>(context);
                   _biquerData.sendData(UserType.individual);
                 },
                 backColor: Colors.black,
-                textColor: Colors.lightBlue,
+                textColor: Colors.white,
               ),
               ServicerTypeCard(
                 typename: 'Empresa',
                 userType: UserType.company,
                 image: SvgPicture.asset(
                   'images/team.svg',
-                  height: 50,
-                  width: 50,
+                  height: 120,
+                  width: 120,
                 ),
                 onSelect: () {
                   var _biquerData = Provider.of<RegisterData>(context);
@@ -161,18 +163,11 @@ class DocumentData {
           inputFormatters: [
             userType == UserType.individual ? cpfmask : cnpjmask
           ],
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Theme.of(context).hintColor.withOpacity(0.30),
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: BorderSide(style: BorderStyle.none, width: 0)),
-            hintText: hint,
-          ),
+          decoration: kMessageFieldDecoration.copyWith(hintText: hint),
         );
         break;
-      case DocumentStage.docUrl:
-        return PickerOptions((path) => onFilePick(path));
+      default:
+        return PickerOptions((dynamic file) => onFilePick(file));
         break;
     }
   }

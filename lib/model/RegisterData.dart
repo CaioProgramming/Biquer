@@ -11,13 +11,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../utils.dart';
 import 'CepData.dart';
 import 'User.dart';
 
-enum RegisterStage { user, address, document, photo, complete }
+enum RegisterStage { user, address, document, photo, saving, complete }
 
 class RegisterData extends ChangeNotifier {
+  List<MessageBubble> messages = [];
+
   FirebaseUser user;
   RegisterStage stage = RegisterStage.user;
   AddressStage addressStage = AddressStage.cep;
@@ -25,9 +26,8 @@ class RegisterData extends ChangeNotifier {
   DocumentStage documentStage = DocumentStage.selectype;
   Address _userAddress;
   User _myUser;
-
   Document _userDocument;
-  String useremail, userpass, _userPicURL;
+  String useremail, userpass;
 
   RegisterData() {
     userAddress = Address();
@@ -45,14 +45,10 @@ class RegisterData extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<MessageBubble> _messages = [];
-
-  List<MessageBubble> get messages => List.of(_messages.reversed);
-
   void initializeRegister() async {
     var udata = UserData();
     List<MessageBubble> registerMessages =
-        await udata.loadRegisterMessages('Debora Profil', (firebaseuser) {
+    await udata.loadRegisterMessages('Debora Profil', (firebaseuser) {
       print('user logged $firebaseuser');
       if (firebaseuser != null) {
         user = firebaseuser;
@@ -83,13 +79,13 @@ class RegisterData extends ChangeNotifier {
       sendReply('Só um momento...');
     }
     for (MessageBubble message in messageBubbles) {
-      _messages.add(message);
+      messages.add(message);
       notifyListeners();
-      await Future.delayed(Duration(seconds: 2), () {
+      await Future.delayed(Duration(seconds: 6), () {
         print('can add another bubble now');
       });
     }
-    print('added ${_messages.length} bubbles');
+    print('added ${messages.length} bubbles');
   }
 
   void updateMessages(Widget child, MessageType messageType) {
@@ -97,7 +93,7 @@ class RegisterData extends ChangeNotifier {
   }
 
   void createMessage(MessageBubble bubble) {
-    _messages.add(bubble);
+    messages.add(bubble);
   }
 
   void sendData(dynamic msg) {
@@ -153,11 +149,10 @@ class RegisterData extends ChangeNotifier {
     userpass = data;
     loadMessage();
     user = await UserData().registerWithEmailAndPassword(useremail, userpass);
-    _messages.removeLast();
+    messages.removeLast();
     if (user != null) {
       sendSuccessMessage(
-          'Seu email foi validado com sucesso ${user
-              .displayName} vamos continuar com o cadastro');
+          'Seu email foi validado com sucesso ${user.displayName} vamos continuar com o cadastro');
       stage = RegisterStage.address;
       initializeAddress();
     } else {
@@ -205,21 +200,20 @@ class RegisterData extends ChangeNotifier {
   void getCepData(String cepInput) async {
     sendMessage(Text(cepInput));
     loadMessage();
-    var cepHelper = CepHelper(cepInput.replaceAll(Utils.intRegex(), ''));
+    var cepHelper = CepHelper(cepInput);
     var cepData = await cepHelper.getCepInfo();
     print('cep updated $cepData');
     var error = cepData == null;
     if (!error) {
-      _messages.removeLast();
+      messages.removeLast();
       sendSuccessMessage(
           'Endereço validado com sucesso veja a seguir se as informações estão corretas');
       updateAddressCEP(cepData.cep);
-      addBubbles(cepData.cepMessages()).then((value) {
-        sendReply('Ok agora envie o número da residência');
-        addressStage = AddressStage.number;
-      });
+      await addBubbles(cepData.cepMessages());
+      sendReply('Ok agora envie o número da residência');
+      addressStage = AddressStage.number;
     } else {
-      _messages.removeLast();
+      messages.removeLast();
       sendReply(
           'Opss, não consegui encontrar seu CEP, poderia digitar novamente?');
       notifyListeners();
@@ -245,7 +239,7 @@ class RegisterData extends ChangeNotifier {
   }
 
   void loadMessage() {
-    _messages.add(MessageBubble(
+    messages.add(MessageBubble(
         messageChild: FadeInImage(
             width: 100,
             height: 100,
@@ -372,14 +366,11 @@ class RegisterData extends ChangeNotifier {
     return user != null;
   }
 
-  set userPicURL(String value) {
-    _userPicURL = value;
-    notifyListeners();
-  }
-
   Future<bool> saveUserInfo() async {
     _myUser.document = _userDocument;
     _myUser.address = _userAddress;
+    stage = RegisterStage.saving;
+    notifyListeners();
     return await UserData()
         .saveUserInfo(_myUser, user.displayName.trim(), this);
   }

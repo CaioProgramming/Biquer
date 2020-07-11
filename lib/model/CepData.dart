@@ -4,6 +4,8 @@ import 'package:Biquer/constants.dart';
 import 'package:Biquer/model/CEP.dart';
 import 'package:http/http.dart' as http;
 
+import '../utils.dart';
+
 class CepHelper {
   String cepRequest;
 
@@ -11,6 +13,7 @@ class CepHelper {
 
   Future<CEP> getCepInfo() async {
     try {
+      cepRequest = cepRequest.replaceAll(Utils.intRegex(), '');
       String url = '$kCepHelperURL$cepRequest';
       print('requesting -> $url');
       http.Response response = await http.get(url);

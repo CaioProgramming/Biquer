@@ -30,7 +30,6 @@ class _SelfieFormState extends State<SelfieForm> {
   void showPicture(String path) async {
     RegisterData registerData =
         Provider.of<RegisterData>(context, listen: true);
-    registerData.userPicURL = path;
     setState(() {
       imageurl = path;
     });

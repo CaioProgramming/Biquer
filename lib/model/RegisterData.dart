@@ -48,7 +48,7 @@ class RegisterData extends ChangeNotifier {
   void initializeRegister() async {
     var udata = UserData();
     List<MessageBubble> registerMessages =
-    await udata.loadRegisterMessages('Debora Profil', (firebaseuser) {
+        await udata.loadRegisterMessages('Debora Profil', (firebaseuser) {
       print('user logged $firebaseuser');
       if (firebaseuser != null) {
         user = firebaseuser;
@@ -81,7 +81,7 @@ class RegisterData extends ChangeNotifier {
     for (MessageBubble message in messageBubbles) {
       messages.add(message);
       notifyListeners();
-      await Future.delayed(Duration(seconds: 6), () {
+      await Future.delayed(Duration(seconds: 4), () {
         print('can add another bubble now');
       });
     }

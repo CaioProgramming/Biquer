@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme(TextTheme appTheme) =>
-        GoogleFonts.ubuntuTextTheme(appTheme);
+        GoogleFonts.openSansTextTheme(appTheme);
 
     return MaterialApp(
       title: 'Biquer',
@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
         '/login': (context) => SplashScreen(),
         '/home': (context) => HomeScreen(),
       },
-      initialRoute: '/register',
+      initialRoute: '/',
     );
   }
 }

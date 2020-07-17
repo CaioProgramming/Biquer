@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 
 BoxDecoration kFileInputDecoration = BoxDecoration(
     borderRadius: BorderRadius.circular(10),
@@ -53,3 +54,11 @@ LinearGradient kSuccessButtonGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
 );
+const kbottombarIcons = [
+  BottomNavigationBarItem(icon: Icon(AntDesign.home), title: Text('Home')),
+  BottomNavigationBarItem(
+      icon: Icon(AntDesign.clockcircleo), title: Text('Transações')),
+  BottomNavigationBarItem(
+      icon: Icon(AntDesign.codepen), title: Text('Serviços')),
+  BottomNavigationBarItem(icon: Icon(AntDesign.user), title: Text('Perfil')),
+];

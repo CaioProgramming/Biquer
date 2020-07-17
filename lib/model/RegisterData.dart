@@ -7,6 +7,9 @@ import 'package:Biquer/model/AddressData.dart';
 import 'package:Biquer/model/Document.dart';
 import 'package:Biquer/model/DocumentData.dart';
 import 'package:Biquer/model/UserData.dart';
+import 'package:cpf_cnpj_validator/cnpj_validator.dart';
+import 'package:cpf_cnpj_validator/cpf_validator.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -117,6 +120,9 @@ class RegisterData extends ChangeNotifier {
       case RegisterStage.complete:
         sendSuccessMessage('Seu cadastro foi concluído com sucesso!');
         break;
+      case RegisterStage.saving:
+        loadMessage();
+        break;
     }
   }
 
@@ -156,7 +162,7 @@ class RegisterData extends ChangeNotifier {
       stage = RegisterStage.address;
       initializeAddress();
     } else {
-      sendReply(
+      sendErrorMessage(
           'Ocorreu um erro ao processar seu cadastro, vamos tentar de novo');
       sendReply('Envie seu email');
       userStage = UserStage.email;
@@ -168,7 +174,16 @@ class RegisterData extends ChangeNotifier {
     addBubbles([MessageBubble.successMessage(msg)]);
   }
 
+  void sendErrorMessage(String msg) {
+    addBubbles([MessageBubble.errorMessage(msg)]);
+  }
+
   void updateUserEmail(String data) {
+    if (!EmailValidator.validate(data)) {
+      sendReply('Não foi possível validar seu email, envie novamente',
+          backcolor: Colors.red);
+      return;
+    }
     useremail = data;
     userStage = UserStage.password;
     sendMessage(Text(data));
@@ -264,6 +279,16 @@ class RegisterData extends ChangeNotifier {
   }
 
   void updateDocID(String id) {
+    if (_myUser.type == UserType.individual) {
+      if (!CPFValidator.isValid(id)) {
+        sendErrorMessage('CPF inválido tente novamente');
+      }
+    } else if (_myUser.type == UserType.company) {
+      if (!CNPJValidator.isValid(id)) {
+        sendErrorMessage('CNPJ inválido tente novamente');
+      }
+    }
+
     _userDocument.id = id;
     sendMessage(Text(id));
     sendReply(

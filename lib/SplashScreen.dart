@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
       print('user ${user.displayName}');
       setState(() {
         user = user;
-        Navigator.pushNamed(context, '/home', arguments: user);
+        Navigator.popAndPushNamed(context, '/home', arguments: user);
       });
     } else {
       Navigator.pushNamed(context, '/register');

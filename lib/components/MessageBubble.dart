@@ -25,6 +25,14 @@ class MessageBubble extends StatefulWidget {
     );
   }
 
+  static MessageBubble errorMessage(String msg) {
+    return MessageBubble(
+      messageChild: defaultMessageText(msg),
+      messageType: MessageType.reply,
+      backcolor: Colors.red,
+    );
+  }
+
   @override
   _MessageBubbleState createState() => _MessageBubbleState();
 }

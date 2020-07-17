@@ -79,6 +79,7 @@ class _RegisterChatState extends State<RegisterChat> {
   final _controller = ScrollController();
   final messageTextController = TextEditingController();
 
+  // ignore: missing_return
   bool showSendButton() {
     switch (_biquerData.stage) {
       case RegisterStage.user:
@@ -118,16 +119,18 @@ class _RegisterChatState extends State<RegisterChat> {
 
   @override
   Widget build(BuildContext context) {
-    Timer(
-      Duration(seconds: 1),
-      () {
-        _controller.animateTo(
-          _controller.position.maxScrollExtent,
-          curve: Curves.easeIn,
-          duration: const Duration(milliseconds: 300),
-        );
-      },
-    );
+    if (!loading) {
+      Timer(
+        Duration(seconds: 1),
+        () {
+          _controller.animateTo(
+            _controller.position.maxScrollExtent,
+            curve: Curves.easeIn,
+            duration: const Duration(milliseconds: 300),
+          );
+        },
+      );
+    }
 
     return Scaffold(
       body: loading
@@ -141,40 +144,30 @@ class _RegisterChatState extends State<RegisterChat> {
                       slivers: [
                         SliverAppBar(
                           expandedHeight: 200,
-                          backgroundColor: Utils.barcolor(context),
                           pinned: true,
-                          centerTitle: true,
+                          backgroundColor: Utils.barcolor(context),
                           leading: IconButton(
                             icon: Icon(AntDesign.arrowleft),
                             onPressed: () => Navigator.pop(context),
                           ),
                           flexibleSpace: FlexibleSpaceBar(
-                            title: Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              alignment: WrapAlignment.center,
-                              runAlignment: WrapAlignment.center,
-                              runSpacing: 4,
+                            centerTitle: true,
+                            titlePadding: EdgeInsets.only(left: 16),
+                            title: Row(
                               children: [
                                 FadeInImage(
-                                    width: _controller.offset >
-                                            (200 - kToolbarHeight)
-                                        ? 50
-                                        : 100,
-                                    height: _controller.offset >
-                                            (200 - kToolbarHeight)
-                                        ? 50
-                                        : 100,
+                                    width: 100,
+                                    height: 100,
                                     fadeInDuration: Duration(seconds: 1),
                                     placeholder: AssetImage(''),
                                     image: AssetImage('images/deboramoji.png')),
-                                Text(
-                                  'Debora Profil',
-                                  style: Theme.of(context).textTheme.headline6,
-                                ),
+                                Text('Debora'),
                               ],
                             ),
                             background: Container(
-                              color: Utils.barcolor(context),
+                              color: Theme
+                                  .of(context)
+                                  .scaffoldBackgroundColor,
                             ),
                           ),
                         ),
@@ -218,9 +211,35 @@ class _RegisterChatState extends State<RegisterChat> {
                       ],
                     ),
                   )
-                ],
-              ),
-            ),
+          ],
+        ),
+      ),
     );
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate(this._child);
+
+  final Text _child;
+
+  @override
+  double get minExtent => 100;
+
+  @override
+  double get maxExtent => 200;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset,
+      bool overlapsContent) {
+    return new Container(
+      color: Utils.barcolor(context), // ADD THE COLOR YOU WANT AS BACKGROUND.
+      child: _child,
+    );
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return false;
   }
 }

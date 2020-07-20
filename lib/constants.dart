@@ -14,10 +14,29 @@ const kAddressMessage =
     'Insira os dados de seu endereço para prosseguir com o cadastro.';
 const kRegistermessage = 'Cadastre-se para começar a divulgar seus serviços!';
 
-const kCepHelperURL = 'https://viacep.com.br/ws/';
-const kCEPHelperJsonReturn = '/json/';
+const kCepHelperURL = 'https://brasilapi.com.br/api/cep/v1/';
 const kDefaultMargin = EdgeInsets.symmetric(vertical: 10);
 const kDefaultBorder = BorderRadius.all(Radius.circular(5));
+
+const kUserMessageBorder = BorderRadius.only(
+  topRight: Radius.circular(0),
+  topLeft: Radius.circular(20),
+  bottomLeft: Radius.circular(20),
+  bottomRight: Radius.circular(20),
+);
+
+const kSenderMessageBorder = BorderRadius.only(
+  topRight: Radius.circular(20),
+  topLeft: Radius.circular(0),
+  bottomLeft: Radius.circular(20),
+  bottomRight: Radius.circular(20),
+);
+
+const kMessageFieldDecoration = InputDecoration(
+  border: OutlineInputBorder(
+      borderSide: BorderSide(style: BorderStyle.none, width: 0)),
+);
+
 LinearGradient kButtonGradient = LinearGradient(
   colors: [
     Colors.blue,

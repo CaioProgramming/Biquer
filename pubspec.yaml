@@ -19,7 +19,6 @@ dependencies:
   firebase_auth: ^0.16.0
   cloud_firestore: ^0.13.5
   firebase_storage: ^3.1.6
-
   google_fonts: ^1.1.0
   google_sign_in: ^4.4.6
   url_launcher: ^5.4.7
@@ -30,6 +29,10 @@ dependencies:
   simple_animations: ^2.2.1
   mask_text_input_formatter: ^1.0.7
   flutter_svg: ^0.17.0
+  email_validator: ^1.0.0
+  cpf_cnpj_validator: ^1.0.5
+  tinycolor: ^1.0.2
+  flutter_statusbarcolor: ^0.2.3
 
 
 flutter_icons:
@@ -46,12 +49,3 @@ flutter:
   uses-material-design: true
   assets:
     - images/
-  fonts:
-    - family: Roboto
-      fonts:
-        - asset: assets/fonts/Roboto-Regular.ttf
-        - asset: assets/fonts/Roboto-Black.ttf
-          weight: 900
-    - family: OpenSans
-      fonts:
-        - asset: assets/fonts/OpenSans-Regular.ttf

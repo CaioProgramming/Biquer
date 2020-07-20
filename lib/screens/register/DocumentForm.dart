@@ -1,5 +1,6 @@
 import 'package:Biquer/components/BaseForm.dart';
 import 'package:Biquer/components/PickerOptions.dart';
+import 'package:Biquer/components/ServicerTypeCard.dart';
 import 'package:Biquer/model/RegisterData.dart';
 import 'package:Biquer/model/User.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,7 +31,8 @@ class _DocumentFormState extends State<DocumentForm> {
         children: [
           Text(
             'Documento autônomo',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 40, color: Colors.white),
             textAlign: TextAlign.center,
           ),
           Text(
@@ -123,13 +125,12 @@ class _DocumentFormState extends State<DocumentForm> {
           },
           textAlign: TextAlign.center,
           keyboardType: TextInputType.phone,
-          style: Theme
-              .of(context)
+          style: Theme.of(context)
               .textTheme
               .headline3
               .copyWith(color: Colors.white, fontWeight: FontWeight.w100),
           decoration:
-          InputDecoration(border: InputBorder.none, hintText: 'CPF'),
+              InputDecoration(border: InputBorder.none, hintText: 'CPF'),
         ),
       ],
     );
@@ -141,7 +142,7 @@ class _DocumentFormState extends State<DocumentForm> {
       Wrap(
         alignment: WrapAlignment.center,
         children: [
-          UserTypeCard(
+          ServicerTypeCard(
             typename: 'Autonômo',
             image: SvgPicture.asset(
               'images/lonely.svg',
@@ -152,9 +153,8 @@ class _DocumentFormState extends State<DocumentForm> {
               selected = UserType.individual;
               setState(() {});
             },
-            selected: selected == UserType.individual,
           ),
-          UserTypeCard(
+          ServicerTypeCard(
             typename: 'Empresa',
             image: SvgPicture.asset(
               'images/team.svg',
@@ -166,7 +166,6 @@ class _DocumentFormState extends State<DocumentForm> {
                 selected = UserType.company;
               });
             },
-            selected: selected == UserType.company,
           ),
         ],
       ),
@@ -177,64 +176,5 @@ class _DocumentFormState extends State<DocumentForm> {
             .updateDocURL(file.path);
       })
     ]);
-  }
-}
-
-class UserTypeCard extends StatelessWidget {
-  final String typename;
-  final bool selected;
-  final Function onSelect;
-  final SvgPicture image;
-
-  UserTypeCard({@required this.image,
-    this.typename,
-    this.selected,
-    @required this.onSelect});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: AnimatedSwitcher(
-        duration: Duration(seconds: 1),
-        transitionBuilder: (child, animation) =>
-            ScaleTransition(scale: animation, child: child),
-        child: MaterialButton(
-          padding: EdgeInsets.all(0),
-          elevation: selected ? 3 : 0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          color: selected ? Colors.blue : Colors.grey.withOpacity(0.30),
-          onPressed: onSelect,
-          child: Container(
-            margin: EdgeInsets.all(4),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      image,
-                      Text(
-                        typename,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: selected
-                                ? Colors.white
-                                : Theme
-                                .of(context)
-                                .textTheme
-                                .bodyText1
-                                .color),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }

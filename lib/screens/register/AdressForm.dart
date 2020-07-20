@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +36,8 @@ class _AddressFormState extends State<AddressForm> {
         children: [
           Text(
             'Comprovante',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 40, color: Colors.white),
             textAlign: TextAlign.center,
           ),
           Text(
@@ -56,7 +56,8 @@ class _AddressFormState extends State<AddressForm> {
         children: [
           Text(
             'Concluído',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 40, color: Colors.white),
             textAlign: TextAlign.center,
           ),
           Text(
@@ -75,7 +76,8 @@ class _AddressFormState extends State<AddressForm> {
         children: [
           Text(
             'Endereço identificado',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 40, color: Colors.white),
             textAlign: TextAlign.center,
           ),
           Text(
@@ -119,11 +121,6 @@ class _AddressFormState extends State<AddressForm> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(
-              'images/location.svg',
-              height: 250,
-              width: 250,
-            ),
             title(),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -226,7 +223,7 @@ class _AddressFormState extends State<AddressForm> {
     error = cepData == null;
     if (!error) {
       RegisterData registerData =
-      Provider.of<RegisterData>(context, listen: true);
+          Provider.of<RegisterData>(context, listen: true);
       registerData.updateAddressCEP(cepData.cep);
     }
     setState(() {

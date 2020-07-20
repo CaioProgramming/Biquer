@@ -71,7 +71,6 @@ class _RegisterFormState extends State<RegisterForm> {
     assert(await user.getIdToken() != null);
     final FirebaseUser currentUser = await _auth.currentUser();
     assert(user.uid == currentUser.uid);
-    Provider.of<RegisterData>(context, listen: true).user = user;
   }
 
   Future registerWithEmailAndPassword(BuildContext context) async {

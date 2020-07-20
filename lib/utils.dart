@@ -1,6 +1,11 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:path/path.dart' as path;
+import 'package:tinycolor/tinycolor.dart';
 
 class Utils {
   static String getFileNameWithExtension(File file) {
@@ -32,5 +37,27 @@ class Utils {
 
   static RegExp intRegex() {
     return RegExp(r'[^0-9]');
+  }
+
+  static setBarAndNavColor(BuildContext context) {
+    FlutterStatusbarcolor.setStatusBarColor(Utils.barcolor(context));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor));
+  }
+
+  static Color barcolor(BuildContext context) {
+    final ThemeData mode = Theme.of(context);
+    Brightness whichMode = mode.brightness;
+    switch (whichMode) {
+      case Brightness.dark:
+        return TinyColor(Theme.of(context).scaffoldBackgroundColor)
+            .darken(10)
+            .color;
+      case Brightness.light:
+        return TinyColor(Theme.of(context).scaffoldBackgroundColor)
+            .lighten(10)
+            .color;
+        break;
+    }
   }
 }

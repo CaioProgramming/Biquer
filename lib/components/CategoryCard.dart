@@ -10,13 +10,16 @@ import '../constants.dart';
 
 class CategoryCard extends StatelessWidget {
   final Category category;
-  final bool selected;
 
-  CategoryCard({@required this.category, this.selected = false});
+  CategoryCard({@required this.category});
 
   @override
   Widget build(BuildContext context) {
     ServiceData serviceData = Provider.of(context);
+    Category selectedCategory = serviceData.category();
+    bool selected() =>
+        selectedCategory != null && selectedCategory.id == category.id;
+
     return CupertinoButton(
       onPressed: () => serviceData.updateCategory(this.category),
       child: Container(
@@ -25,7 +28,7 @@ class CategoryCard extends StatelessWidget {
                 fit: BoxFit.cover, image: NetworkImage(category.posterImage)),
             borderRadius: kDefaultBorder,
             border: Border.all(
-                color: selected
+                color: selected()
                     ? Theme.of(context).textTheme.button.color
                     : Colors.transparent,
                 width: 3)),
@@ -46,13 +49,17 @@ class CategoryCard extends StatelessWidget {
               left: 4,
               top: 4,
               child: Visibility(
-                visible: selected,
+                visible: selected(),
                 child: Container(
                   padding: EdgeInsets.all(10),
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                      color: Theme.of(context).textTheme.button.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .button
+                          .color,
                       borderRadius: kDefaultBorder),
                   child: Center(
                     child: Icon(

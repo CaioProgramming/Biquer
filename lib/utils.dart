@@ -58,6 +58,10 @@ class Utils {
             .lighten(10)
             .color;
         break;
+      default:
+        return TinyColor(Theme.of(context).scaffoldBackgroundColor)
+            .lighten(10)
+            .color;
     }
   }
 }

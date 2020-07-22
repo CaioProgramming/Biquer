@@ -61,6 +61,8 @@ class AddressData {
       case AddressStage.proof:
         return 'Envie o comprovante de endereço...';
         break;
+      default:
+        return '';
     }
   }
 
@@ -95,5 +97,6 @@ class AddressData {
         });
         break;
     }
+    return SizedBox();
   }
 }

@@ -19,6 +19,10 @@ const kCepHelperURL = 'https://brasilapi.com.br/api/cep/v1/';
 const kDefaultMargin = EdgeInsets.symmetric(vertical: 10);
 const kDefaultBorder = BorderRadius.all(Radius.circular(10));
 
+const kSavingServiceIllustration = 'https://blush.ly/htzfMMG4P/p';
+const kSavedServiceIllustration = 'https://blush.ly/8-T_F9IJ2/p';
+const kErrorServiceIllustration = 'https://blush.ly/iYlgf16yK/p';
+
 const kUserMessageBorder = BorderRadius.only(
   topRight: Radius.circular(0),
   topLeft: Radius.circular(20),

@@ -63,6 +63,7 @@ class _RegisterChatState extends State<RegisterChat> {
         );
         break;
     }
+    return SizedBox();
   }
 
   void load() async {
@@ -213,31 +214,5 @@ class _RegisterChatState extends State<RegisterChat> {
               ),
             ),
     );
-  }
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate(this._child);
-
-  final Text _child;
-
-  @override
-  double get minExtent => 100;
-
-  @override
-  double get maxExtent => 200;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return new Container(
-      color: Utils.barcolor(context), // ADD THE COLOR YOU WANT AS BACKGROUND.
-      child: _child,
-    );
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
   }
 }

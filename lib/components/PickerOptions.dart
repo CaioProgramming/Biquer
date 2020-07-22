@@ -73,8 +73,7 @@ class PickerOptions extends StatelessWidget {
     );
   }
 
-  Future<PickedFile> pickAddressProof(
-      BuildContext context, ImageSource source) async {
+  void pickAddressProof(BuildContext context, ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: source);
     if (pickedFile == null) {

@@ -1,19 +1,38 @@
 import 'dart:developer';
 
+import 'package:Biquer/components/SavingScreen.dart';
+import 'package:Biquer/constants.dart';
 import 'package:Biquer/model/Category.dart';
 import 'package:Biquer/model/Service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
-class ServiceData extends ChangeNotifier {
-  var service = Service();
+enum SavingState { SAVING, SAVED, ERROR }
 
-  ServiceData() {
-    service = Service();
+class ServiceData extends ChangeNotifier {
+  Service service;
+  SavingState state = SavingState.SAVING;
+
+  ServiceData(FirebaseUser user) {
+    this.service = Service(userID: user.uid);
   }
 
   Category category() => service.category;
 
-  CategoryStyle style() => service.category.selectedStyle;
+  saveService() async {
+    var fireStoreInstance = Firestore.instance;
+    await fireStoreInstance
+        .collection("Services")
+        .add(service.toMap())
+        .catchError((onError) {
+      print(onError);
+      state = SavingState.ERROR;
+    }).whenComplete(() {
+      state = SavingState.SAVED;
+    });
+    notifyListeners();
+  }
 
   updateServiceName(String newName) {
     service.name = newName;
@@ -31,22 +50,38 @@ class ServiceData extends ChangeNotifier {
   }
 
   updateCategory(Category category) {
-    if (service.category == null) service.category = Category();
     service.category = category;
-    service.category.selectedStyle = category.styles[0];
+    service.categoryKey = category.id;
+    updateStyle(0);
     notifyListeners();
   }
 
-  updateStyle(CategoryStyle style) {
-    if (service.category.selectedStyle == null) {
-      service.category.selectedStyle = CategoryStyle();
+  updateStyle(int position) {
+    service.stylePosition = position;
+    notifyListeners();
+  }
+
+  Widget savingScreen() {
+    switch (state) {
+      case SavingState.SAVING:
+        return SavingScreen(
+            message: 'Salvando seu bico', image: kSavingServiceIllustration);
+        break;
+      case SavingState.SAVED:
+        return SavingScreen(
+            message: 'Serviço salvo com sucesso!',
+            image: kSavedServiceIllustration);
+        break;
+      case SavingState.ERROR:
+        saveService();
+        return SavingScreen(
+            message:
+                'Ocorreu um erro ao salvar seu bico, Estamos verificando o que aconteceu',
+            image: kErrorServiceIllustration);
+        break;
     }
-    service.category.selectedStyle = style;
-    notifyListeners();
+    return SizedBox();
   }
 
-  updateCategoryStyle(CategoryStyle style) {
-    service.category.selectedStyle = style;
-    notifyListeners();
-  }
+  CategoryStyle selectedStyle() => category().styles[service.stylePosition];
 }

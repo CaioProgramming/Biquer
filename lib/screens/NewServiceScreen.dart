@@ -1,15 +1,12 @@
-import 'dart:ui';
+import 'dart:async';
 
-import 'package:Biquer/components/CategorySection.dart';
-import 'package:Biquer/components/ServiceForm.dart';
-import 'package:Biquer/components/ServicePreview.dart';
+import 'package:Biquer/components/NewServicePages.dart';
 import 'package:Biquer/model/ServiceData.dart';
-import 'package:Biquer/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class NewService extends StatefulWidget {
   static String screenRoute = '/newService';
@@ -19,79 +16,41 @@ class NewService extends StatefulWidget {
 }
 
 class _NewServiceState extends State<NewService> {
+  var currentPage = 0;
+  bool loading = true;
+  FirebaseUser user;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        user = ModalRoute.of(context).settings.arguments;
+      });
+      Timer(Duration(seconds: 2), () {
+        setState(() {
+          loading = false;
+        });
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    PageController pageController = PageController();
-    int currentPage = 0;
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        leading: (IconButton(
+            icon: Icon(AntDesign.close),
+            onPressed: () => Navigator.pop(context))),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
-      body: ChangeNotifierProvider(
-        create: (context) => ServiceData(),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Stack(
-            children: [
-              Expanded(
-                child: PageView(
-                  controller: pageController,
-                  onPageChanged: (position) {
-                    currentPage = position;
-                    print(currentPage);
-                    setState(() {});
-                  },
-                  children: [
-                    ServiceForm(),
-                    CategorySection(),
-                    ServicePreview()
-                  ],
-                ),
-              ),
-              Positioned(
-                  bottom: 10,
-                  right: 10,
-                  child: currentPage < 2
-                      ? FloatingActionButton(
-                          onPressed: () {
-                            pageController.nextPage(
-                                duration: Duration(seconds: 1),
-                                curve: Curves.easeIn);
-                          },
-                          child: Icon(
-                            AntDesign.right,
-                            color: Utils.barcolor(context),
-                          ),
-                          backgroundColor:
-                              Theme.of(context).textTheme.bodyText1.color,
-                        )
-                      : CupertinoButton(
-                          child: Text('Salvar'),
-                          onPressed: () {},
-                        ))
-            ],
-          ),
-        ),
-      ),
+      body: loading
+          ? Center(child: CupertinoActivityIndicator())
+          : ChangeNotifierProvider(
+              create: (context) => ServiceData(this.user),
+              child: NewServicePages(),
+            ),
     );
   }
-}
-
-class ExampleViewModel {
-  final List<Color> pageColors;
-  final CircularSliderAppearance appearance;
-  final double min;
-  final double max;
-  final double value;
-  final InnerWidget innerWidget;
-
-  ExampleViewModel(
-      {@required this.pageColors,
-      @required this.appearance,
-      this.min = 0,
-      this.max = 100,
-      this.value = 50,
-      this.innerWidget});
 }

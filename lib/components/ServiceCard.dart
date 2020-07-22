@@ -1,8 +1,10 @@
 import 'package:Biquer/constants.dart';
 import 'package:Biquer/model/Service.dart';
 import 'package:Biquer/model/ServiceData.dart';
+import 'package:Biquer/utils.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_swipe/liquid_swipe.dart';
 import 'package:money2/money2.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor/tinycolor.dart';
@@ -65,8 +67,8 @@ class ServiceCard extends StatelessWidget {
                 children: [
                   AutoSizeText(
                     'Desenvolvimento de aplicativos iOS e android',
-                    minFontSize: 18,
-                    maxFontSize: 32,
+                    minFontSize: 20,
+                    maxFontSize: 50,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -113,11 +115,18 @@ class ServiceCardPreview extends StatelessWidget {
 
   ServiceCardPreview({this.infinite = false});
 
-  final PageController _controller = PageController(initialPage: 0);
-
   @override
   Widget build(BuildContext context) {
     ServiceData serviceData = Provider.of(context, listen: true);
+
+    List<Container> containers() {
+      List<Container> containers = [];
+      for (var style in serviceData.category().styles) {
+        containers.add(style.imageContainer());
+      }
+      return containers;
+    }
+
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
       width: double.maxFinite,
@@ -125,16 +134,14 @@ class ServiceCardPreview extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: kDefaultBorder,
-            child: PageView.builder(
-                itemCount: serviceData.category().styles.length,
-                controller: _controller,
-                onPageChanged: (position) => serviceData
-                    .updateStyle(serviceData.category().styles[position]),
-                itemBuilder: (context, index) => FadeInImage(
-                    fit: BoxFit.cover,
-                    placeholder: AssetImage('images/chick.png'),
-                    image: NetworkImage(
-                        serviceData.category().styles[index].backgroundImage))),
+            child: LiquidSwipe(
+              pages: containers(),
+              enableLoop: true,
+              onPageChangeCallback: (position) {
+                print('page changed $position');
+                serviceData.updateStyle(position);
+              },
+            ),
           ),
           Positioned(
             bottom: 0,
@@ -151,30 +158,17 @@ class ServiceCardPreview extends StatelessWidget {
                         Colors.black.withOpacity(0.40),
                         Colors.transparent
                       ])),
-              child: Wrap(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AutoSizeText(
-                    'Desenvolvimento de aplicativos iOS e android',
-                    minFontSize: 18,
-                    maxFontSize: 32,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: serviceData.style() == null
-                            ? Colors.white
-                            : TinyColor.fromString(
-                                    serviceData.style().textColor)
-                                .color,
-                        fontWeight: FontWeight.w900),
+                  ServiceCardAutoText(
+                    servicename: serviceData.service.name,
                   ),
                   Container(
                     padding: EdgeInsets.all(8),
                     margin: EdgeInsets.symmetric(vertical: 10),
                     decoration: BoxDecoration(
-                        color:
-                            TinyColor(Theme.of(context).scaffoldBackgroundColor)
-                                .darken(50)
-                                .color,
+                        color: Utils.barcolor(context),
                         borderRadius: kDefaultBorder),
                     child: Text(money(serviceData.service.value)),
                   )
@@ -191,5 +185,23 @@ class ServiceCardPreview extends StatelessWidget {
     Currency currency = Currency.create('BRL', 2, symbol: 'R\$');
     Money money = Money.from(value, currency);
     return money.toString();
+  }
+}
+
+class ServiceCardAutoText extends StatelessWidget {
+  final String servicename;
+
+  ServiceCardAutoText({this.servicename = ''});
+
+  @override
+  Widget build(BuildContext context) {
+    return AutoSizeText(
+      servicename,
+      minFontSize: 20,
+      maxFontSize: 50,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900),
+    );
   }
 }

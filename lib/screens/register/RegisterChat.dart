@@ -228,8 +228,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => 200;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset,
-      bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return new Container(
       color: Utils.barcolor(context), // ADD THE COLOR YOU WANT AS BACKGROUND.
       child: _child,

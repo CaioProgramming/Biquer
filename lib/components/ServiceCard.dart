@@ -3,6 +3,7 @@ import 'package:Biquer/model/Service.dart';
 import 'package:Biquer/model/ServiceData.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:money2/money2.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor/tinycolor.dart';
 
@@ -175,23 +176,7 @@ class ServiceCardPreview extends StatelessWidget {
                                 .darken(50)
                                 .color,
                         borderRadius: kDefaultBorder),
-                    child: RichText(
-                      textAlign: TextAlign.start,
-                      text: TextSpan(
-                        text: 'R\$',
-                        style: Theme.of(context).textTheme.caption,
-                        children: <TextSpan>[
-                          TextSpan(
-                              text:
-                                  serviceData.service.value.toStringAsFixed(2),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w100,
-                                  fontSize: 20,
-                                  color:
-                                      Theme.of(context).textTheme.button.color))
-                        ],
-                      ),
-                    ),
+                    child: Text(money(serviceData.service.value)),
                   )
                 ],
               ),
@@ -200,5 +185,11 @@ class ServiceCardPreview extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String money(double value) {
+    Currency currency = Currency.create('BRL', 2, symbol: 'R\$');
+    Money money = Money.from(value, currency);
+    return money.toString();
   }
 }

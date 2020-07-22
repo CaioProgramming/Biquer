@@ -78,13 +78,13 @@ class _HomeScreenState extends State<HomeScreen> {
         child: loading
             ? CupertinoActivityIndicator()
             : Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: sections,
-            ),
-          ),
-        ),
+                padding: const EdgeInsets.all(8.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: sections,
+                  ),
+                ),
+              ),
       ),
     );
   }

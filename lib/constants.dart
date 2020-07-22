@@ -17,7 +17,7 @@ const kRegistermessage = 'Cadastre-se para começar a divulgar seus serviços!';
 
 const kCepHelperURL = 'https://brasilapi.com.br/api/cep/v1/';
 const kDefaultMargin = EdgeInsets.symmetric(vertical: 10);
-const kDefaultBorder = BorderRadius.all(Radius.circular(5));
+const kDefaultBorder = BorderRadius.all(Radius.circular(10));
 
 const kUserMessageBorder = BorderRadius.only(
   topRight: Radius.circular(0),

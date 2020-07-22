@@ -24,18 +24,19 @@ class CEP {
         null,
         readonly: true,
         hintText: state,
-        labelText: 'state',
       ));
 
     if (neighborhood != null)
-      cepWidgets.add(FormInput(null,
-          readonly: true, hintText: neighborhood, labelText: 'neighborhood'));
+      cepWidgets.add(FormInput(
+        null,
+        readonly: true,
+        hintText: neighborhood,
+      ));
     if (city != null)
       cepWidgets.add(FormInput(
         null,
         readonly: true,
         hintText: city,
-        labelText: 'city',
       ));
 
     return Column(

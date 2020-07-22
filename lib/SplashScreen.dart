@@ -1,3 +1,4 @@
+import 'package:Biquer/screens/NewServiceScreen.dart';
 import 'package:Biquer/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SplashScreen extends StatefulWidget {
+  static String screenRoute = '/';
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -20,7 +23,8 @@ class _SplashScreenState extends State<SplashScreen> {
       print('user ${user.displayName}');
       setState(() {
         user = user;
-        Navigator.popAndPushNamed(context, '/home', arguments: user);
+        Navigator.popAndPushNamed(context, NewService.screenRoute,
+            arguments: user);
       });
     } else {
       Navigator.pushNamed(context, '/register');

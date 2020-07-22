@@ -165,9 +165,7 @@ class _RegisterChatState extends State<RegisterChat> {
                               ],
                             ),
                             background: Container(
-                              color: Theme
-                                  .of(context)
-                                  .scaffoldBackgroundColor,
+                              color: Theme.of(context).scaffoldBackgroundColor,
                             ),
                           ),
                         ),
@@ -211,8 +209,8 @@ class _RegisterChatState extends State<RegisterChat> {
                       ],
                     ),
                   )
-          ],
-        ),
+                ],
+              ),
       ),
     );
   }

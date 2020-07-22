@@ -1,8 +1,8 @@
 import 'package:Biquer/SplashScreen.dart';
 import 'package:Biquer/screens/HomeScreen.dart';
+import 'package:Biquer/screens/NewServiceScreen.dart';
 import 'package:Biquer/screens/register/RegisterScreen.dart';
 import 'package:Biquer/utils.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -16,26 +16,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _auth = FirebaseAuth.instance;
-  FirebaseUser loggedUser;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _auth.currentUser().then((user) {
-      if (user != null) {
-        print('user ${user.displayName}');
-      }
-      setState(() {
-        loggedUser = user;
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme(TextTheme appTheme) =>
-        GoogleFonts.openSansTextTheme(appTheme);
+        GoogleFonts.latoTextTheme(appTheme);
 
     return MaterialApp(
       title: 'Biquer',
@@ -57,12 +41,13 @@ class _MyAppState extends State<MyApp> {
           primaryColorDark: Colors.deepOrange,
           primaryColor: Colors.orange),
       routes: {
-        '/': (context) => SplashScreen(),
-        '/register': (context) => RegisterScreen(),
+        SplashScreen.screenRoute: (context) => SplashScreen(),
+        RegisterScreen.screenRoute: (context) => RegisterScreen(),
         '/login': (context) => SplashScreen(),
-        '/home': (context) => HomeScreen(),
+        HomeScreen.screenRoute: (context) => HomeScreen(),
+        NewService.screenRoute: (context) => NewService()
       },
-      initialRoute: '/',
+      initialRoute: NewService.screenRoute,
     );
   }
 }

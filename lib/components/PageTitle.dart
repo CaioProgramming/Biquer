@@ -15,8 +15,11 @@ class PageTitle extends StatelessWidget {
           title,
           style: TextStyle(fontWeight: FontWeight.w900, fontSize: 40),
         ),
-        Text(
-          message,
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Text(
+            message,
+          ),
         ),
       ],
     );

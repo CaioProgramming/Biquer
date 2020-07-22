@@ -50,7 +50,7 @@ class Utils {
     Brightness whichMode = mode.brightness;
     switch (whichMode) {
       case Brightness.dark:
-        return TinyColor(Theme.of(context).scaffoldBackgroundColor)
+        return TinyColor(ThemeData.dark().scaffoldBackgroundColor)
             .darken(10)
             .color;
       case Brightness.light:

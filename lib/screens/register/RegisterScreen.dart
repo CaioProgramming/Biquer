@@ -6,6 +6,8 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
+  static String screenRoute = '/register';
+
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }

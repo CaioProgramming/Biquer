@@ -26,14 +26,14 @@ dependencies:
   adobe_xd: ^0.1.0
   package_info: ^0.4.1
   image_picker: ^0.6.7+2
-  simple_animations: ^2.2.1
   mask_text_input_formatter: ^1.0.7
   flutter_svg: ^0.17.0
   email_validator: ^1.0.0
   cpf_cnpj_validator: ^1.0.5
   tinycolor: ^1.0.2
   flutter_statusbarcolor: ^0.2.3
-
+  auto_size_text: ^2.1.0
+  sleek_circular_slider: ^1.1.0
 
 flutter_icons:
   android: true

@@ -211,7 +211,7 @@ class _RegisterChatState extends State<RegisterChat> {
                   )
                 ],
               ),
-      ),
+            ),
     );
   }
 }

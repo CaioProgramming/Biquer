@@ -26,11 +26,11 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => {
-      setState(() {
-        user = ModalRoute.of(context).settings.arguments;
-        loading = false;
-      })
-    });
+          setState(() {
+            user = ModalRoute.of(context).settings.arguments;
+            loading = false;
+          })
+        });
   }
 
   @override

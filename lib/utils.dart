@@ -67,7 +67,8 @@ class Utils {
   }
 
   static String moneyText(double value) {
-    Currency currency = Currency.create('BRL', 2, symbol: 'R\$');
+    Currency currency = Currency.create('BRL', 2,
+        symbol: 'R\$ ', pattern: 'S0.000,00', invertSeparators: true);
     Money money = Money.from(value, currency);
     return money.toString();
   }

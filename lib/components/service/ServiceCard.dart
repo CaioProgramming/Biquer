@@ -38,6 +38,7 @@ class ServiceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           image: DecorationImage(
@@ -45,54 +46,34 @@ class ServiceCard extends StatelessWidget {
               image: NetworkImage(service.style().backgroundImage))),
       width: double.maxFinite,
       height: !infinite ? double.maxFinite / 2 : double.maxFinite,
-      child: Stack(
-        children: [
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  gradient: LinearGradient(
-                      begin: Alignment.bottomLeft,
-                      end: Alignment.topLeft,
-                      colors: [
-                        Colors.black.withOpacity(0.40),
-                        Colors.transparent
-                      ])),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ServiceCardAutoText(
-                    servicename: service.name,
-                    textColor:
-                        TinyColor.fromString(service.style().textColor).color,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(8),
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                        color:
-                            TinyColor(Theme.of(context).scaffoldBackgroundColor)
-                                .darken(50)
-                                .color,
-                        borderRadius: kDefaultBorder),
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                          color: Utils.barcolor(context),
-                          borderRadius: kDefaultBorder),
-                      child: Text(Utils.moneyText(service.value)),
-                    ),
-                  )
-                ],
-              ),
+      child: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            gradient: LinearGradient(
+                begin: Alignment.bottomLeft,
+                end: Alignment.topLeft,
+                colors: [Colors.black.withOpacity(0.40), Colors.transparent])),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ServiceCardAutoText(
+              servicename: service.name,
+              textColor: TinyColor.fromString(service.style().textColor).color,
             ),
-          )
-        ],
+            Container(
+              padding: EdgeInsets.all(16),
+              margin: EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                  color: TinyColor(Theme.of(context).scaffoldBackgroundColor)
+                      .darken(50)
+                      .color,
+                  borderRadius: kDefaultBorder),
+              child: Text(Utils.moneyText(service.value)),
+            )
+          ],
+        ),
       ),
     );
   }

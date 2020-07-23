@@ -55,7 +55,7 @@ class _RegisterChatState extends State<RegisterChat> {
             Navigator.pop(context);
           },
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           padding: EdgeInsets.all(16),
           child: Text(
             'Concluir cadastro',

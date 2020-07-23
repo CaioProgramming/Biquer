@@ -30,14 +30,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget headerSection() {
     return HomeHeader(
-      title: 'R\$ 5000,00',
+      title: Utils.moneyText(2000),
       caption: 'Você já lucrou',
     );
   }
 
   Widget transactionsSection() {
     return Section(
-        title: 'Últimos serviços',
+        title: 'Últimas transações',
         section: ListView.builder(
           shrinkWrap: true,
           itemCount: 4,

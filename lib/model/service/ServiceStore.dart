@@ -43,12 +43,7 @@ class ServiceStore extends BaseData {
                     arguments: _user);
               }),
         ));
-        widget = GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 4,
-                crossAxisSpacing: 4,
-                childAspectRatio: 2 / 4),
+        widget = PageView.builder(
             itemBuilder: (context, index) {
               return serviceCards[index];
             },

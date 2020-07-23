@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:Biquer/constants.dart';
 import 'package:Biquer/model/service/Service.dart';
 import 'package:Biquer/model/service/ServiceData.dart';
@@ -28,7 +30,7 @@ class ServiceCard extends StatelessWidget {
         children: [
           Center(
             child:
-                Text('Você precisa voltar e informar os dados do seu serviço'),
+            Text('Você precisa voltar e informar os dados do seu serviço'),
           )
         ],
       ),
@@ -46,34 +48,39 @@ class ServiceCard extends StatelessWidget {
               image: NetworkImage(service.style().backgroundImage))),
       width: double.maxFinite,
       height: !infinite ? double.maxFinite / 2 : double.maxFinite,
-      child: Container(
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            gradient: LinearGradient(
-                begin: Alignment.bottomLeft,
-                end: Alignment.topLeft,
-                colors: [Colors.black.withOpacity(0.40), Colors.transparent])),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ServiceCardAutoText(
-              servicename: service.name,
-              textColor: TinyColor.fromString(service.style().textColor).color,
+      child: Stack(
+        children: [
+          Positioned(
+            bottom: 10,
+            left: 10,
+            right: 10,
+            child: ClipRRect(
+              borderRadius: kDefaultBorder,
+              child: Container(
+                padding: EdgeInsets.all(8),
+                color: Utils.barcolor(context).withOpacity(0.40),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ServiceCardAutoText(
+                        servicename: service.name,
+                        textColor:
+                            TinyColor.fromString(service.style().textColor)
+                                .color,
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        child: Text(Utils.moneyText(service.value)),
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ),
-            Container(
-              padding: EdgeInsets.all(16),
-              margin: EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(
-                  color: TinyColor(Theme.of(context).scaffoldBackgroundColor)
-                      .darken(50)
-                      .color,
-                  borderRadius: kDefaultBorder),
-              child: Text(Utils.moneyText(service.value)),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

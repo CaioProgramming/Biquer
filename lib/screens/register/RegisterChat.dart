@@ -111,7 +111,7 @@ class _RegisterChatState extends State<RegisterChat> {
     if (!loading) {
       Timer(
         Duration(seconds: 1),
-            () {
+        () {
           _controller.animateTo(
             _controller.position.maxScrollExtent,
             curve: Curves.easeIn,
@@ -124,7 +124,7 @@ class _RegisterChatState extends State<RegisterChat> {
         Duration(seconds: 1),
             () {
           RegisterData _biquerData =
-          Provider.of<RegisterData>(context, listen: false);
+              Provider.of<RegisterData>(context, listen: false);
           _biquerData.initializeRegister();
         },
       );

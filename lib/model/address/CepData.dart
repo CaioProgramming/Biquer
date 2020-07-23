@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'package:Biquer/constants.dart';
-import 'package:Biquer/model/CEP.dart';
 import 'package:http/http.dart' as http;
 
-import '../utils.dart';
+import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/model/address/CEP.dart';
+
+import '../../utils.dart';
 
 class CepHelper {
   String cepRequest;

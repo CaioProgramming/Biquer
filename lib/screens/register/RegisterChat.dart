@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:Biquer/components/PickerOptions.dart';
-import 'package:Biquer/model/AddressData.dart';
-import 'package:Biquer/model/DocumentData.dart';
 import 'package:Biquer/model/RegisterData.dart';
-import 'package:Biquer/model/UserData.dart';
+import 'package:Biquer/model/address/AddressData.dart';
+import 'package:Biquer/model/document/DocumentData.dart';
+import 'package:Biquer/model/user/UserData.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -22,6 +22,8 @@ class _RegisterChatState extends State<RegisterChat> {
       GlobalKey<SliverAnimatedListState>();
 
   Widget messageField() {
+    RegisterData _biquerData = Provider.of(context);
+
     switch (_biquerData.stage) {
       case RegisterStage.user:
         return UserData.userField(
@@ -53,7 +55,7 @@ class _RegisterChatState extends State<RegisterChat> {
             Navigator.pop(context);
           },
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           padding: EdgeInsets.all(16),
           child: Text(
             'Concluir cadastro',
@@ -66,22 +68,14 @@ class _RegisterChatState extends State<RegisterChat> {
     return SizedBox();
   }
 
-  void load() async {
-    Future.delayed(Duration(seconds: 2), () {
-      _biquerData = Provider.of<RegisterData>(context);
-      _biquerData.initializeRegister();
-      loading = false;
-      setState(() {});
-    });
-  }
-
-  RegisterData _biquerData;
   bool loading = true;
   final _controller = ScrollController();
   final messageTextController = TextEditingController();
 
   // ignore: missing_return
   bool showSendButton() {
+    RegisterData _biquerData = Provider.of(context);
+
     switch (_biquerData.stage) {
       case RegisterStage.user:
         return true;
@@ -106,16 +100,10 @@ class _RegisterChatState extends State<RegisterChat> {
   }
 
   void sendData({value}) {
+    RegisterData _biquerData = Provider.of(context, listen: false);
     print('sending data');
     _biquerData.sendData(value ?? messageTextController.text);
     messageTextController.clear();
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    load();
   }
 
   @override
@@ -123,7 +111,7 @@ class _RegisterChatState extends State<RegisterChat> {
     if (!loading) {
       Timer(
         Duration(seconds: 1),
-        () {
+            () {
           _controller.animateTo(
             _controller.position.maxScrollExtent,
             curve: Curves.easeIn,
@@ -131,6 +119,18 @@ class _RegisterChatState extends State<RegisterChat> {
           );
         },
       );
+    } else {
+      Timer(
+        Duration(seconds: 1),
+            () {
+          RegisterData _biquerData =
+          Provider.of<RegisterData>(context, listen: false);
+          _biquerData.initializeRegister();
+        },
+      );
+      setState(() {
+        loading = false;
+      });
     }
 
     return Scaffold(
@@ -172,8 +172,14 @@ class _RegisterChatState extends State<RegisterChat> {
                         ),
                         SliverList(
                           delegate: SliverChildBuilderDelegate(
-                              (context, index) => _biquerData.messages[index],
-                              childCount: _biquerData.messages.length),
+                                  (context, index) {
+                                RegisterData _biquerData = Provider.of(context);
+                                return _biquerData.messages[index];
+                              },
+                              childCount: Provider
+                                  .of<RegisterData>(context)
+                                  .messages
+                                  .length),
                           key: _listKey,
                         ),
                       ],

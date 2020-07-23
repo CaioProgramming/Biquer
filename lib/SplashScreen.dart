@@ -1,4 +1,5 @@
-import 'package:Biquer/screens/NewServiceScreen.dart';
+import 'package:Biquer/screens/HomeScreen.dart';
+import 'package:Biquer/screens/LoginScreen.dart';
 import 'package:Biquer/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,11 +24,11 @@ class _SplashScreenState extends State<SplashScreen> {
       print('user ${user.displayName}');
       setState(() {
         user = user;
-        Navigator.popAndPushNamed(context, NewService.screenRoute,
+        Navigator.popAndPushNamed(context, HomeScreen.screenRoute,
             arguments: user);
       });
     } else {
-      Navigator.pushNamed(context, '/register');
+      Navigator.popAndPushNamed(context, LoginScreen.screenRoute);
     }
   }
 

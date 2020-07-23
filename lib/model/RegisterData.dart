@@ -2,11 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:Biquer/components/MessageBubble.dart';
-import 'package:Biquer/model/Address.dart';
-import 'package:Biquer/model/AddressData.dart';
-import 'package:Biquer/model/Document.dart';
-import 'package:Biquer/model/DocumentData.dart';
-import 'package:Biquer/model/UserData.dart';
 import 'package:cpf_cnpj_validator/cnpj_validator.dart';
 import 'package:cpf_cnpj_validator/cpf_validator.dart';
 import 'package:email_validator/email_validator.dart';
@@ -14,8 +9,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'CepData.dart';
-import 'User.dart';
+import 'address/Address.dart';
+import 'address/AddressData.dart';
+import 'address/CepData.dart';
+import 'document/Document.dart';
+import 'document/DocumentData.dart';
+import 'user/User.dart';
+import 'user/UserData.dart';
 
 enum RegisterStage { user, address, document, photo, saving, complete }
 

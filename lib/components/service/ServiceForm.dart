@@ -1,11 +1,12 @@
 import 'package:Biquer/components/PageTitle.dart';
-import 'package:Biquer/model/ServiceData.dart';
 import 'package:flutter/material.dart';
 import 'package:money2/money2.dart';
 import 'package:provider/provider.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
-import '../constants.dart';
+import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/model/service/ServiceData.dart';
+
+import '../../constants.dart';
 
 class ServiceForm extends StatelessWidget {
   @override
@@ -59,7 +60,7 @@ class ServiceForm extends StatelessWidget {
         CustomSliderWidths(trackWidth: 1, progressBarWidth: 5, handlerSize: 20);
     final customColors02 = CustomSliderColors(
         trackColor: Theme.of(context).hintColor.withOpacity(0.05),
-        dotColor: Colors.black,
+        dotColor: Colors.green,
         progressBarColor: Colors.green,
         hideShadow: true);
     final info02 = InfoProperties(
@@ -80,7 +81,7 @@ class ServiceForm extends StatelessWidget {
         infoProperties: info02,
         startAngle: 180,
         angleRange: 360,
-        size: 300.0,
+        size: 320.0,
         animationEnabled: true);
 
     final slider = SleekCircularSlider(

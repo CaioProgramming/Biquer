@@ -2,10 +2,9 @@ import 'dart:io';
 
 import 'package:Biquer/components/MessageBubble.dart';
 import 'package:Biquer/constants.dart';
-import 'package:Biquer/model/AddressData.dart';
-import 'package:Biquer/model/DocumentData.dart';
 import 'package:Biquer/model/RegisterData.dart';
-import 'package:Biquer/model/User.dart';
+import 'package:Biquer/model/address/AddressData.dart';
+import 'package:Biquer/model/document/DocumentData.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -14,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import 'User.dart';
 
 enum UserStage { email, password }
 

@@ -1,4 +1,4 @@
-import 'package:Biquer/model/User.dart';
+import 'package:Biquer/model/user/User.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

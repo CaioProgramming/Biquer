@@ -1,9 +1,10 @@
-import 'package:Biquer/model/ServiceData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
 
-import '../utils.dart';
+import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/model/service/ServiceData.dart';
+
+import '../../utils.dart';
 import 'CategorySection.dart';
 import 'ServiceForm.dart';
 import 'ServicePreview.dart';

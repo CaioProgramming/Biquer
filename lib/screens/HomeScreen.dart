@@ -1,7 +1,7 @@
 import 'package:Biquer/components/HomeHeader.dart';
 import 'package:Biquer/components/Section.dart';
-import 'package:Biquer/components/ServiceCard.dart';
 import 'package:Biquer/components/TransactionCard.dart';
+import 'package:Biquer/screens/ServicesScreen.dart';
 import 'package:Biquer/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,9 +21,32 @@ class _HomeScreenState extends State<HomeScreen> {
   bool loading = true;
   FirebaseUser user;
 
+  Widget serviceSection() {
+    return Section(
+      title: 'Seus serviços',
+      section: ServiceScreen(this.user),
+    );
+  }
+
+  Widget headerSection() {
+    return HomeHeader(
+      title: 'R\$ 5000,00',
+      caption: 'Você já lucrou',
+    );
+  }
+
+  Widget transactionsSection() {
+    return Section(
+        title: 'Últimos serviços',
+        section: ListView.builder(
+          shrinkWrap: true,
+          itemCount: 4,
+          itemBuilder: (context, index) => TransactionCard(),
+        ));
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => {
           setState(() {
@@ -35,33 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> sections = [];
-
-    sections.add(HomeHeader(
-      title: 'R\$ 5000,00',
-      caption: 'Você já lucrou',
-    ));
-
-    sections.add(
-      Section(
-          title: 'Últimos serviços',
-          section: ListView.builder(
-            shrinkWrap: true,
-            itemCount: 4,
-            itemBuilder: (context, index) => TransactionCard(),
-          )),
-    );
-
-    sections.add(Section(
-      title: 'Serviços mais buscados',
-      section: Container(
-        width: double.infinity,
-        height: 500,
-        child: PageView.builder(
-            itemBuilder: (context, index) => ServiceCard(), itemCount: 4),
-      ),
-    ));
-
     return Scaffold(
       appBar: AppBar(
         elevation: 1,
@@ -81,7 +77,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: SingleChildScrollView(
                   child: Column(
-                    children: sections,
+                    children: [
+                      headerSection(),
+                      transactionsSection(),
+                      serviceSection()
+                    ],
                   ),
                 ),
               ),

@@ -22,7 +22,8 @@ const kDefaultBorder = BorderRadius.all(Radius.circular(10));
 const kSavingServiceIllustration = 'https://blush.ly/htzfMMG4P/p';
 const kSavedServiceIllustration = 'https://blush.ly/8-T_F9IJ2/p';
 const kErrorServiceIllustration = 'https://blush.ly/iYlgf16yK/p';
-
+const kLoginImage = 'https://blush.ly/F_G_vXq4C/p';
+const kNoServiceImage = 'https://blush.ly/ycXBSkED4/p';
 const kUserMessageBorder = BorderRadius.only(
   topRight: Radius.circular(0),
   topLeft: Radius.circular(20),

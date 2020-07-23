@@ -1,5 +1,6 @@
 import 'package:Biquer/SplashScreen.dart';
 import 'package:Biquer/screens/HomeScreen.dart';
+import 'package:Biquer/screens/LoginScreen.dart';
 import 'package:Biquer/screens/NewServiceScreen.dart';
 import 'package:Biquer/screens/register/RegisterScreen.dart';
 import 'package:Biquer/utils.dart';
@@ -23,6 +24,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       title: 'Biquer',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
           textTheme: textTheme(Theme.of(context).textTheme),
           accentColor: Colors.deepOrange,
@@ -43,7 +45,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         SplashScreen.screenRoute: (context) => SplashScreen(),
         RegisterScreen.screenRoute: (context) => RegisterScreen(),
-        '/login': (context) => SplashScreen(),
+        LoginScreen.screenRoute: (context) => LoginScreen(),
         HomeScreen.screenRoute: (context) => HomeScreen(),
         NewService.screenRoute: (context) => NewService()
       },

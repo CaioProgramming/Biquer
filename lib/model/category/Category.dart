@@ -19,16 +19,16 @@ class Category {
   factory Category.fromMap(Map<String, dynamic> map, String key) {
     print('Converting \n $map \nto category');
     return new Category(
-      styles: dynamicToStyles(map['styles']),
+      styles: dynamicListToStyles(map['styles']),
       title: map['title'] as String,
       subtitle: map['subtitle'] as String,
       posterImage: map['posterImage'] as String,
       titleColor: map['titleColor'] as String,
-      id: map['id'] as String,
+      id: key,
     );
   }
 
-  static List<CategoryStyle> dynamicToStyles(List<dynamic> list) {
+  static List<CategoryStyle> dynamicListToStyles(List<dynamic> list) {
     List<CategoryStyle> styles = [];
     for (final style in list) {
       styles.add(CategoryStyle.fromMap(style));

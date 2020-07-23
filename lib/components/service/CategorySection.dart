@@ -1,7 +1,8 @@
-import 'package:Biquer/model/CategoryData.dart';
 import 'package:flutter/material.dart';
 
-import 'PageTitle.dart';
+import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/model/category/CategoryData.dart';
+
+import '../PageTitle.dart';
 
 class CategorySection extends StatelessWidget {
   void getCategories() async {}

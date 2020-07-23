@@ -2,18 +2,17 @@ import 'dart:io';
 
 import 'package:Biquer/components/MessageBubble.dart';
 import 'package:Biquer/components/PickerOptions.dart';
-import 'package:Biquer/components/ServicerTypeCard.dart';
-import 'package:Biquer/model/Document.dart';
-import 'package:Biquer/model/User.dart';
+import 'package:Biquer/components/service/ServicerTypeCard.dart';
+import 'package:Biquer/constants.dart';
+import 'package:Biquer/model/RegisterData.dart';
+import 'package:Biquer/model/document/Document.dart';
+import 'package:Biquer/model/user/User.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
-
-import '../constants.dart';
-import 'RegisterData.dart';
 
 enum DocumentStage { selectype, docid, docUrl }
 
@@ -39,44 +38,6 @@ class DocumentData {
     messages.add(MessageBubble(
         messageChild: MessageBubble.defaultMessageText(
             'Antes de enviar seus documentos precisa selecionar a opção em que se encontra')));
-/*
-    messages.add(MessageBubble(
-      messageChild: Wrap(
-        children: [
-          ServicerTypeCard(
-            typename: 'Autonômo',
-            image: SvgPicture.asset(
-              'images/lonely.svg',
-              height: 50,
-              width: 50,
-            ),
-            onSelect: () {
-              var type = UserType.individual;
-              onSelect(type);
-            },
-            backColor: Colors.black,
-            textColor: Colors.lightBlue,
-          ),
-          ServicerTypeCard(
-            typename: 'Empresa',
-            userType: UserType.company,
-            image: SvgPicture.asset(
-              'images/team.svg',
-              height: 50,
-              width: 50,
-            ),
-            onSelect: () {
-              var type = UserType.company;
-              onSelect(type);
-            },
-            backColor: Colors.deepPurple,
-            textColor: Colors.white,
-          ),
-        ],
-      ),
-      backcolor: Colors.transparent,
-    ));
-*/
 
     return messages;
   }
@@ -130,7 +91,8 @@ class DocumentData {
                   width: 120,
                 ),
                 onSelect: () {
-                  var _biquerData = Provider.of<RegisterData>(context);
+                  var _biquerData =
+                      Provider.of<RegisterData>(context, listen: false);
                   _biquerData.sendData(UserType.individual);
                 },
                 backColor: Colors.black,

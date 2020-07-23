@@ -1,8 +1,9 @@
-import 'package:Biquer/components/CategoryCard.dart';
 import 'package:Biquer/model/BaseData.dart';
-import 'package:Biquer/model/Category.dart';
+import 'package:Biquer/model/category/Category.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+
+import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/components/service/CategoryCard.dart';
 
 class CategoryData extends BaseData {
   @override
@@ -40,5 +41,10 @@ class CategoryData extends BaseData {
         }
       },
     );
+  }
+
+  Future<Category> getCategory(String id) async {
+    DocumentSnapshot categorySnapshot = await singleDocument(id);
+    return Category.fromMap(categorySnapshot.data, categorySnapshot.documentID);
   }
 }

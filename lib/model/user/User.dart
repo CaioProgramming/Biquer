@@ -1,5 +1,5 @@
-import 'package:Biquer/model/Address.dart';
-import 'package:Biquer/model/Document.dart';
+import 'package:Biquer/model/address/Address.dart';
+import 'package:Biquer/model/document/Document.dart';
 
 enum UserType {
   individual,

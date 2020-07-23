@@ -1,12 +1,13 @@
 import 'dart:async';
 
-import 'package:Biquer/components/NewServicePages.dart';
-import 'package:Biquer/model/ServiceData.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
+
+import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/components/service/NewServicePages.dart';
+import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/model/service/ServiceData.dart';
 
 class NewService extends StatefulWidget {
   static String screenRoute = '/newService';
@@ -42,7 +43,10 @@ class _NewServiceState extends State<NewService> {
         elevation: 0,
         leading: (IconButton(
             icon: Icon(AntDesign.close),
-            onPressed: () => Navigator.pop(context))),
+            onPressed: () {
+              ServiceData serviceData = Provider.of(context);
+              Navigator.pop(context, serviceData.state == SavingState.SAVED);
+            })),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       body: loading

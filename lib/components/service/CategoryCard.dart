@@ -1,12 +1,13 @@
-import 'package:Biquer/model/Category.dart';
-import 'package:Biquer/model/ServiceData.dart';
+import 'package:Biquer/model/category/Category.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor/tinycolor.dart';
 
-import '../constants.dart';
+import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/model/service/ServiceData.dart';
+
+import '../../constants.dart';
 
 class CategoryCard extends StatelessWidget {
   final Category category;
@@ -55,11 +56,7 @@ class CategoryCard extends StatelessWidget {
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .button
-                          .color,
+                      color: Theme.of(context).textTheme.button.color,
                       borderRadius: kDefaultBorder),
                   child: Center(
                     child: Icon(

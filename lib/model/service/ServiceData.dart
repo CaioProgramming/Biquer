@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:Biquer/components/SavingScreen.dart';
 import 'package:Biquer/constants.dart';
-import 'package:Biquer/model/Category.dart';
-import 'package:Biquer/model/Service.dart';
+import 'package:Biquer/model/category/Category.dart';
+import 'package:Biquer/model/service/Service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';

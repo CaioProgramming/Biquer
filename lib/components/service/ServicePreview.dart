@@ -1,10 +1,11 @@
-import 'package:Biquer/model/Service.dart';
-import 'package:Biquer/model/ServiceData.dart';
+import 'package:Biquer/model/service/Service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'PageTitle.dart';
+import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/model/service/ServiceData.dart';
+
+import '../PageTitle.dart';
 import 'ServiceCard.dart';
 
 class ServicePreview extends StatelessWidget {

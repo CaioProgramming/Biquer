@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:money2/money2.dart';
 import 'package:path/path.dart' as path;
 import 'package:tinycolor/tinycolor.dart';
 
@@ -63,5 +64,11 @@ class Utils {
             .lighten(10)
             .color;
     }
+  }
+
+  static String moneyText(double value) {
+    Currency currency = Currency.create('BRL', 2, symbol: 'R\$');
+    Money money = Money.from(value, currency);
+    return money.toString();
   }
 }

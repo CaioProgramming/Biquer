@@ -29,8 +29,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
   }
 
   void getServices() async {
-    services = await ServiceData()
-        .findUserServices(widget.userID, Text('Nenhum serviço encontrado'));
+    services = await ServiceData().findUserServices(widget.userID, context);
     setState(() {});
   }
 }

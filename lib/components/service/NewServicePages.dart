@@ -62,28 +62,28 @@ class _NewServicePagesState extends State<NewServicePages> {
 
     return bicoData != null
         ? Stack(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: PageView(
-            controller: pageController,
-            physics: NeverScrollableScrollPhysics(),
-            onPageChanged: (position) {
-              setState(() {
-                currentPage = position;
-              });
-            },
             children: [
-              CategorySection(),
-              ServiceSection(bicoData.category.id),
-              ServiceForm(),
-              bicoData.savingScreen()
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: PageView(
+                  controller: pageController,
+                  physics: NeverScrollableScrollPhysics(),
+                  onPageChanged: (position) {
+                    setState(() {
+                      currentPage = position;
+                    });
+                  },
+                  children: [
+                    CategorySection(),
+                    ServiceSection(bicoData.category.id),
+                    ServiceForm(),
+                    bicoData.savingScreen()
+                  ],
+                ),
+              ),
+              Positioned(bottom: 10, right: 10, child: actionButton())
             ],
-          ),
-        ),
-        Positioned(bottom: 10, right: 10, child: actionButton())
-      ],
-    )
+          )
         : Center(child: Text('Erro ao recuperar provider'));
   }
 }

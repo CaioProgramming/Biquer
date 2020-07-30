@@ -1,26 +1,29 @@
 import 'package:Biquer/model/category/Category.dart';
-import 'package:Biquer/model/service/BicoData.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tinycolor/tinycolor.dart';
 
 import '../../constants.dart';
 
 class CategoryCard extends StatelessWidget {
   final Category category;
+  final Function cardSelect;
+  final Category selectedCategory;
 
-  CategoryCard({@required this.category});
+  CategoryCard(
+      {@required this.category, this.cardSelect, this.selectedCategory});
 
   @override
   Widget build(BuildContext context) {
-    BicoData serviceData = Provider.of(context);
-    Category selectedCategory = serviceData.category;
     bool selected() =>
         selectedCategory != null && selectedCategory.id == category.id;
 
     return CupertinoButton(
-      onPressed: () => serviceData.updateCategory(this.category),
+      onPressed: cardSelect == null
+          ? null
+          : () {
+              cardSelect(this.category);
+            },
       child: Container(
         padding: EdgeInsets.all(selected() ? 4 : 0),
         decoration: BoxDecoration(

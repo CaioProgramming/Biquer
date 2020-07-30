@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:Biquer/components/service/ServiceCard.dart';
 import 'package:Biquer/constants.dart';
 import 'package:Biquer/model/BaseData.dart';
+import 'package:Biquer/model/Job.dart';
 import 'package:Biquer/model/service/Service.dart';
+import 'package:Biquer/screens/NewServiceScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -12,34 +14,50 @@ class ServiceData extends BaseData {
 
   ServiceData({this.categoryID});
 
-  Future<Widget> findUserServices(String userID, Widget emptyResult) async {
+  Future<Widget> findUserServices(String userID, BuildContext context) async {
     QuerySnapshot snapshot = await firestoreInstance
         .collectionGroup(kBicosReference)
         .where("userID", isEqualTo: userID)
         .getDocuments();
-
     if (snapshot != null) {
-      List<Service> userServices = [];
-      await Future.forEach(snapshot.documents, (job) async {
+      List<Widget> servicesCards = [];
+      await Future.forEach(snapshot.documents, (DocumentSnapshot job) async {
         DocumentSnapshot serviceSnapshot =
             await job.reference.parent().parent().get();
+        Job j = Job.fromMap(job.data, job.documentID);
         if (serviceSnapshot != null) {
-          userServices.add(Service.fromMap(
-              serviceSnapshot.data, serviceSnapshot.documentID));
+          servicesCards.add(ServiceCard(
+              price: j.price,
+              service: Service.fromMap(
+                  serviceSnapshot.data, serviceSnapshot.documentID)));
         }
       });
-      if (userServices.isNotEmpty) {
+
+      if (servicesCards.isNotEmpty) {
+        servicesCards.add(CupertinoButton(
+            child: Column(
+              children: [
+                Expanded(
+                  child: FadeInImage(
+                      placeholder: AssetImage(''),
+                      image: NetworkImage(
+                          'https://i.ibb.co/yRjwmB8/pixeltrue-web-development-1.png')),
+                ),
+                Text('Adicionar novo bico'),
+              ],
+            ),
+            onPressed: () => Navigator.of(context)
+                .pushNamed(NewService.screenRoute, arguments: userID)));
         return GridView.builder(
-            itemCount: userServices.length,
+            itemCount: servicesCards.length,
             shrinkWrap: true,
-            gridDelegate:
-                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
-            itemBuilder: (context, position) =>
-                ServiceCard(service: userServices[position]));
-      } else {
-        return emptyResult;
+            padding: EdgeInsets.all(0),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1, childAspectRatio: 4 / 3),
+            itemBuilder: (context, position) => servicesCards[position]);
       }
     }
+    return Text('Nenhum bico encontrado');
   }
 
   @override
@@ -50,7 +68,7 @@ class ServiceData extends BaseData {
 
   @override
   StreamBuilder<QuerySnapshot> defaultBuilder(Stream<dynamic> stream,
-      {Widget emptyResult}) {
+      {Widget emptyResult, Function cardPress, Service selectedService}) {
     return StreamBuilder<QuerySnapshot>(
       stream: stream,
       builder: (context, snapshot) {
@@ -61,7 +79,7 @@ class ServiceData extends BaseData {
             return GridView.builder(
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1),
+                    mainAxisSpacing: 1, crossAxisSpacing: 1, crossAxisCount: 2),
                 itemCount: servicesDocuments.length,
                 itemBuilder: (context, index) {
                   Service service = Service.fromMap(
@@ -69,7 +87,11 @@ class ServiceData extends BaseData {
                       servicesDocuments[index].documentID);
                   return service == null
                       ? Text('Erro ao recuperar serviço')
-                      : ServiceCard(service: service);
+                      : ServiceCard(
+                    selectedService: selectedService,
+                    service: service,
+                    onServiceSelect: (Service s) => cardPress(service),
+                  );
                 });
           } else {
             return emptyResult;

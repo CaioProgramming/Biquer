@@ -2,8 +2,8 @@ import 'package:Biquer/model/Job.dart';
 import 'package:Biquer/model/category/Category.dart';
 
 class Service extends Category {
-  double minValue;
-  double averageValue;
+  double minPrice;
+  double averagePrice;
   String title;
   String subtitle;
   String posterImage;
@@ -14,8 +14,8 @@ class Service extends Category {
   factory Service.fromMap(Map<String, dynamic> map, String key) {
     print('converting $map');
     return new Service(
-      minValue: map['minValue'] as double,
-      averageValue: map['averageValue'] as double,
+      minPrice: map['minPrice'] as double,
+      averagePrice: map['averagePrice'] as double,
       title: map['title'] as String,
       subtitle: map['subtitle'] as String,
       posterImage: map['posterImage'] as String,
@@ -34,8 +34,8 @@ class Service extends Category {
 
   Map<String, dynamic> toMap() {
     return {
-      'minValue': this.minValue,
-      'averageValue': this.averageValue,
+      'minPrice': this.minPrice,
+      'averagePrice': this.averagePrice,
       'title': this.title,
       'subtitle': this.subtitle,
       'posterImage': this.posterImage,
@@ -45,8 +45,8 @@ class Service extends Category {
   }
 
   Service(
-      {this.minValue,
-      this.averageValue,
+      {this.minPrice,
+      this.averagePrice,
       this.title,
       this.subtitle,
       this.posterImage,

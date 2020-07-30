@@ -42,8 +42,8 @@ class ServiceForm extends StatelessWidget {
               border: OutlineInputBorder(borderSide: BorderSide.none)),
         ),
         PriceSlider(
-            maxValue: serviceData.service.averageValue * 2,
-            minValue: serviceData.service.minValue,
+            maxValue: serviceData.service.averagePrice * 2,
+            minValue: serviceData.service.minPrice,
             currentValue: serviceData.bico.price,
             label: Utils.moneyText(serviceData.bico.price),
             onChange: (newValue) => serviceData.updateBicoPrice(newValue))

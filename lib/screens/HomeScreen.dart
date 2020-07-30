@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../constants.dart';
 
@@ -58,6 +59,16 @@ class _HomeScreenState extends State<HomeScreen> {
               elevation: 1,
               backgroundColor: Utils.barcolor(context),
               centerTitle: true,
+              leading: Center(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 4),
+                  child: Text(
+                    'Bico',
+                    style: GoogleFonts.bangers(
+                        color: Theme.of(context).primaryColor, fontSize: 30),
+                  ),
+                ),
+              ),
               title: Text(user.displayName),
             ),
             bottomNavigationBar: BottomNavigationBar(
@@ -66,31 +77,41 @@ class _HomeScreenState extends State<HomeScreen> {
               unselectedItemColor: Theme.of(context).hintColor,
               selectedItemColor: Theme.of(context).primaryColor,
             ),
-            body: Container(
-              decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.vertical(bottom: Radius.circular(10))),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      HomeHeader(
-                        title: Utils.moneyText(2000),
-                        caption: 'Você já lucrou',
-                      ),
-                      Section(
-                          title: 'Últimas transações',
-                          section: TransactionsScreen(user.uid)),
-                      Section(
-                        title: 'Seus serviços',
-                        section: ServiceScreen(user.uid),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            body: SafeArea(child: MainScreen(user.uid)),
           );
+  }
+}
+
+class MainScreen extends StatelessWidget {
+  final String userID;
+
+  MainScreen(this.userID);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(10))),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              HomeHeader(
+                title: Utils.moneyText(2000),
+                caption: 'Você já lucrou',
+              ),
+              Section(
+                  title: 'Últimas transações',
+                  section: TransactionsScreen(userID)),
+              Section(
+                title: 'Seus serviços',
+                section: ServiceScreen(userID),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -1,5 +1,8 @@
-import 'package:Biquer/model/category/Category.dart';
+import 'dart:ui';
+
 import 'package:Biquer/model/service/Service.dart';
+import 'package:Biquer/utils.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tinycolor/tinycolor.dart';
@@ -8,18 +11,28 @@ import '../../constants.dart';
 
 class ServiceCard extends StatelessWidget {
   final Service service;
-  final Category selectedCategory;
-  final Function onPress;
+  final double price;
+  final Service selectedService;
+  final Function onServiceSelect;
 
-  ServiceCard({@required this.service, this.selectedCategory, this.onPress});
+  ServiceCard(
+      {@required this.service,
+      this.price,
+      this.selectedService,
+      this.onServiceSelect});
 
   @override
   Widget build(BuildContext context) {
     bool selected() =>
-        selectedCategory != null && selectedCategory.id == service.id;
+        selectedService != null && selectedService.id == service.id;
 
     return CupertinoButton(
-      onPressed: onPress,
+      padding: EdgeInsets.all(0),
+      onPressed: onServiceSelect == null
+          ? null
+          : () {
+              onServiceSelect(service);
+            },
       child: Container(
         padding: EdgeInsets.all(selected() ? 4 : 0),
         decoration: BoxDecoration(
@@ -36,17 +49,76 @@ class ServiceCard extends StatelessWidget {
                   image: NetworkImage(service.posterImage ??
                       'https://i.ibb.co/GF0jJzm/pixeltrue-error.png')),
               borderRadius: kDefaultBorder),
-          child: Center(
-              child: Text(
-            service.title ?? 'Erro ao recuperar informações do serviço',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontWeight: FontWeight.w900,
-                fontSize: 26,
-                color: service.titleColor != null
-                    ? TinyColor.fromString(service.titleColor).color
-                    : Theme.of(context).textTheme.title.color),
-          )),
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                    child: AutoSizeText(
+                      service.title ??
+                          'Erro ao recuperar informações do serviço',
+                      maxLines: 2,
+                      maxFontSize: 26,
+                      minFontSize: 16,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 26,
+                          color: service.titleColor != null
+                              ? TinyColor
+                              .fromString(service.titleColor)
+                              .color
+                              : Theme
+                              .of(context)
+                              .textTheme
+                              .headline6
+                              .color),
+                    )),
+              ),
+              price == null
+                  ? SizedBox()
+                  : Positioned(
+                bottom: 4,
+                left: 4,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .headline6
+                          .color,
+                      borderRadius: kDefaultBorder),
+                  padding: EdgeInsets.all(8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Seu valor',
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .caption
+                            .copyWith(
+                            color: Theme
+                                .of(context)
+                                .scaffoldBackgroundColor),
+                      ),
+                      Text(
+                        Utils.moneyText(price),
+                        style: TextStyle(
+                            color:
+                            Theme
+                                .of(context)
+                                .scaffoldBackgroundColor,
+                            fontWeight: FontWeight.w300),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

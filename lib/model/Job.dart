@@ -3,11 +3,11 @@ class Job {
   double price;
   String id;
 
-  factory Job.fromMap(Map<String, dynamic> map) {
+  factory Job.fromMap(Map<String, dynamic> map, String key) {
     return new Job(
       userID: map['userID'] as String,
       price: map['price'] as double,
-      id: map['id'] as String,
+      id: key,
     );
   }
 

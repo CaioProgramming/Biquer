@@ -9,7 +9,7 @@ import '../../constants.dart';
 class CategoryData extends BaseData {
   @override
   StreamBuilder<QuerySnapshot> defaultBuilder(Stream stream,
-      {Widget emptyResult}) {
+      {Widget emptyResult, Function cardSelect, Category selectedCategory}) {
     return StreamBuilder<QuerySnapshot>(
       stream: stream,
       builder: (context, snapshot) {
@@ -20,13 +20,14 @@ class CategoryData extends BaseData {
             itemBuilder: (context, index) {
               Category category = Category.fromMap(
                   categoriesDocs[index].data, categoriesDocs[index].documentID);
-              return CategoryCard(category: category);
+              return CategoryCard(
+                category: category,
+                cardSelect: cardSelect,
+                selectedCategory: selectedCategory,
+              );
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1,
-                childAspectRatio: 16 / 9,
-                crossAxisSpacing: 1,
-                mainAxisSpacing: 1),
+                crossAxisCount: 2, crossAxisSpacing: 1, mainAxisSpacing: 1),
             padding: EdgeInsets.all(0),
             shrinkWrap: true,
           );

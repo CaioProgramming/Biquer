@@ -70,7 +70,7 @@ class BicoData extends ChangeNotifier {
 
   updateService(Service service) {
     this.service = service;
-    this.bico.price = service.minValue;
+    this.bico.price = service.minPrice;
     notifyListeners();
   }
 

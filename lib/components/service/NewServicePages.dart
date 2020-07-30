@@ -37,29 +37,23 @@ class _NewServicePagesState extends State<NewServicePages> {
           elevation: 0,
           onPressed: enabled()
               ? () {
-            if (currentPage != 2) {
-              pageController.nextPage(
-                  duration: Duration(seconds: 1), curve: Curves.easeIn);
-            } else {
-              bicoData.subscribeToService();
+                  if (currentPage != 2) {
+                    pageController.nextPage(
+                        duration: Duration(seconds: 1), curve: Curves.easeIn);
+                  } else {
+                    bicoData.subscribeToService();
                     pageController.nextPage(
                         duration: Duration(seconds: 1), curve: Curves.easeIn);
                   }
-          }
+                }
               : null,
           child: Icon(
             currentPage != 2 ? AntDesign.right : AntDesign.check,
             color: Utils.barcolor(context),
           ),
           backgroundColor: enabled()
-              ? Theme
-              .of(context)
-              .textTheme
-              .bodyText1
-              .color
-              : Theme
-              .of(context)
-              .hintColor,
+              ? Theme.of(context).textTheme.bodyText1.color
+              : Theme.of(context).hintColor,
         );
       } else {
         return SizedBox();

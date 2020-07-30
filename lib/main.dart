@@ -38,11 +38,8 @@ class _MyAppState extends State<MyApp> {
       darkTheme: ThemeData.dark().copyWith(
           scaffoldBackgroundColor: Colors.black,
           canvasColor: Colors.black,
-          textTheme: textTheme(ThemeData
-              .dark()
-              .textTheme),
-          appBarTheme: ThemeData
-              .dark()
+          textTheme: textTheme(ThemeData.dark().textTheme),
+          appBarTheme: ThemeData.dark()
               .copyWith()
               .appBarTheme
               .copyWith(color: Utils.barcolor(context)),

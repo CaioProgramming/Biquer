@@ -64,7 +64,7 @@ class UserData extends BaseData {
     final _auth = FirebaseAuth.instance;
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
-    await googleSignInAccount.authentication;
+        await googleSignInAccount.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
@@ -78,8 +78,8 @@ class UserData extends BaseData {
     return user;
   }
 
-  Future<FirebaseUser> signInWithEmailAndPassword(String email,
-      String password) async {
+  Future<FirebaseUser> signInWithEmailAndPassword(
+      String email, String password) async {
     FirebaseUser user;
 
     try {
@@ -94,8 +94,8 @@ class UserData extends BaseData {
     return user;
   }
 
-  Future<FirebaseUser> registerWithEmailAndPassword(String useremail,
-      userpassword) async {
+  Future<FirebaseUser> registerWithEmailAndPassword(
+      String useremail, userpassword) async {
     try {
       final _auth = FirebaseAuth.instance;
 

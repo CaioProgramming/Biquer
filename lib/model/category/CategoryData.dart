@@ -33,8 +33,8 @@ class CategoryData extends BaseData {
         } else {
           return Center(
               child: Center(
-                child: Column(
-                  children: [
+            child: Column(
+              children: [
                 Image.network('https://blush.ly/eKcCsFlK_/p'),
                 Text('Nenhuma categoria encontrada'),
               ],

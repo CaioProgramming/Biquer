@@ -41,9 +41,9 @@ class _NewServiceState extends State<NewService> {
       body: uid == null
           ? Center(child: CupertinoActivityIndicator())
           : ChangeNotifierProvider(
-        create: (context) => BicoData(uid),
-        child: NewServicePages(),
-      ),
+              create: (context) => BicoData(uid),
+              child: NewServicePages(),
+            ),
     );
   }
 }

@@ -172,12 +172,11 @@ class _RegisterChatState extends State<RegisterChat> {
                         ),
                         SliverList(
                           delegate: SliverChildBuilderDelegate(
-                                  (context, index) {
-                                RegisterData _biquerData = Provider.of(context);
-                                return _biquerData.messages[index];
-                              },
-                              childCount: Provider
-                                  .of<RegisterData>(context)
+                              (context, index) {
+                            RegisterData _biquerData = Provider.of(context);
+                            return _biquerData.messages[index];
+                          },
+                              childCount: Provider.of<RegisterData>(context)
                                   .messages
                                   .length),
                           key: _listKey,

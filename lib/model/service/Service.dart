@@ -1,65 +1,55 @@
+import 'package:Biquer/model/Job.dart';
 import 'package:Biquer/model/category/Category.dart';
 
-import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/model/category/CategoryData.dart';
-
-class Service {
-  String name, description, userID, id;
-  double value;
-  String categoryKey;
-  int stylePosition;
-  Category category;
-
-  Service(
-      {this.name,
-      this.description,
-      this.userID,
-      this.value,
-      this.categoryKey,
-      this.category,
-      this.id,
-      this.stylePosition});
+class Service extends Category {
+  double minValue;
+  double averageValue;
+  String title;
+  String subtitle;
+  String posterImage;
+  String titleColor;
+  String id;
+  List<Job> jobs;
 
   factory Service.fromMap(Map<String, dynamic> map, String key) {
+    print('converting $map');
     return new Service(
-      name: map['name'] as String,
-      description: map['description'] as String,
-      userID: map['user'] as String,
-      value: map['value'] as double,
-      categoryKey: map['categoryKey'] as String,
-      stylePosition: map['stylePosition'] as int,
+      minValue: map['minValue'] as double,
+      averageValue: map['averageValue'] as double,
+      title: map['title'] as String,
+      subtitle: map['subtitle'] as String,
+      posterImage: map['posterImage'] as String,
+      titleColor: map['titleColor'] as String,
       id: key,
     );
   }
 
-  static Future<Service> withStyle(Map<String, dynamic> map, String key) async {
-    print('converting \n\n$map \n\n to Service');
-    return new Service(
-        name: map['name'] as String,
-        id: key,
-        description: map['description'] as String,
-        userID: map['user'] as String,
-        value: map['value'] as double,
-        categoryKey: map['categoryKey'] as String,
-        stylePosition: map['stylePosition'] as int,
-        category: await CategoryData().getCategory(map['categoryKey']));
+  List<Map<String, dynamic>> jobsToMapList() {
+    List jobsMaps = [];
+    for (var job in jobs) {
+      jobsMaps.add(job.toMap());
+    }
+    return jobsMaps;
   }
 
   Map<String, dynamic> toMap() {
-    // ignore: unnecessary_cast
     return {
-      'name': this.name,
-      'description': this.description,
-      'user': this.userID,
-      'value': this.value,
-      'categoryKey': this.categoryKey,
-      'stylePosition': this.stylePosition,
-    } as Map<String, dynamic>;
+      'minValue': this.minValue,
+      'averageValue': this.averageValue,
+      'title': this.title,
+      'subtitle': this.subtitle,
+      'posterImage': this.posterImage,
+      'titleColor': this.titleColor,
+      'jobs': jobsToMapList()
+    };
   }
 
-  bool hasData() =>
-      name != null && description != null && value != null && value > 0;
-
-  bool hasCategory() => category != null && categoryKey != null;
-
-  CategoryStyle style() => category.styles[stylePosition];
+  Service(
+      {this.minValue,
+      this.averageValue,
+      this.title,
+      this.subtitle,
+      this.posterImage,
+      this.titleColor,
+      this.id});
 }

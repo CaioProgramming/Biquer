@@ -30,7 +30,7 @@ class RegisterData extends ChangeNotifier {
   Address _userAddress;
   User _myUser;
   Document _userDocument;
-  String useremail, userpass;
+  String userEmail, userPassword, userName;
 
   RegisterData() {
     userAddress = Address();
@@ -148,13 +148,17 @@ class RegisterData extends ChangeNotifier {
       case UserStage.password:
         await updateUserPass(data);
         break;
+      case UserStage.name:
+        updateUsername(data);
+        break;
     }
   }
 
   Future updateUserPass(String data) async {
-    userpass = data;
+    userPassword = data;
     loadMessage();
-    user = await UserData().registerWithEmailAndPassword(useremail, userpass);
+    user =
+        await UserData().registerWithEmailAndPassword(userEmail, userPassword);
     messages.removeLast();
     if (user != null) {
       sendSuccessMessage(
@@ -179,16 +183,23 @@ class RegisterData extends ChangeNotifier {
   }
 
   void updateUserEmail(String data) {
+    sendMessage(Text(data));
     if (!EmailValidator.validate(data)) {
       sendReply('Não foi possível validar seu email, envie novamente',
           backcolor: Colors.red);
       return;
     }
-    useremail = data;
+    userEmail = data;
     userStage = UserStage.password;
-    sendMessage(Text(data));
     sendReply('Ok agora digite sua senha');
     notifyListeners();
+  }
+
+  void updateUsername(String data) {
+    sendData(Text(data));
+    userName = data;
+    sendReply('Que nome lindo! agora envie seu email por gentileza');
+    userStage = UserStage.email;
   }
 
   void handleDocument(dynamic data) {

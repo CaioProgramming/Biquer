@@ -7,6 +7,12 @@ BoxDecoration kFileInputDecoration = BoxDecoration(
     border: Border.all(color: Colors.blue, style: BorderStyle.solid, width: 2),
     color: Colors.blue.withOpacity(0.10));
 
+const kServiceReference = "Services";
+const kCategoryReference = "Categories";
+const kBicosReference = "Jobs";
+const kTransactionsReference = "Transactions";
+const kUsersReference = "Users";
+
 const kDocumentMessage =
     'Hora de enviar uma foto de seus documentos. Lembre-se de fotografar corretamente, para que sua aprovação ocorra o mais rápido possível.';
 const kSelfieMessage =

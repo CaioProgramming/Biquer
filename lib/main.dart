@@ -28,14 +28,21 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
           textTheme: textTheme(Theme.of(context).textTheme),
           accentColor: Colors.deepOrange,
+          scaffoldBackgroundColor: Colors.white,
+          canvasColor: Colors.white,
           appBarTheme: Theme.of(context)
               .appBarTheme
               .copyWith(color: Utils.barcolor(context)),
           primaryColorDark: Colors.deepOrange,
           primaryColor: Colors.orange),
       darkTheme: ThemeData.dark().copyWith(
-          textTheme: textTheme(ThemeData.dark().textTheme),
-          appBarTheme: ThemeData.dark()
+          scaffoldBackgroundColor: Colors.black,
+          canvasColor: Colors.black,
+          textTheme: textTheme(ThemeData
+              .dark()
+              .textTheme),
+          appBarTheme: ThemeData
+              .dark()
               .copyWith()
               .appBarTheme
               .copyWith(color: Utils.barcolor(context)),

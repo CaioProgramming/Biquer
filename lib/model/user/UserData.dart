@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Biquer/components/MessageBubble.dart';
 import 'package:Biquer/constants.dart';
+import 'package:Biquer/model/BaseData.dart';
 import 'package:Biquer/model/RegisterData.dart';
 import 'package:Biquer/model/address/AddressData.dart';
 import 'package:Biquer/model/document/DocumentData.dart';
@@ -16,11 +17,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import 'User.dart';
 
-enum UserStage { email, password }
+enum UserStage { name, email, password }
 
-class UserData {
-  Firestore _firestore = Firestore.instance;
-
+class UserData extends BaseData {
   Future<bool> saveUserInfo(
       User user, String name, RegisterData registerData) async {
     AddressData addressData = AddressData();
@@ -37,8 +36,7 @@ class UserData {
           'Erro ao recuperar informações de endereço e documento');
     }
     bool success = false;
-    await _firestore
-        .collection('Users')
+    await collectionReference()
         .document(user.uid)
         .setData(user.map())
         .catchError((onError) {
@@ -61,12 +59,12 @@ class UserData {
     return await storageReference.getDownloadURL();
   }
 
-  Future signInWithGoogle(Function onSignInListener) async {
+  Future<FirebaseUser> signInWithGoogle() async {
     final GoogleSignIn googleSignIn = GoogleSignIn();
     final _auth = FirebaseAuth.instance;
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
+    await googleSignInAccount.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
@@ -77,11 +75,27 @@ class UserData {
     assert(await user.getIdToken() != null);
     final FirebaseUser currentUser = await _auth.currentUser();
     assert(user.uid == currentUser.uid);
-    onSignInListener(user);
+    return user;
   }
 
-  Future<FirebaseUser> registerWithEmailAndPassword(
-      String useremail, userpassword) async {
+  Future<FirebaseUser> signInWithEmailAndPassword(String email,
+      String password) async {
+    FirebaseUser user;
+
+    try {
+      final _auth = FirebaseAuth.instance;
+      AuthResult result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      user = result.user;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+    return user;
+  }
+
+  Future<FirebaseUser> registerWithEmailAndPassword(String useremail,
+      userpassword) async {
     try {
       final _auth = FirebaseAuth.instance;
 
@@ -125,8 +139,9 @@ class UserData {
             MaterialCommunityIcons.google,
             color: Colors.white,
           ),
-          onPressed: () {
-            signInWithGoogle(onSignInListener);
+          onPressed: () async {
+            FirebaseUser user = await signInWithGoogle();
+            onSignInListener(user);
           }),
       messageType: MessageType.reply,
       backcolor: Colors.blue,
@@ -162,5 +177,16 @@ class UserData {
           : TextInputType.visiblePassword,
       decoration: kMessageFieldDecoration.copyWith(hintText: hint),
     );
+  }
+
+  @override
+  CollectionReference collectionReference() =>
+      firestoreInstance.collection(kUsersReference);
+
+  @override
+  StreamBuilder<QuerySnapshot> defaultBuilder(Stream stream,
+      {Widget emptyResult}) {
+    // TODO: implement defaultBuilder
+    throw UnimplementedError();
   }
 }

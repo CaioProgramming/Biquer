@@ -1,38 +1,40 @@
+import 'package:Biquer/components/service/CategoryCard.dart';
 import 'package:Biquer/model/BaseData.dart';
 import 'package:Biquer/model/category/Category.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/components/service/CategoryCard.dart';
+import '../../constants.dart';
 
 class CategoryData extends BaseData {
   @override
-  String reference() => "Categories";
-
-  StreamBuilder getCategories() {
-    List<CategoryCard> categoryCards = [];
+  StreamBuilder<QuerySnapshot> defaultBuilder(Stream stream,
+      {Widget emptyResult}) {
     return StreamBuilder<QuerySnapshot>(
       stream: stream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          categoryCards.clear();
           final categoriesDocs = snapshot.data.documents;
-          for (final category in categoriesDocs) {
-            categoryCards.add(CategoryCard(
-                category:
-                    Category.fromMap(category.data, category.documentID)));
-          }
-          return GridView.count(
+          return GridView.builder(
+            itemCount: categoriesDocs.length,
+            itemBuilder: (context, index) {
+              Category category = Category.fromMap(
+                  categoriesDocs[index].data, categoriesDocs[index].documentID);
+              return CategoryCard(category: category);
+            },
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1,
+                childAspectRatio: 16 / 9,
+                crossAxisSpacing: 1,
+                mainAxisSpacing: 1),
             padding: EdgeInsets.all(0),
-            crossAxisCount: 2,
             shrinkWrap: true,
-            children: categoryCards,
           );
         } else {
           return Center(
               child: Center(
-            child: Column(
-              children: [
+                child: Column(
+                  children: [
                 Image.network('https://blush.ly/eKcCsFlK_/p'),
                 Text('Nenhuma categoria encontrada'),
               ],
@@ -43,8 +45,13 @@ class CategoryData extends BaseData {
     );
   }
 
-  Future<Category> getCategory(String id) async {
-    DocumentSnapshot categorySnapshot = await singleDocument(id);
-    return Category.fromMap(categorySnapshot.data, categorySnapshot.documentID);
-  }
+  @override
+  Stream<DocumentSnapshot> singleDocument(String key) => firestoreInstance
+      .collection(kCategoryReference)
+      .document(key)
+      .snapshots();
+
+  @override
+  CollectionReference collectionReference() =>
+      firestoreInstance.collection(kCategoryReference);
 }

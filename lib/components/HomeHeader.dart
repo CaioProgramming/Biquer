@@ -18,7 +18,7 @@ class HomeHeader extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .caption
-                        .copyWith(fontSize: 20),
+                        .copyWith(fontSize: 18),
                   ),
                   Text(
                     title,

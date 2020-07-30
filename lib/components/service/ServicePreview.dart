@@ -1,20 +1,18 @@
-import 'package:Biquer/model/service/Service.dart';
+import 'package:Biquer/model/Job.dart';
+import 'package:Biquer/model/service/BicoData.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/model/service/ServiceData.dart';
-
 import '../PageTitle.dart';
-import 'ServiceCard.dart';
 
 class ServicePreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ServiceData serviceData = Provider.of(context);
+    BicoData serviceData = Provider.of(context);
     Widget serviceCard() {
-      Service service = serviceData.service;
-      if (!service.hasData()) {
+      Job bico = serviceData.bico;
+      if (!bico.hasData()) {
         return Center(
           child: Column(
             children: [
@@ -28,10 +26,18 @@ class ServicePreview extends StatelessWidget {
             ],
           ),
         );
-      } else if (!service.hasCategory()) {
-        ServiceCard.defaultCard(service);
+      } else {
+        return Center(
+          child: Column(
+            children: [
+              Text(
+                'Seu bico foi incluído com sucesso!',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ],
+          ),
+        );
       }
-      return ServiceCardPreview();
     }
 
     return Column(

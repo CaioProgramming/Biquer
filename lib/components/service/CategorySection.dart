@@ -1,12 +1,9 @@
+import 'package:Biquer/model/category/CategoryData.dart';
 import 'package:flutter/material.dart';
-
-import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/model/category/CategoryData.dart';
 
 import '../PageTitle.dart';
 
 class CategorySection extends StatelessWidget {
-  void getCategories() async {}
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -14,8 +11,13 @@ class CategorySection extends StatelessWidget {
       children: [
         PageTitle(
             'Categoria', 'Selecione uma categoria em relação ao seu serviço'),
-        Expanded(child: CategoryData().getCategories()),
+        Expanded(child: categories()),
       ],
     );
+  }
+
+  StreamBuilder categories() {
+    CategoryData categoryData = CategoryData();
+    return categoryData.defaultBuilder(categoryData.defaultStream());
   }
 }

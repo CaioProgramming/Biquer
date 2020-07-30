@@ -9,6 +9,7 @@ class Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
@@ -19,6 +20,7 @@ class Section extends StatelessWidget {
           ),
         ),
         Container(
+          width: double.maxFinite,
           child: section,
           margin: EdgeInsets.all(10),
         )

@@ -1,7 +1,7 @@
 import 'package:Biquer/components/HomeHeader.dart';
 import 'package:Biquer/components/Section.dart';
-import 'package:Biquer/components/TransactionCard.dart';
 import 'package:Biquer/screens/ServicesScreen.dart';
+import 'package:Biquer/screens/TransactionsScreen.dart';
 import 'package:Biquer/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,13 +18,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool loading = true;
   FirebaseUser user;
 
   Widget serviceSection() {
     return Section(
       title: 'Seus serviços',
-      section: ServiceScreen(this.user),
+      section: ServiceScreen(user.uid),
     );
   }
 
@@ -37,12 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget transactionsSection() {
     return Section(
-        title: 'Últimas transações',
-        section: ListView.builder(
-          shrinkWrap: true,
-          itemCount: 4,
-          itemBuilder: (context, index) => TransactionCard(),
-        ));
+        title: 'Últimas transações', section: TransactionsScreen(user.uid));
   }
 
   @override
@@ -51,41 +45,52 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) => {
           setState(() {
             user = ModalRoute.of(context).settings.arguments;
-            loading = false;
           })
         });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 1,
-        backgroundColor: Utils.barcolor(context),
-        centerTitle: true,
-        title: Text(user.displayName),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: kbottombarIcons,
-        unselectedItemColor: Theme.of(context).hintColor,
-        selectedItemColor: Theme.of(context).primaryColor,
-      ),
-      body: Container(
-        child: loading
-            ? CupertinoActivityIndicator()
-            : Padding(
+    return user == null
+        ? Center(child: CupertinoActivityIndicator())
+        : Scaffold(
+            appBar: AppBar(
+              elevation: 1,
+              backgroundColor: Utils.barcolor(context),
+              centerTitle: true,
+              title: Text(user.displayName),
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              backgroundColor: Colors.redAccent,
+              items: kbottombarIcons,
+              unselectedItemColor: Theme.of(context).hintColor,
+              selectedItemColor: Theme.of(context).primaryColor,
+            ),
+            body: Container(
+              decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.vertical(bottom: Radius.circular(10))),
+              child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      headerSection(),
-                      transactionsSection(),
-                      serviceSection()
+                      HomeHeader(
+                        title: Utils.moneyText(2000),
+                        caption: 'Você já lucrou',
+                      ),
+                      Section(
+                          title: 'Últimas transações',
+                          section: TransactionsScreen(user.uid)),
+                      Section(
+                        title: 'Seus serviços',
+                        section: ServiceScreen(user.uid),
+                      )
                     ],
                   ),
                 ),
               ),
-      ),
-    );
+            ),
+          );
   }
 }

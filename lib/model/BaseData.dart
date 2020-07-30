@@ -1,29 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 abstract class BaseData {
-  Stream stream;
-
-  String reference();
-
   final firestoreInstance = Firestore.instance;
 
-  BaseData() {
-    this.stream = firestoreInstance.collection(reference()).snapshots();
-  }
+  StreamBuilder<QuerySnapshot> defaultBuilder(Stream stream,
+      {@required Widget emptyResult});
 
-  Future<QuerySnapshot> query({String field, String value, int limit = 100}) {
-    return firestoreInstance
-        .collection(reference())
-        .where(field, isEqualTo: value)
-        .limit(limit)
-        .getDocuments();
-  }
+  CollectionReference collectionReference();
 
-  Future<DocumentSnapshot> singleDocument(String key) async {
-    return firestoreInstance
-        .collection(reference())
-        .document(key)
-        .snapshots()
-        .first;
+  Stream query({@required String field, @required String value}) =>
+      collectionReference().where(field, isEqualTo: value).snapshots();
+
+  Stream singleDocument(String key) =>
+      collectionReference().document(key).snapshots();
+
+  Stream defaultStream() {
+    return collectionReference().snapshots();
   }
 }

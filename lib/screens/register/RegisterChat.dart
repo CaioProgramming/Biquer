@@ -122,7 +122,7 @@ class _RegisterChatState extends State<RegisterChat> {
     } else {
       Timer(
         Duration(seconds: 1),
-            () {
+        () {
           RegisterData _biquerData =
               Provider.of<RegisterData>(context, listen: false);
           _biquerData.initializeRegister();
@@ -148,7 +148,7 @@ class _RegisterChatState extends State<RegisterChat> {
                           pinned: true,
                           backgroundColor: Utils.barcolor(context),
                           leading: IconButton(
-                            icon: Icon(AntDesign.arrowleft),
+                            icon: Icon(AntDesign.close),
                             onPressed: () => Navigator.pop(context),
                           ),
                           flexibleSpace: FlexibleSpaceBar(

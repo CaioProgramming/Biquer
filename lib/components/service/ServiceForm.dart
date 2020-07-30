@@ -1,99 +1,97 @@
+import 'package:Biquer/CurrencyInputFormatter.dart';
 import 'package:Biquer/components/PageTitle.dart';
+import 'package:Biquer/model/service/BicoData.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:money2/money2.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
-import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/model/service/ServiceData.dart';
-
-import '../../constants.dart';
+import '../../utils.dart';
 
 class ServiceForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var serviceData = Provider.of<ServiceData>(context);
+    var serviceData = Provider.of<BicoData>(context);
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            PageTitle('Novo bico',
-                'Adicione um novo bico para atrair mais clientes e render mais.'),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: TextField(
-                textCapitalization: TextCapitalization.sentences,
-                onChanged: (value) {
-                  serviceData.updateServiceName(value);
-                },
-                decoration: InputDecoration(
-                    hintText: 'Nome do serviço',
-                    border: OutlineInputBorder(borderRadius: kDefaultBorder)),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: TextField(
-                maxLines: 4,
-                onChanged: (value) {
-                  serviceData.updateServiceDescription(value);
-                },
-                textCapitalization: TextCapitalization.sentences,
-                decoration: InputDecoration(
-                    hintText: 'Descrição do serviço',
-                    border: OutlineInputBorder(borderRadius: kDefaultBorder)),
-              ),
-            ),
-            Center(child: slider(context))
+    TextEditingController textController = TextEditingController(
+        text: Utils.moneyText(serviceData.bico.price ?? 0));
+    var maskFormatter = new CurrencyInputFormatter(maxDigits: 5);
+
+    return Column(
+      children: [
+        PageTitle("Preço",
+            "Para concluir basta definir o valor do seu serviço(lembre-se de não exagerar)"),
+        FadeInImage(
+            height: 250,
+            width: 250,
+            placeholder: AssetImage(''),
+            image: NetworkImage('https://i.ibb.co/1TkjDxq/taxi-33.png')),
+        TextField(
+          textAlign: TextAlign.center,
+          controller: textController,
+          keyboardType: TextInputType.number,
+          inputFormatters: [
+            WhitelistingTextInputFormatter.digitsOnly,
+            maskFormatter
           ],
+          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+          onChanged: (newValue) =>
+              serviceData.updateBicoPrice(maskFormatter.getUnmaskedText()),
+          decoration: InputDecoration(
+              hintText: Utils.moneyText(0),
+              border: OutlineInputBorder(borderSide: BorderSide.none)),
         ),
-      ),
+        PriceSlider(
+            maxValue: serviceData.service.averageValue * 2,
+            minValue: serviceData.service.minValue,
+            currentValue: serviceData.bico.price,
+            label: Utils.moneyText(serviceData.bico.price),
+            onChange: (newValue) => serviceData.updateBicoPrice(newValue))
+      ],
     );
   }
+}
 
-  SleekCircularSlider slider(BuildContext context) {
-    ServiceData _serviceData = Provider.of(context);
+class PriceSlider extends StatelessWidget {
+  final double maxValue, minValue, currentValue;
+  final String label;
+  final Function onChange;
 
-    final customWidth02 =
-        CustomSliderWidths(trackWidth: 1, progressBarWidth: 5, handlerSize: 20);
-    final customColors02 = CustomSliderColors(
-        trackColor: Theme.of(context).hintColor.withOpacity(0.05),
-        dotColor: Colors.green,
-        progressBarColor: Colors.green,
-        hideShadow: true);
-    final info02 = InfoProperties(
-        topLabelStyle: TextStyle(
-            color: Colors.orangeAccent,
-            fontSize: 20,
-            fontWeight: FontWeight.w100),
-        topLabelText: 'Valor',
-        mainLabelStyle: TextStyle(fontSize: 50.0, fontWeight: FontWeight.w400),
-        modifier: (double value) {
-          Currency currency = Currency.create('BRL', 2, symbol: 'R\$ ');
-          Money money = Money.from(value, currency);
-          return money.toString();
-        });
-    final CircularSliderAppearance appearance02 = CircularSliderAppearance(
-        customWidths: customWidth02,
-        customColors: customColors02,
-        infoProperties: info02,
-        startAngle: 180,
-        angleRange: 360,
-        size: 320.0,
-        animationEnabled: true);
-
-    final slider = SleekCircularSlider(
-      onChangeStart: (double value) {},
-      onChangeEnd: (double value) {
-        _serviceData.updateServicePrice(value);
-      },
-      appearance: appearance02,
-      min: 0,
-      max: 6000,
-      initialValue: 0,
-    );
-    return slider;
+  @override
+  Widget build(BuildContext context) {
+    try {
+      return SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 15),
+              overlayShape: RoundSliderOverlayShape(overlayRadius: 30),
+              thumbColor: Colors.black,
+              overlayColor: Colors.black.withAlpha(50),
+              trackHeight: 1,
+              showValueIndicator: ShowValueIndicator.always,
+              rangeValueIndicatorShape: PaddleRangeSliderValueIndicatorShape(),
+              valueIndicatorShape: PaddleSliderValueIndicatorShape(),
+              valueIndicatorColor: Colors.white,
+              valueIndicatorTextStyle: Theme.of(context).textTheme.bodyText1,
+              activeTrackColor: Theme.of(context).textTheme.button.color,
+              inactiveTrackColor: Theme.of(context).textTheme.button.color),
+          child: Slider(
+            label: label,
+            value: currentValue,
+            min: minValue,
+            max: 10000,
+            onChanged: (newValue) => onChange(newValue),
+          ));
+    } catch (e) {
+      print(e);
+      return CupertinoActivityIndicator();
+    }
   }
+
+  const PriceSlider({
+    @required this.maxValue,
+    @required this.minValue,
+    @required this.currentValue,
+    @required this.label,
+    @required this.onChange,
+  });
 }

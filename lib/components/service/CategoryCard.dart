@@ -1,11 +1,9 @@
 import 'package:Biquer/model/category/Category.dart';
+import 'package:Biquer/model/service/BicoData.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor/tinycolor.dart';
-
-import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/model/service/ServiceData.dart';
 
 import '../../constants.dart';
 
@@ -16,58 +14,38 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ServiceData serviceData = Provider.of(context);
-    Category selectedCategory = serviceData.category();
+    BicoData serviceData = Provider.of(context);
+    Category selectedCategory = serviceData.category;
     bool selected() =>
         selectedCategory != null && selectedCategory.id == category.id;
 
     return CupertinoButton(
       onPressed: () => serviceData.updateCategory(this.category),
       child: Container(
+        padding: EdgeInsets.all(selected() ? 4 : 0),
         decoration: BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.cover, image: NetworkImage(category.posterImage)),
             borderRadius: kDefaultBorder,
             border: Border.all(
                 color: selected()
-                    ? Theme.of(context).textTheme.button.color
+                    ? Theme.of(context).primaryColor
                     : Colors.transparent,
-                width: 3)),
-        child: Stack(
-          children: [
-            Center(
-                child: Text(
-              category.title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 16,
-                  color: category.titleColor != null
-                      ? TinyColor.fromString(category.titleColor).color
-                      : Colors.white),
-            )),
-            Positioned(
-              left: 4,
-              top: 4,
-              child: Visibility(
-                visible: selected(),
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).textTheme.button.color,
-                      borderRadius: kDefaultBorder),
-                  child: Center(
-                    child: Icon(
-                      AntDesign.check,
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+                width: 2)),
+        child: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  fit: BoxFit.cover, image: NetworkImage(category.posterImage)),
+              borderRadius: kDefaultBorder),
+          child: Center(
+              child: Text(
+            category.title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 26,
+                color: category.titleColor != null
+                    ? TinyColor.fromString(category.titleColor).color
+                    : Colors.white),
+          )),
         ),
       ),
     );

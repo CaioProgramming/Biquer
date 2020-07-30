@@ -1,87 +1,83 @@
 import 'dart:developer';
 
-import 'package:Biquer/components/SavingScreen.dart';
+import 'package:Biquer/components/service/ServiceCard.dart';
 import 'package:Biquer/constants.dart';
-import 'package:Biquer/model/category/Category.dart';
+import 'package:Biquer/model/BaseData.dart';
 import 'package:Biquer/model/service/Service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
-enum SavingState { SAVING, SAVED, ERROR }
+class ServiceData extends BaseData {
+  String categoryID;
 
-class ServiceData extends ChangeNotifier {
-  Service service;
-  SavingState state = SavingState.SAVING;
+  ServiceData({this.categoryID});
 
-  ServiceData(FirebaseUser user) {
-    this.service = Service(userID: user.uid);
-  }
+  Future<Widget> findUserServices(String userID, Widget emptyResult) async {
+    QuerySnapshot snapshot = await firestoreInstance
+        .collectionGroup(kBicosReference)
+        .where("userID", isEqualTo: userID)
+        .getDocuments();
 
-  Category category() => service.category;
-
-  saveService() async {
-    var fireStoreInstance = Firestore.instance;
-    await fireStoreInstance
-        .collection("Services")
-        .add(service.toMap())
-        .catchError((onError) {
-      print(onError);
-      state = SavingState.ERROR;
-    }).whenComplete(() {
-      state = SavingState.SAVED;
-    });
-    notifyListeners();
-  }
-
-  updateServiceName(String newName) {
-    service.name = newName;
-    notifyListeners();
-  }
-
-  updateServiceDescription(String newName) {
-    service.description = newName;
-    notifyListeners();
-  }
-
-  updateServicePrice(double newValue) {
-    service.value = newValue;
-    notifyListeners();
-  }
-
-  updateCategory(Category category) {
-    service.category = category;
-    service.categoryKey = category.id;
-    updateStyle(0);
-    notifyListeners();
-  }
-
-  updateStyle(int position) {
-    service.stylePosition = position;
-    notifyListeners();
-  }
-
-  Widget savingScreen() {
-    switch (state) {
-      case SavingState.SAVING:
-        return SavingScreen(
-            message: 'Salvando seu bico', image: kSavingServiceIllustration);
-        break;
-      case SavingState.SAVED:
-        return SavingScreen(
-            message: 'Serviço salvo com sucesso!',
-            image: kSavedServiceIllustration);
-        break;
-      case SavingState.ERROR:
-        saveService();
-        return SavingScreen(
-            message:
-                'Ocorreu um erro ao salvar seu bico, Estamos verificando o que aconteceu',
-            image: kErrorServiceIllustration);
-        break;
+    if (snapshot != null) {
+      List<Service> userServices = [];
+      await Future.forEach(snapshot.documents, (job) async {
+        DocumentSnapshot serviceSnapshot =
+            await job.reference.parent().parent().get();
+        if (serviceSnapshot != null) {
+          userServices.add(Service.fromMap(
+              serviceSnapshot.data, serviceSnapshot.documentID));
+        }
+      });
+      if (userServices.isNotEmpty) {
+        return GridView.builder(
+            itemCount: userServices.length,
+            shrinkWrap: true,
+            gridDelegate:
+                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
+            itemBuilder: (context, position) =>
+                ServiceCard(service: userServices[position]));
+      } else {
+        return emptyResult;
+      }
     }
-    return SizedBox();
   }
 
-  CategoryStyle selectedStyle() => category().styles[service.stylePosition];
+  @override
+  CollectionReference collectionReference() => firestoreInstance
+      .collection(kCategoryReference)
+      .document(categoryID)
+      .collection(kServiceReference);
+
+  @override
+  StreamBuilder<QuerySnapshot> defaultBuilder(Stream<dynamic> stream,
+      {Widget emptyResult}) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: stream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          print(snapshot.data);
+          final servicesDocuments = snapshot.data.documents;
+          if (servicesDocuments.isNotEmpty) {
+            return GridView.builder(
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 1),
+                itemCount: servicesDocuments.length,
+                itemBuilder: (context, index) {
+                  Service service = Service.fromMap(
+                      servicesDocuments[index].data,
+                      servicesDocuments[index].documentID);
+                  return service == null
+                      ? Text('Erro ao recuperar serviço')
+                      : ServiceCard(service: service);
+                });
+          } else {
+            return emptyResult;
+          }
+        } else {
+          return emptyResult;
+        }
+      },
+    );
+  }
 }

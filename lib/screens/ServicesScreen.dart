@@ -1,41 +1,36 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:Biquer/model/service/ServiceData.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'file:///C:/Users/cacai/StudioProjects/Biquer/lib/model/service/ServiceStore.dart';
-
 class ServiceScreen extends StatefulWidget {
-  final FirebaseUser _user;
+  final String categoryID, userID;
 
-  ServiceScreen(this._user);
+  ServiceScreen(this.userID, {this.categoryID});
 
   @override
   _ServiceScreenState createState() => _ServiceScreenState();
 }
 
 class _ServiceScreenState extends State<ServiceScreen> {
-  Widget serviceView = Center(
-    child: CupertinoActivityIndicator(),
-  );
-
-  void getService() async {
-    serviceView = await ServiceStore(widget._user).getServices(context);
-    print('service view updated');
-    setState(() {});
-  }
+  Widget services = CupertinoActivityIndicator();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getService();
+    getServices();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 500,
-      child: serviceView,
+      child: services,
     );
+  }
+
+  void getServices() async {
+    services = await ServiceData()
+        .findUserServices(widget.userID, Text('Nenhum serviço encontrado'));
+    setState(() {});
   }
 }

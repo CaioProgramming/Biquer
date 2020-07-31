@@ -17,37 +17,39 @@ class ServiceForm extends StatelessWidget {
         text: Utils.moneyText(serviceData.bico.price ?? 0));
     var maskFormatter = new CurrencyInputFormatter(maxDigits: 5);
 
-    return Column(
-      children: [
-        PageTitle("Preço",
-            "Para concluir basta definir o valor do seu serviço(lembre-se de não exagerar)"),
-        FadeInImage(
-            height: 250,
-            width: 250,
-            placeholder: AssetImage(''),
-            image: NetworkImage('https://i.ibb.co/1TkjDxq/taxi-33.png')),
-        TextField(
-          textAlign: TextAlign.center,
-          controller: textController,
-          keyboardType: TextInputType.number,
-          inputFormatters: [
-            WhitelistingTextInputFormatter.digitsOnly,
-            maskFormatter
-          ],
-          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-          onChanged: (newValue) =>
-              serviceData.updateBicoPrice(maskFormatter.getUnmaskedText()),
-          decoration: InputDecoration(
-              hintText: Utils.moneyText(0),
-              border: OutlineInputBorder(borderSide: BorderSide.none)),
-        ),
-        PriceSlider(
-            maxValue: serviceData.service.averagePrice * 2,
-            minValue: serviceData.service.minPrice,
-            currentValue: serviceData.bico.price,
-            label: Utils.moneyText(serviceData.bico.price),
-            onChange: (newValue) => serviceData.updateBicoPrice(newValue))
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          PageTitle("Preço",
+              "Para concluir basta definir o valor do seu serviço(lembre-se de não exagerar)"),
+          FadeInImage(
+              height: 250,
+              width: 250,
+              placeholder: AssetImage(''),
+              image: NetworkImage('https://i.ibb.co/1TkjDxq/taxi-33.png')),
+          TextField(
+            textAlign: TextAlign.center,
+            controller: textController,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              WhitelistingTextInputFormatter.digitsOnly,
+              maskFormatter
+            ],
+            style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+            onChanged: (newValue) =>
+                serviceData.updateBicoPrice(maskFormatter.getUnmaskedText()),
+            decoration: InputDecoration(
+                hintText: Utils.moneyText(0),
+                border: OutlineInputBorder(borderSide: BorderSide.none)),
+          ),
+          PriceSlider(
+              maxValue: serviceData.service.averagePrice * 2,
+              minValue: serviceData.service.minPrice,
+              currentValue: serviceData.bico.price,
+              label: Utils.moneyText(serviceData.bico.price),
+              onChange: (newValue) => serviceData.updateBicoPrice(newValue))
+        ],
+      ),
     );
   }
 }
@@ -64,14 +66,15 @@ class PriceSlider extends StatelessWidget {
           data: SliderTheme.of(context).copyWith(
               thumbShape: RoundSliderThumbShape(enabledThumbRadius: 15),
               overlayShape: RoundSliderOverlayShape(overlayRadius: 30),
-              thumbColor: Colors.black,
-              overlayColor: Colors.black.withAlpha(50),
+              thumbColor: Colors.green,
+              overlayColor:
+                  Theme.of(context).textTheme.bodyText1.color.withOpacity(0.50),
               trackHeight: 1,
               showValueIndicator: ShowValueIndicator.always,
               rangeValueIndicatorShape: PaddleRangeSliderValueIndicatorShape(),
               valueIndicatorShape: PaddleSliderValueIndicatorShape(),
-              valueIndicatorColor: Colors.white,
-              valueIndicatorTextStyle: Theme.of(context).textTheme.bodyText1,
+              valueIndicatorColor: Theme.of(context).scaffoldBackgroundColor,
+              valueIndicatorTextStyle: Theme.of(context).textTheme.headline6,
               activeTrackColor: Theme.of(context).textTheme.button.color,
               inactiveTrackColor: Theme.of(context).textTheme.button.color),
           child: Slider(

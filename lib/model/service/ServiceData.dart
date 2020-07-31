@@ -8,6 +8,7 @@ import 'package:Biquer/model/service/Service.dart';
 import 'package:Biquer/screens/NewServiceScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ServiceData extends BaseData {
   String categoryID;
@@ -35,29 +36,31 @@ class ServiceData extends BaseData {
 
       if (servicesCards.isNotEmpty) {
         servicesCards.add(CupertinoButton(
-            child: Column(
-              children: [
-                Expanded(
-                  child: FadeInImage(
-                      placeholder: AssetImage(''),
-                      image: NetworkImage(
-                          'https://i.ibb.co/yRjwmB8/pixeltrue-web-development-1.png')),
-                ),
-                Text('Adicionar novo bico'),
-              ],
-            ),
+            child: Center(
+                child: Text(
+              'Adicionar novo bico',
+              textAlign: TextAlign.center,
+            )),
             onPressed: () => Navigator.of(context)
                 .pushNamed(NewService.screenRoute, arguments: userID)));
         return GridView.builder(
             itemCount: servicesCards.length,
             shrinkWrap: true,
             padding: EdgeInsets.all(0),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1, childAspectRatio: 4 / 3),
+            gridDelegate: kServiceGridDelegate,
             itemBuilder: (context, position) => servicesCards[position]);
       }
     }
-    return Text('Nenhum bico encontrado');
+    return CupertinoButton(
+      child: Center(
+        child: Text(
+          'Adicionar novo bico',
+        ),
+      ),
+      onPressed: () {
+        Navigator.pushNamed(context, NewService.screenRoute, arguments: userID);
+      },
+    );
   }
 
   @override
@@ -78,8 +81,7 @@ class ServiceData extends BaseData {
           if (servicesDocuments.isNotEmpty) {
             return GridView.builder(
                 shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    mainAxisSpacing: 1, crossAxisSpacing: 1, crossAxisCount: 2),
+                gridDelegate: kServiceGridDelegate,
                 itemCount: servicesDocuments.length,
                 itemBuilder: (context, index) {
                   Service service = Service.fromMap(

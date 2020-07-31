@@ -34,6 +34,7 @@ class ServiceCard extends StatelessWidget {
               onServiceSelect(service);
             },
       child: Container(
+        width: double.maxFinite,
         padding: EdgeInsets.all(selected() ? 4 : 0),
         decoration: BoxDecoration(
             borderRadius: kDefaultBorder,
@@ -43,6 +44,7 @@ class ServiceCard extends StatelessWidget {
                     : Colors.transparent,
                 width: 2)),
         child: Container(
+          height: double.maxFinite,
           decoration: BoxDecoration(
               image: DecorationImage(
                   fit: BoxFit.cover,
@@ -52,71 +54,48 @@ class ServiceCard extends StatelessWidget {
           child: Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                    child: AutoSizeText(
-                      service.title ??
-                          'Erro ao recuperar informações do serviço',
-                      maxLines: 2,
-                      maxFontSize: 26,
-                      minFontSize: 16,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 26,
-                          color: service.titleColor != null
-                              ? TinyColor
-                              .fromString(service.titleColor)
-                              .color
-                              : Theme
-                              .of(context)
-                              .textTheme
-                              .headline6
-                              .color),
-                    )),
+                padding: const EdgeInsets.all(16),
+                child: AutoSizeText(
+                  service.title ?? 'Erro ao recuperar informações do serviço',
+                  maxLines: 2,
+                  maxFontSize: 36,
+                  minFontSize: 10,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 26,
+                      color: service.titleColor != null
+                          ? TinyColor.fromString(service.titleColor).color
+                          : Theme.of(context).textTheme.headline6.color),
+                ),
               ),
+              SizedBox(),
               price == null
                   ? SizedBox()
                   : Positioned(
-                bottom: 4,
-                left: 4,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .headline6
-                          .color,
-                      borderRadius: kDefaultBorder),
-                  padding: EdgeInsets.all(8),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Seu valor',
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .caption
-                            .copyWith(
-                            color: Theme
-                                .of(context)
-                                .scaffoldBackgroundColor),
+                      bottom: 0,
+                      left: 0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                topRight: Radius.circular(10))),
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Seu valor',
+                                style: Theme.of(context).textTheme.caption),
+                            Text(
+                              Utils.moneyText(price),
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                          ],
+                        ),
                       ),
-                      Text(
-                        Utils.moneyText(price),
-                        style: TextStyle(
-                            color:
-                            Theme
-                                .of(context)
-                                .scaffoldBackgroundColor,
-                            fontWeight: FontWeight.w300),
-                      ),
-                    ],
-                  ),
-                ),
-              )
+                    )
             ],
           ),
         ),

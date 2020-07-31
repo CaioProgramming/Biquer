@@ -9,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
   static String screenRoute = '/Login';
@@ -26,17 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(
-          'Bico',
-          style: GoogleFonts.bangers(
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1,
-              fontSize: 30,
-              color: Theme.of(context).primaryColor),
-        ),
-      ),
       body: SafeArea(
           child: SingleChildScrollView(
         child: Padding(
@@ -57,9 +45,44 @@ class _LoginScreenState extends State<LoginScreen> {
               Text(
                 'A sua nova maneira de trabalhar e arranjar aquela renda extra que você sempre quis em suas mãos! Afinal um bico é sempre bom né?',
                 textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              SocialLoginButton('Continuar com Google', FlutterIcons.google_mco,
+                  backColor: Colors.blue,
+                  iconColor: Colors.white,
+                  textStyle: TextStyle(color: Colors.white), onTap: () async {
+                FirebaseUser user = await UserData().signInWithGoogle();
+                handleUserLogin(user, context);
+              }),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      width: double.maxFinite,
+                      height: 1,
+                      child: Container(
+                        color: Theme.of(context).secondaryHeaderColor,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Ou'),
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      width: double.maxFinite,
+                      height: 1,
+                      child: Container(
+                        color: Theme.of(context).secondaryHeaderColor,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 4),
+                margin: EdgeInsets.symmetric(vertical: 10),
                 child: TextField(
                   textInputAction: TextInputAction.next,
                   onSubmitted: (value) => FocusScope.of(context).nextFocus(),
@@ -112,59 +135,62 @@ class _LoginScreenState extends State<LoginScreen> {
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
                               color:
-                                  Theme.of(context).textTheme.bodyText1.color),
+                              Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .color),
                           borderRadius: kDefaultBorder)),
                 ),
               ),
               CupertinoButton(
+                child: RichText(
+                    text: TextSpan(text: 'Esqueceu a senha? ', children: [
+                      TextSpan(
+                          text: 'Clique aqui',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.red))
+                    ])),
+                onPressed: () =>
+                    Navigator.pushNamed(context, RegisterScreen.screenRoute),
+              ),
+              MaterialButton(
+                minWidth: double.maxFinite,
+                padding: EdgeInsets.all(16),
+                color: Theme
+                    .of(context)
+                    .textTheme
+                    .bodyText1
+                    .color,
+                shape: RoundedRectangleBorder(borderRadius: kDefaultBorder),
                 onPressed: login
                     ? null
                     : () async {
-                        handleUserLogin(
-                            await UserData()
-                                .signInWithEmailAndPassword(email, password),
-                            context);
-                      },
-                child: Container(
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                      borderRadius: kDefaultBorder,
-                      color: Theme.of(context).textTheme.bodyText1.color),
-                  child: !login
-                      ? Icon(
-                          AntDesign.right,
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                        )
-                      : CircularProgressIndicator(
-                          strokeWidth: 1,
-                        ),
+                  handleUserLogin(
+                      await UserData()
+                          .signInWithEmailAndPassword(email, password),
+                      context);
+                },
+                child: Text(
+                  'Login',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme
+                          .of(context)
+                          .scaffoldBackgroundColor),
                 ),
               ),
-              SocialLoginButton('Continuar com Google', FlutterIcons.google_mco,
-                  backColor: Colors.blue,
-                  iconColor: Colors.white,
-                  textStyle: TextStyle(color: Colors.white), onTap: () async {
-                FirebaseUser user = await UserData().signInWithGoogle();
-                handleUserLogin(user, context);
-              }),
               CupertinoButton(
-                child: Wrap(
-                  spacing: 4,
-                  runSpacing: 4,
-                  children: [
-                    Text(
-                      'Não possui conta?',
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
-                    Text(
-                      'Cadastre-se hoje mesmo',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .copyWith(fontWeight: FontWeight.bold),
-                    )
-                  ],
-                ),
+                child: RichText(
+                    text: TextSpan(text: 'Não possui cadastro? ', children: [
+                      TextSpan(
+                          text: 'Cadastre-se hoje mesmo',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme
+                                  .of(context)
+                                  .primaryColor))
+                    ])),
                 onPressed: () =>
                     Navigator.pushNamed(context, RegisterScreen.screenRoute),
               )
@@ -176,9 +202,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void handleUserLogin(FirebaseUser user, BuildContext context) {
-    setState(() {
-      login = true;
-    });
     if (user != null) {
       showDialog(
           context: context,

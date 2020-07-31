@@ -5,6 +5,7 @@ import 'package:Biquer/model/RegisterData.dart';
 import 'package:Biquer/model/address/AddressData.dart';
 import 'package:Biquer/model/document/DocumentData.dart';
 import 'package:Biquer/model/user/UserData.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -18,8 +19,23 @@ class RegisterChat extends StatefulWidget {
 }
 
 class _RegisterChatState extends State<RegisterChat> {
-  final GlobalKey<SliverAnimatedListState> _listKey =
-      GlobalKey<SliverAnimatedListState>();
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      RegisterData _biquerData =
+          Provider.of<RegisterData>(context, listen: false);
+      FirebaseUser user = ModalRoute.of(context).settings.arguments;
+      if (user != null) {
+        _biquerData.updateUser(user);
+      } else {
+        _biquerData.initializeRegister();
+      }
+      setState(() {
+        loading = false;
+      });
+    });
+  }
 
   Widget messageField() {
     RegisterData _biquerData = Provider.of(context);
@@ -119,18 +135,6 @@ class _RegisterChatState extends State<RegisterChat> {
           );
         },
       );
-    } else {
-      Timer(
-        Duration(seconds: 1),
-        () {
-          RegisterData _biquerData =
-              Provider.of<RegisterData>(context, listen: false);
-          _biquerData.initializeRegister();
-        },
-      );
-      setState(() {
-        loading = false;
-      });
     }
 
     return Scaffold(
@@ -179,7 +183,6 @@ class _RegisterChatState extends State<RegisterChat> {
                               childCount: Provider.of<RegisterData>(context)
                                   .messages
                                   .length),
-                          key: _listKey,
                         ),
                       ],
                     ),

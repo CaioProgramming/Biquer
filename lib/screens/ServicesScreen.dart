@@ -23,9 +23,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: services,
-    );
+    return services;
   }
 
   void getServices() async {

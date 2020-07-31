@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 class SavingScreen extends StatelessWidget {
   final String message;
   final String image;
+  final Function callBack;
 
-  SavingScreen({this.message, this.image});
+  SavingScreen({this.message, this.image, this.callBack});
 
   @override
   Widget build(BuildContext context) {
+    callBack();
+
     return Container(
       height: double.maxFinite,
       child: Center(

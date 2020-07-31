@@ -50,25 +50,29 @@ class RegisterData extends ChangeNotifier {
 
   void initializeRegister() async {
     var udata = UserData();
-    List<MessageBubble> registerMessages =
-        await udata.loadRegisterMessages('Debora Profil', (firebaseuser) {
-      print('user logged $firebaseuser');
-      if (firebaseuser != null) {
-        user = firebaseuser;
-        sendSuccessMessage(
-            'Seus dados foram validados ${user.displayName} vamos prosseguir com o cadastro');
-        this.user = firebaseuser;
-        _myUser.uid = user.uid;
-        stage = RegisterStage.address;
-        initializeAddress();
-      } else {
-        sendReply('Ops parece que algo deu errado durante seu login');
-      }
+    List<MessageBubble> registerMessages = await udata
+        .loadRegisterMessages('Debora Profil', (FirebaseUser firebaseuser) {
+      updateUser(firebaseuser);
     });
     if (registerMessages == null || registerMessages.isEmpty) {
       sendReply('Ocorreu um erro ao iniciar o chat');
     } else {
       addBubbles(registerMessages);
+    }
+  }
+
+  void updateUser(FirebaseUser firebaseuser) {
+    print('user logged $firebaseuser');
+    if (firebaseuser != null) {
+      user = firebaseuser;
+      sendSuccessMessage(
+          'Seus dados foram validados ${user.displayName} vamos prosseguir com o cadastro');
+      this.user = firebaseuser;
+      _myUser.uid = user.uid;
+      stage = RegisterStage.address;
+      initializeAddress();
+    } else {
+      sendReply('Ops parece que algo deu errado durante seu login');
     }
   }
 

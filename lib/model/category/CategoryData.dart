@@ -26,8 +26,7 @@ class CategoryData extends BaseData {
                 selectedCategory: selectedCategory,
               );
             },
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, crossAxisSpacing: 1, mainAxisSpacing: 1),
+            gridDelegate: kCategoryGridDelegate,
             padding: EdgeInsets.all(0),
             shrinkWrap: true,
           );
@@ -45,12 +44,6 @@ class CategoryData extends BaseData {
       },
     );
   }
-
-  @override
-  Stream<DocumentSnapshot> singleDocument(String key) => firestoreInstance
-      .collection(kCategoryReference)
-      .document(key)
-      .snapshots();
 
   @override
   CollectionReference collectionReference() =>

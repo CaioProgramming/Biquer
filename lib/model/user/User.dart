@@ -21,9 +21,8 @@ class User {
 
   Map<String, dynamic> map() {
     return {
-      'uid': this.uid,
       'safetyPic': this.safetyPic,
-      'type': this.type,
+      'type': this.type.index,
       'address': address.map(),
       'document': document.map()
     };

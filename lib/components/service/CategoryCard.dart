@@ -24,6 +24,7 @@ class CategoryCard extends StatelessWidget {
           : () {
               cardSelect(this.category);
             },
+      padding: EdgeInsets.all(0),
       child: Container(
         padding: EdgeInsets.all(selected() ? 4 : 0),
         decoration: BoxDecoration(

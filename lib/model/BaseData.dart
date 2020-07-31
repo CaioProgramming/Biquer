@@ -12,8 +12,8 @@ abstract class BaseData {
   Stream query({@required String field, @required String value}) =>
       collectionReference().where(field, isEqualTo: value).snapshots();
 
-  Stream singleDocument(String key) =>
-      collectionReference().document(key).snapshots();
+  Future<DocumentSnapshot> singleDocument(String key) async =>
+      await collectionReference().document(key).get();
 
   Stream defaultStream() {
     return collectionReference().snapshots();

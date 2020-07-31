@@ -77,7 +77,7 @@ class _NewServicePagesState extends State<NewServicePages> {
                     CategorySection(),
                     ServiceSection(bicoData.category.id),
                     ServiceForm(),
-                    bicoData.savingScreen()
+                    bicoData.savingScreen(context)
                   ],
                 ),
               ),

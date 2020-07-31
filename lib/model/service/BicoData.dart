@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:Biquer/components/SavingScreen.dart';
@@ -41,7 +42,7 @@ class BicoData extends ChangeNotifier {
     notifyListeners();
   }
 
-  Widget savingScreen() {
+  Widget savingScreen(BuildContext context) {
     switch (state) {
       case SavingState.SAVING:
         return SavingScreen(
@@ -55,6 +56,9 @@ class BicoData extends ChangeNotifier {
       case SavingState.ERROR:
         subscribeToService();
         return SavingScreen(
+            callBack: () {
+              Timer(Duration(seconds: 5), () => Navigator.pop(context));
+            },
             message:
                 'Ocorreu um erro ao salvar seu bico, Estamos verificando o que aconteceu',
             image: kErrorServiceIllustration);
@@ -77,7 +81,9 @@ class BicoData extends ChangeNotifier {
   updateBicoPrice(double newValue) {
     try {
       if (bico == null) bico = Job(userID: uid);
-      this.bico.price = newValue;
+      if (newValue > service.minPrice) {
+        this.bico.price = newValue;
+      }
       notifyListeners();
     } catch (e) {
       print(e);

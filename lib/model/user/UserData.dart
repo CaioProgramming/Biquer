@@ -59,7 +59,7 @@ class UserData extends BaseData {
     return await storageReference.getDownloadURL();
   }
 
-  Future<FirebaseUser> signInWithGoogle() async {
+  Future<dynamic> signInWithGoogle() async {
     final GoogleSignIn googleSignIn = GoogleSignIn();
     final _auth = FirebaseAuth.instance;
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
@@ -78,6 +78,11 @@ class UserData extends BaseData {
     return user;
   }
 
+  Future<bool> checkUser(String userID) async {
+    DocumentSnapshot snapshot = await singleDocument(userID);
+    return snapshot.data != null;
+  }
+
   Future<FirebaseUser> signInWithEmailAndPassword(
       String email, String password) async {
     FirebaseUser user;
@@ -92,6 +97,12 @@ class UserData extends BaseData {
       return null;
     }
     return user;
+  }
+
+  Future signOut() async {
+    final _auth = FirebaseAuth.instance;
+    await _auth.signOut();
+    return true;
   }
 
   Future<FirebaseUser> registerWithEmailAndPassword(

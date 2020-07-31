@@ -8,24 +8,25 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return this.caption != null && this.title != null
-        ? Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text(
-                    caption,
-                    style: Theme.of(context)
-                        .textTheme
-                        .caption
-                        .copyWith(fontSize: 18),
-                  ),
-                  Text(
-                    title,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
-                  )
-                ],
-              ),
+        ? Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  caption,
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(fontSize: 18),
+                ),
+                Text(
+                  title,
+                  overflow: TextOverflow.fade,
+                  softWrap: true,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                )
+              ],
             ),
           )
         : SizedBox();

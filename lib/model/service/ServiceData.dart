@@ -90,10 +90,10 @@ class ServiceData extends BaseData {
                   return service == null
                       ? Text('Erro ao recuperar serviço')
                       : ServiceCard(
-                    selectedService: selectedService,
-                    service: service,
-                    onServiceSelect: (Service s) => cardPress(service),
-                  );
+                          selectedService: selectedService,
+                          service: service,
+                          onServiceSelect: (Service s) => cardPress(service),
+                        );
                 });
           } else {
             return emptyResult;

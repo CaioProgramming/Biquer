@@ -1,16 +1,15 @@
-import 'package:Biquer/components/Section.dart';
 import 'package:Biquer/model/user/UserData.dart';
 import 'package:Biquer/screens/LoginScreen.dart';
-import 'package:Biquer/screens/ServicesScreen.dart';
-import 'package:Biquer/screens/TransactionsScreen.dart';
 import 'package:Biquer/screens/register/RegisterScreen.dart';
 import 'package:Biquer/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../constants.dart';
+import 'MainScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   static String screenRoute = '/home';
@@ -40,33 +39,14 @@ class _HomeScreenState extends State<HomeScreen> {
         : Scaffold(
             appBar: AppBar(
               elevation: 0,
-              backgroundColor: Utils.barcolor(context),
-              leading: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                          color: Theme
-                              .of(context)
-                              .primaryColor, width: 1),
-                      image:
-                      DecorationImage(image: NetworkImage(user.photoUrl))),
+              leading: Center(
+                child: Text(
+                  'Bico',
+                  style: GoogleFonts.bangers().copyWith(
+                      color: Theme.of(context).primaryColorDark, fontSize: 30),
                 ),
               ),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Olá, ${user.displayName}'),
-                  Text(
-                    'Você já lucrou ${Utils.moneyText(2000)}',
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .caption,
-                  ),
-                ],
-              ),
+              backgroundColor: Utils.barcolor(context),
               actions: [
                 CupertinoButton(
                     child: Text(
@@ -80,17 +60,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     })
               ],
             ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: kbottombarIcons,
-        unselectedItemColor: Theme
-            .of(context)
-            .hintColor,
-        selectedItemColor: Theme
-            .of(context)
-            .primaryColor,
-      ),
-      body: SafeArea(child: MainScreen(user)),
-    );
+            bottomNavigationBar: BottomNavigationBar(
+              items: kbottombarIcons,
+              unselectedItemColor: Theme.of(context).hintColor,
+              selectedItemColor: Theme.of(context).primaryColor,
+            ),
+            body: SafeArea(child: MainScreen(user)),
+          );
   }
 
   void checkUser() async {
@@ -107,45 +83,12 @@ class _HomeScreenState extends State<HomeScreen> {
             actions: [
               CupertinoButton(
                 child: Text('Finalizar cadastro'),
-                onPressed: () =>
-                    Navigator.popAndPushNamed(
-                        context, RegisterScreen.screenRoute,
-                        arguments: user),
+                onPressed: () => Navigator.popAndPushNamed(
+                    context, RegisterScreen.screenRoute,
+                    arguments: user),
               )
             ],
           ));
     }
-  }
-}
-
-class MainScreen extends StatelessWidget {
-  final FirebaseUser user;
-
-  MainScreen(this.user);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 4),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
-          color: Utils.barcolor(context)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Section(
-                  title: 'Últimas transações',
-                  section: TransactionsScreen(user.uid)),
-              Section(
-                title: 'Seus serviços',
-                section: ServiceScreen(user.uid),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

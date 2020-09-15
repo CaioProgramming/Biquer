@@ -50,8 +50,8 @@ const kMessageFieldDecoration = InputDecoration(
 const kServiceGridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
     crossAxisSpacing: 10,
     mainAxisSpacing: 10,
-    crossAxisCount: 2,
-    childAspectRatio: 3 / 6);
+    crossAxisCount: 1,
+    childAspectRatio: 4 / 3);
 
 const kCategoryGridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
     crossAxisSpacing: 4,

@@ -39,6 +39,7 @@ dependencies:
   numberpicker: ^1.2.1
   flutter_masked_text: ^0.7.0
   intl: ^0.16.1
+  flutter_zoom_drawer: ^1.0.4
 
 flutter_icons:
   android: true

@@ -46,6 +46,7 @@ class ServiceCard extends StatelessWidget {
         child: Container(
           height: double.maxFinite,
           decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor.withOpacity(0.20),
               image: DecorationImage(
                   fit: BoxFit.cover,
                   image: NetworkImage(service.posterImage ??
